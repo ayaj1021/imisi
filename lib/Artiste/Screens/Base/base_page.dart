@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:imisi/Utils/gap.dart';
+
 
 class BasePage extends StatefulWidget {
   const BasePage({super.key});
@@ -11,7 +11,7 @@ class BasePage extends StatefulWidget {
 class _BasePageState extends State<BasePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
