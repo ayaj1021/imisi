@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:imisi/Artiste/Screens/Base/base_page.dart';
+
+import 'package:imisi/onboard/Screens/splash_screen.dart';
 import 'package:scaled_size/scaled_size.dart';
 
 class MyApp extends StatelessWidget {
@@ -12,12 +13,13 @@ class MyApp extends StatelessWidget {
         allowTextScaling: true,
         builder: () {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
-            home: BasePage(),
+            home: const SplashScreen(),
           );
         });
   }
