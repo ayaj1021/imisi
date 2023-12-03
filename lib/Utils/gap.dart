@@ -6,5 +6,5 @@ gapHeight(double height) {
 }
 
 gapWidth(double width) {
-  return SizedBox(height: width.rw);
+  return SizedBox(width: width.rw);
 }

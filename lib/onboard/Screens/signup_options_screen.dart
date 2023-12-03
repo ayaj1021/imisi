@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:imisi/Listener/Screens/signup_screen.dart';
 import 'package:imisi/Styles/app_colors.dart';
-import 'package:imisi/Utils/button_widget.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
-import 'package:scaled_size/scaled_size.dart';
+import 'package:imisi/Widget/button_widget.dart';
+import 'package:imisi/onboard/Screens/Authentication_pages/login.dart';
+import 'package:imisi/onboard/Screens/Authentication_pages/sign_up.dart';
 
-class SignupOptionScreens extends StatelessWidget {
+class SignupOptionScreens extends StatefulWidget {
   const SignupOptionScreens({super.key});
+
+  @override
+  State<SignupOptionScreens> createState() => _SignupOptionScreensState();
+}
+
+class _SignupOptionScreensState extends State<SignupOptionScreens> {
+  List userType = [
+    {
+      "name": "Artist",
+    },
+    {
+      "name": "Listener",
+    },
+  ];
+
+  int selectedItem = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -15,39 +31,47 @@ class SignupOptionScreens extends StatelessWidget {
       backgroundColor: AppColors.secondaryColor,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Center(
-                child: SizedBox(
-                  height: 60,
-                  width: 40,
-                  child: Image.asset(
-                    'assets/logos/Imisi_logo1.png',
-                  ),
+              SizedBox(
+                height: 60,
+                width: 40,
+                child: Image.asset(
+                  'assets/logos/Imisi_logo1.png',
                 ),
               ),
-              const Spacer(),
-              //  gapHeight(126),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ButtonWidget(
-                      onTap: () => nextPage(const ListenerSignup(), context),
-                      color: AppColors.primaryColor,
-                      text: 'Sign up as a Listener',
-                      textColor: AppColors.secondaryColor,
-                      width: 335.rw),
-                  gapHeight(16),
-                  ButtonWidget(
-                      border: Border.all(color: AppColors.onPrimaryColor),
-                      text: 'Sign up as a music artiste',
-                      textColor: AppColors.onPrimaryColor,
-                      width: 335.rw),
-                ],
-              ),
-              const Spacer(),
+              gapHeight(100),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: userType.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: ButtonWidget(
+                      onTap: () {
+                        setState(() {
+                          selectedItem = index;
+                        });
+                        nextPage(const LoginPage(), context);
+                      },
+                      text: "Sign up as ${userType[index]["name"]}",
+                      color: selectedItem == index
+                          ? AppColors.primaryColor
+                          : AppColors.secondaryColor,
+                      border: Border.all(
+                        color: selectedItem == index
+                            ? AppColors.primaryColor
+                            : AppColors.primaryColor,
+                      ),
+                      textColor: selectedItem == index
+                          ? Colors.black
+                          : AppColors.primaryColor,
+                    ),
+                  );
+                },
+              )
             ],
           ),
         ),

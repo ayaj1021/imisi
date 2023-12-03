@@ -8,7 +8,6 @@ class ButtonWidget extends StatelessWidget {
     required this.text,
     this.onTap,
     this.color,
-    required this.width,
     this.border,
     this.textColor,
   });
@@ -17,7 +16,7 @@ class ButtonWidget extends StatelessWidget {
   final VoidCallback? onTap;
   final Color? color;
   final Color? textColor;
-  final double width;
+
   final Border? border;
 
   @override
@@ -25,9 +24,9 @@ class ButtonWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        padding: const EdgeInsets.all(15),
         alignment: Alignment.center,
-        height: 48.rh,
-        width: double.infinity,
+        width: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           border: border,
           color: color,

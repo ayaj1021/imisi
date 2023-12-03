@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
-import 'package:imisi/Utils/button_widget.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Onboard/Screens/signup_options_screen.dart';
+import 'package:imisi/Widget/button_widget.dart';
 import 'package:scaled_size/scaled_size.dart';
 
 import '../Onboard_model/onboard_model.dart';
@@ -122,7 +122,6 @@ class _OnboardScreenState extends State<OnboardScreen> {
                                             const Duration(milliseconds: 300),
                                         curve: Curves.bounceIn);
                                   },
-                                  width: 335.rw,
                                   color: AppColors.primaryColor,
                                   text: currentPage == index - 1
                                       ? 'Next'
