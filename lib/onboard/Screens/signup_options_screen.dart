@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:imisi/Listener/Screens/signup_screen.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Utils/button_widget.dart';
 import 'package:imisi/Utils/gap.dart';
+import 'package:imisi/Utils/navigator.dart';
 import 'package:scaled_size/scaled_size.dart';
 
 class SignupOptionScreens extends StatelessWidget {
@@ -32,6 +34,7 @@ class SignupOptionScreens extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ButtonWidget(
+                      onTap: () => nextPage(const ListenerSignup(), context),
                       color: AppColors.primaryColor,
                       text: 'Sign up as a Listener',
                       textColor: AppColors.secondaryColor,

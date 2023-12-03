@@ -4,7 +4,7 @@ import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/button_widget.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
-import 'package:imisi/onboard/Screens/signup_options_screen.dart';
+import 'package:imisi/Onboard/Screens/signup_options_screen.dart';
 import 'package:scaled_size/scaled_size.dart';
 
 import '../Onboard_model/onboard_model.dart';
@@ -70,7 +70,10 @@ class _OnboardScreenState extends State<OnboardScreen> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    nextPage(
+                                        const SignupOptionScreens(), context);
+                                  },
                                   child: const Text(
                                     'Skip',
                                     style: TextStyle(color: Colors.white),

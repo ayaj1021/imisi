@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:imisi/Styles/app_colors.dart';
-import 'package:imisi/onboard/Screens/onboard_screen.dart';
+import 'package:imisi/Onboard/Screens/onboard_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
