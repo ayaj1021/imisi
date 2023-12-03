@@ -14,7 +14,7 @@ class ButtonWidget extends StatelessWidget {
   });
 
   final String text;
-  final void Function()? onTap;
+  final VoidCallback? onTap;
   final Color? color;
   final Color? textColor;
   final double width;
@@ -27,7 +27,7 @@ class ButtonWidget extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         height: 48.rh,
-        width: width,
+        width: double.infinity,
         decoration: BoxDecoration(
           border: border,
           color: color,
