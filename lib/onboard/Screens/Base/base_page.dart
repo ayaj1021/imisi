@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:imisi/Database/database.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/onboard/Screens/Base/Basepages/home_page.dart';
+import 'package:imisi/onboard/Screens/Base/Basepages/upload_pages.dart';
 
 class BasePage extends StatefulWidget {
   const BasePage({super.key});
@@ -23,7 +24,7 @@ class _BasePageState extends State<BasePage> {
   List<Widget> artistPages = [
     const HomePage(),
     Container(color: Colors.black),
-    Container(color: Colors.green),
+    const UpLoadPage(),
     Container(color: Colors.amber),
   ];
 

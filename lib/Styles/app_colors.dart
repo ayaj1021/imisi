@@ -8,5 +8,5 @@ class AppColors {
   static const Color overlayColor = Color(0xFF2E2E2E);
   static const Color upLoadContainerColor = Color(0xFF5F5F5F);
   static const Color alertDialogColor = Color(0xFF313030);
-
+  static const Color disabledButtonColor = Color(0xFF440145);
 }
