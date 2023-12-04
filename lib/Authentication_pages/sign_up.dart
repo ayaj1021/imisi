@@ -110,16 +110,17 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   gapHeight(50),
                   ButtonWidget(
-                    onTap: () {
+                    onTap: () async {
                       setState(() {
                         isLoading = true;
                       });
 
-                      AuthService()
+                      await AuthService()
                           .signUp(
                         name: nameController.text.trim(),
                         email: emailController.text.trim(),
                         password: passwordController.text.trim(),
+                        context: context,
                       )
                           .then((_) {
                         setState(() {

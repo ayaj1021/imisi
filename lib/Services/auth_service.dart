@@ -9,11 +9,11 @@ import 'package:imisi/Constants/url_constants.dart';
 import 'package:imisi/Utils/snackBar.dart';
 
 class AuthService {
-  Future<void> signUp(
+  signUp(
       {required String name,
       required String email,
       required String password,
-      BuildContext? context}) async {
+      required BuildContext context}) async {
     String url = AppConstants.baseUrl + AppConstants.register;
 
     Map<String, dynamic> body = {
@@ -21,16 +21,14 @@ class AuthService {
       "email": email,
       "password": password,
     };
-    final Map<String, String> headers = {
+    Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
-    debugPrint(body.toString());
 
     try {
       var response = await http.post(
         Uri.parse(url),
         body: jsonEncode(body),
-        //  body: body,
         headers: headers,
       );
       if (response.statusCode == 201 || response.statusCode == 200) {
@@ -38,8 +36,11 @@ class AuthService {
         showSnackBar(isError: true, context: context, message: "Successful");
         return json;
       } else {
-        var json = jsonDecode(response.body);
-        showSnackBar(isError: true, context: context, message: json['message']);
+        // var json = jsonDecode(response.body);
+        print("problem");
+        showSnackBar(isError: false, context: context, message: 'message');
+        // ScaffoldMessenger.of(context)
+        //     .showSnackBar(SnackBar(content: Text("h")));
       }
     } catch (e) {
       log('Error $e');

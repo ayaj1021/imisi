@@ -1,11 +1,14 @@
-
 import 'package:flutter/material.dart';
 import 'package:imisi/Styles/app_colors.dart';
 
 import 'package:scaled_size/scaled_size.dart';
 
-showSnackBar({required context, required String message, bool? isError}) {
-  ScaffoldMessenger.of(context).showSnackBar(
+showSnackBar({
+  required BuildContext context,
+  required String message,
+  bool? isError,
+}) {
+  return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(100),
