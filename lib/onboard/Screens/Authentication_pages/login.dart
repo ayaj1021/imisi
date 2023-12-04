@@ -9,6 +9,7 @@ import 'package:imisi/Widget/button_widget.dart';
 
 import 'package:imisi/Widget/custom_text_field.dart';
 import 'package:imisi/onboard/Screens/Authentication_pages/sign_up.dart';
+import 'package:imisi/onboard/Screens/Base/base_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -79,9 +80,12 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   gapHeight(50),
-                  const ButtonWidget(
+                  ButtonWidget(
                     text: "Sign Up",
                     color: AppColors.primaryColor,
+                    onTap: () {
+                      nextPage(const BasePage(), context);
+                    },
                   ),
                   gapHeight(20),
                   InkWell(

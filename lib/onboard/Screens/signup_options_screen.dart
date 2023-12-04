@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:imisi/Database/database.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
@@ -23,7 +24,7 @@ class _SignupOptionScreensState extends State<SignupOptionScreens> {
     },
   ];
 
-  int selectedItem = 0;
+  int? selectedItem;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +55,8 @@ class _SignupOptionScreensState extends State<SignupOptionScreens> {
                         setState(() {
                           selectedItem = index;
                         });
+                        SharedPref().saveUserAccountType(
+                            userType[selectedItem!.toInt()]["name"]);
                         nextPage(const LoginPage(), context);
                       },
                       text: "Sign up as ${userType[index]["name"]}",
