@@ -4,7 +4,7 @@ import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Widget/button_widget.dart';
 import 'package:imisi/Widget/upload_widget.dart';
-import 'package:scaled_size/scaled_size.dart';
+
 
 class UpLoadPage extends StatefulWidget {
   const UpLoadPage({super.key});

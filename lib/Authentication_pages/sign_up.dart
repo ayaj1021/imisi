@@ -1,25 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:imisi/Services/auth_service.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Widget/button_widget.dart';
-
 import 'package:imisi/Widget/custom_text_field.dart';
-import 'package:imisi/onboard/Screens/Authentication_pages/sign_up.dart';
-import 'package:imisi/onboard/Screens/Base/base_page.dart';
+import 'package:imisi/Authentication_pages/login.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  TextEditingController controller = TextEditingController();
+class _SignUpPageState extends State<SignUpPage> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  bool isObscure = true;
+
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,21 +53,33 @@ class _LoginPageState extends State<LoginPage> {
                   gapHeight(20),
                   Text(
                     "Create your Account",
-                    style: AppStyles.agTitle3Bold.copyWith(color: Colors.white),
+                    style: AppStyles.agTitle3Bold.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                   gapHeight(50),
                   CustomTextField(
+                    hint: "Enter username",
+                    controller: nameController,
+                    prefixIcon: Image.asset(
+                      "assets/images/person.png",
+                      height: 30,
+                      color: Colors.white,
+                    ),
+                  ),
+                  gapHeight(15),
+                  CustomTextField(
                     hint: "Enter Email Address",
-                    controller: controller,
+                    controller: emailController,
                     prefixIcon: const Icon(
                       Icons.email_outlined,
                       color: Colors.white,
                     ),
                   ),
-                  gapHeight(10),
+                  gapHeight(15),
                   CustomTextField(
                     hint: "Enter Password",
-                    controller: controller,
+                    controller: passwordController,
                     prefixIcon: Image.asset(
                       "assets/images/lock.png",
                       height: 30,
@@ -67,30 +91,49 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.white,
                     ),
                   ),
-                  gapHeight(20),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      "Forget Password?",
-                      style: GoogleFonts.inter(
+                  gapHeight(10),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.circle,
                         color: AppColors.primaryColor,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 11,
+                        size: 5,
                       ),
-                    ),
+                      gapWidth(5),
+                      Text(
+                        "Password must be minimum of 6 characters",
+                        style: AppStyles.captionText.copyWith(
+                          color: AppColors.onPrimaryColor,
+                        ),
+                      ),
+                    ],
                   ),
                   gapHeight(50),
                   ButtonWidget(
-                    text: "Sign Up",
-                    color: AppColors.primaryColor,
                     onTap: () {
-                      nextPage(const BasePage(), context);
+                      setState(() {
+                        isLoading = true;
+                      });
+
+                      AuthService()
+                          .signUp(
+                        name: nameController.text.trim(),
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim(),
+                      )
+                          .then((_) {
+                        setState(() {
+                          isLoading = false;
+                        });
+                      });
                     },
+                    text: isLoading == true ? "Loading..." : "Sign Up",
+                    color: AppColors.primaryColor,
                   ),
                   gapHeight(20),
                   InkWell(
                     onTap: () {
-                      nextPage(const SignUpPage(), context);
+                      nextPage(const LoginPage(), context);
                     },
                     child: RichText(
                       text: TextSpan(
@@ -105,9 +148,10 @@ class _LoginPageState extends State<LoginPage> {
                           TextSpan(
                             text: "Login",
                             style: GoogleFonts.inter(
-                                color: AppColors.primaryColor,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500),
+                              color: AppColors.primaryColor,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),

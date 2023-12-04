@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
-import 'package:scaled_size/scaled_size.dart';
 
 class ButtonWidget extends StatelessWidget {
   const ButtonWidget({

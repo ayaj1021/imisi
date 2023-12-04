@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Widget/top_artist_widget.dart';
 import 'package:imisi/Widget/top_songs_widget.dart';
-import 'package:scaled_size/scaled_size.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,14 +21,16 @@ class _HomePageState extends State<HomePage> {
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset("assets/images/ad.png"),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 15.0),
-                child: Icon(
-                  Icons.menu,
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0, top: 20),
+                child: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.menu,
+                  ),
                   color: Colors.white,
                 ),
               ),

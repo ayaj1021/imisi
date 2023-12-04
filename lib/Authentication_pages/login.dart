@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Widget/button_widget.dart';
-
 import 'package:imisi/Widget/custom_text_field.dart';
-import 'package:imisi/onboard/Screens/Authentication_pages/login.dart';
+import 'package:imisi/Authentication_pages/sign_up.dart';
+import 'package:imisi/onboard/Screens/Base/base_page.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _LoginPageState extends State<LoginPage> {
   TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -39,20 +38,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   gapHeight(20),
                   Text(
-                    "Create your Account",
+                    "Log into your Account",
                     style: AppStyles.agTitle3Bold.copyWith(color: Colors.white),
                   ),
                   gapHeight(50),
-                  CustomTextField(
-                    hint: "Enter username",
-                    controller: controller,
-                    prefixIcon: Image.asset(
-                      "assets/images/person.png",
-                      height: 30,
-                      color: Colors.white,
-                    ),
-                  ),
-                  gapHeight(10),
                   CustomTextField(
                     hint: "Enter Email Address",
                     controller: controller,
@@ -76,46 +65,28 @@ class _SignUpPageState extends State<SignUpPage> {
                       color: Colors.white,
                     ),
                   ),
-                  gapHeight(10),
+                  gapHeight(20),
                   Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.centerRight,
                     child: Text(
-                      "Password requirement",
-                      style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 11,
-                      ),
+                      "Forgot Password?",
+                      style: AppStyles.bodyRegularText
+                          .copyWith(color: AppColors.primaryColor,),
+
                     ),
                   ),
-                  gapHeight(5),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.circle,
-                        color: AppColors.primaryColor,
-                        size: 5,
-                      ),
-                      gapWidth(10),
-                      Text(
-                        "Password must be minimum of 6 characters",
-                        style: GoogleFonts.inter(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
-                  ),
                   gapHeight(50),
-                  const ButtonWidget(
-                    text: "Sign Up",
+                  ButtonWidget(
+                    text: "Login",
                     color: AppColors.primaryColor,
+                    onTap: () {
+                      nextPage(const BasePage(), context);
+                    },
                   ),
                   gapHeight(20),
                   InkWell(
                     onTap: () {
-                      nextPage(const LoginPage(), context);
+                      nextPage(const SignUpPage(), context);
                     },
                     child: RichText(
                       text: TextSpan(
@@ -128,12 +99,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                           ),
                           TextSpan(
-                            text: "Login",
-                            style: GoogleFonts.inter(
-                              color: AppColors.primaryColor,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            text: "Sign up",
+                            style: AppStyles.bodyRegularText
+                          .copyWith(color: AppColors.primaryColor,),
                           ),
                         ],
                       ),

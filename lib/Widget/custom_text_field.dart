@@ -18,10 +18,11 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       style: GoogleFonts.inter(color: Colors.white),
       decoration: InputDecoration(
-        labelStyle: GoogleFonts.inter(color: Colors.grey),
-        labelText: hint,
+        hintStyle: GoogleFonts.inter(color: Colors.grey),
+        hintText: hint,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         focusedBorder: TextFieldDecoration().focusBorder,

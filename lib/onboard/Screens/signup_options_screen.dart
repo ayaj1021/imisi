@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:imisi/Authentication_pages/login.dart';
 import 'package:imisi/Database/database.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Widget/button_widget.dart';
-import 'package:imisi/onboard/Screens/Authentication_pages/login.dart';
-import 'package:imisi/onboard/Screens/Authentication_pages/sign_up.dart';
 
 class SignupOptionScreens extends StatefulWidget {
   const SignupOptionScreens({super.key});
@@ -55,9 +54,6 @@ class _SignupOptionScreensState extends State<SignupOptionScreens> {
                         setState(() {
                           selectedItem = index;
                         });
-                        SharedPref().saveUserAccountType(
-                            userType[selectedItem!.toInt()]["name"]);
-                        nextPage(const LoginPage(), context);
                       },
                       text: "Sign up as ${userType[index]["name"]}",
                       color: selectedItem == index
@@ -74,6 +70,23 @@ class _SignupOptionScreensState extends State<SignupOptionScreens> {
                     ),
                   );
                 },
+              ),
+              SizedBox(
+                width: 135,
+                child: ButtonWidget(
+                  onTap: () {
+                    SharedPref().saveUserAccountType(
+                        userType[selectedItem!.toInt()]["name"]);
+                    nextPage(const LoginPage(), context);
+                  },
+                  text: "Continue",
+                  color: selectedItem == null
+                      ? AppColors.disabledButtonColor
+                      : AppColors.primaryColor,
+                  textColor: selectedItem == null
+                      ? AppColors.hintTextColor
+                      : AppColors.disabledButtonColor,
+                ),
               )
             ],
           ),
