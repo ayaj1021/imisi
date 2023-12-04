@@ -33,15 +33,13 @@ class AuthService {
         //  body: body,
         headers: headers,
       );
-      if (response.statusCode == 201) {
-        debugPrint(response.body);
+      if (response.statusCode == 201 || response.statusCode == 200) {
         var json = jsonDecode(response.body);
-       
+        showSnackBar(isError: true, context: context, message: "Successful");
         return json;
       } else {
-        debugPrint(response.body);
-        debugPrint(response.statusCode.toString());
-        // showSnackBar(isError: true, context: context, message: response.body);
+        var json = jsonDecode(response.body);
+        showSnackBar(isError: true, context: context, message: json['message']);
       }
     } catch (e) {
       log('Error $e');
