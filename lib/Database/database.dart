@@ -1,7 +1,21 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 class SharedPref {
+  saveUserAccountType(String accountType) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    sf.setString("account_type", accountType);
+    print(accountType);
+  }
+
+  getUserAccountType() async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    String? type = sf.getString("account_type");
+    return type;
+  }
+
   // saveUserToken(String token) async {
-  //   SharedPreferences sf = await SharedPreferences.getInstance();
-  //   sf.setString("token", token);
+  // SharedPreferences sf = await SharedPreferences.getInstance();
+  // sf.setString("token", token);
   // }
 
   // saveUserRefreshToken(String refreshToken) async {
