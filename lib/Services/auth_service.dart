@@ -6,11 +6,11 @@ import 'package:imisi/Constants/url_constants.dart';
 import 'package:imisi/Database/database.dart';
 
 class AuthService {
-  Future<void> signUp(
+  signUp(
       {required String name,
       required String email,
       required String password,
-      BuildContext? context}) async {
+      required BuildContext context}) async {
     String url = AppConstants.baseUrl + AppConstants.register;
 
     Map<String, dynamic> body = {
@@ -18,16 +18,14 @@ class AuthService {
       "email": email,
       "password": password,
     };
-    final Map<String, String> headers = {
+    Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
-    debugPrint(body.toString());
 
     try {
       var response = await http.post(
         Uri.parse(url),
         body: jsonEncode(body),
-        //  body: body,
         headers: headers,
       );
       var json = jsonDecode(response.body);
@@ -80,6 +78,11 @@ class AuthService {
       } else {
         debugPrint(data);
         debugPrint(response.statusCode.toString());
+        // var json = jsonDecode(response.body);
+        print("problem");
+        showSnackBar(isError: false, context: context, message: 'message');
+        // ScaffoldMessenger.of(context)
+        //     .showSnackBar(SnackBar(content: Text("h")));
       }
     } catch (e) {
       log('Error $e');
