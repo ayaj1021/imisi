@@ -115,18 +115,18 @@ class _SignUpPageState extends State<SignUpPage> {
                         isLoading = true;
                       });
 
-                      await AuthService()
-                          .signUp(
-                        name: nameController.text.trim(),
-                        email: emailController.text.trim(),
-                        password: passwordController.text.trim(),
-                        context: context,
-                      )
-                          .then((_) {
-                        setState(() {
-                          isLoading = false;
-                        });
-                      });
+                      // await AuthService()
+                      //     .signUp(
+                      //   name: nameController.text.trim(),
+                      //   email: emailController.text.trim(),
+                      //   password: passwordController.text.trim(),
+                      //   context: context,
+                      // )
+                      //     .then((_) {
+                      //   setState(() {
+                      //     isLoading = false;
+                      //   });
+                      // });
                     },
                     text: isLoading == true ? "Loading..." : "Sign Up",
                     color: AppColors.primaryColor,
