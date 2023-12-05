@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:imisi/Styles/app_colors.dart';
 
@@ -16,7 +15,7 @@ showSnackBar({required context, required String message, bool? isError}) {
       content: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          isError
+          isError == true
               ? const CircleAvatar(
                   backgroundColor: Colors.red,
                   radius: 15,

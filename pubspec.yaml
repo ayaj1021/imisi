@@ -20,6 +20,8 @@ dependencies:
   google_fonts: ^6.1.0
   http: ^1.1.2
   another_flushbar: ^1.12.30
+  video_player: ^2.8.1
+  smooth_page_indicator: ^1.1.0
 
 dev_dependencies:
   flutter_test:

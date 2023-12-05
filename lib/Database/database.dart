@@ -4,7 +4,19 @@ class SharedPref {
   saveUserAccountType(String accountType) async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     sf.setString("account_type", accountType);
-    print(accountType);
+   // print(accountType);
+  }
+
+  saveUserToken(String key, String value) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setString(key, value);
+   // print(key);
+  }
+
+  getUserToken(String key) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.getString(key);
+  //  print(key);
   }
 
   getUserAccountType() async {

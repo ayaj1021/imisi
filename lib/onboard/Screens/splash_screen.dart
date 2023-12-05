@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:imisi/Database/database.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Onboard/Screens/onboard_screen.dart';
 
@@ -14,6 +15,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    SharedPref().getUserToken('token').then((value) {
+     // token = value;
+    });
     Timer(const Duration(seconds: 4), () {
       Navigator.push(
         context,

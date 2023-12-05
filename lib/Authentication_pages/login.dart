@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:imisi/Services/auth_service.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
@@ -17,7 +18,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController controller = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
                   gapHeight(50),
                   CustomTextField(
                     hint: "Enter Email Address",
-                    controller: controller,
+                    controller: emailController,
                     prefixIcon: const Icon(
                       Icons.email_outlined,
                       color: Colors.white,
@@ -53,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                   gapHeight(10),
                   CustomTextField(
                     hint: "Enter Password",
-                    controller: controller,
+                    controller: passwordController,
                     prefixIcon: Image.asset(
                       "assets/images/lock.png",
                       height: 30,
@@ -70,17 +81,30 @@ class _LoginPageState extends State<LoginPage> {
                     alignment: Alignment.centerRight,
                     child: Text(
                       "Forgot Password?",
-                      style: AppStyles.bodyRegularText
-                          .copyWith(color: AppColors.primaryColor,),
-
+                      style: AppStyles.bodyRegularText.copyWith(
+                        color: AppColors.primaryColor,
+                      ),
                     ),
                   ),
                   gapHeight(50),
                   ButtonWidget(
-                    text: "Login",
+                    text: isLoading == true ? "Loading..." : "Login",
                     color: AppColors.primaryColor,
                     onTap: () {
-                      nextPage(const BasePage(), context);
+                      setState(() {
+                        isLoading = true;
+                      });
+                      AuthService()
+                          .login(
+                        email: emailController.text,
+                        password: passwordController.text,
+                      )
+                          .then((_) {
+                        nextPage(const BasePage(), context);
+                        setState(() {
+                          isLoading = false;
+                        });
+                      });
                     },
                   ),
                   gapHeight(20),
@@ -100,8 +124,9 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           TextSpan(
                             text: "Sign up",
-                            style: AppStyles.bodyRegularText
-                          .copyWith(color: AppColors.primaryColor,),
+                            style: AppStyles.bodyRegularText.copyWith(
+                              color: AppColors.primaryColor,
+                            ),
                           ),
                         ],
                       ),
