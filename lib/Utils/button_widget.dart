@@ -8,7 +8,7 @@ class ButtonWidget extends StatelessWidget {
     required this.text,
     this.onTap,
     this.color,
-    required this.width,
+   
     this.border,
     this.textColor,
   });
@@ -17,7 +17,7 @@ class ButtonWidget extends StatelessWidget {
   final void Function()? onTap;
   final Color? color;
   final Color? textColor;
-  final double width;
+  
   final Border? border;
 
   @override
@@ -27,7 +27,7 @@ class ButtonWidget extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         height: 48.rh,
-        width: width,
+        width: double.infinity,
         decoration: BoxDecoration(
           border: border,
           color: color,

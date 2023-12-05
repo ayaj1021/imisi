@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+
 import 'package:imisi/Styles/app_colors.dart';
-import 'package:imisi/Styles/app_text_styles.dart';
+
 import 'package:imisi/Utils/button_widget.dart';
 import 'package:imisi/Utils/gap.dart';
-import 'package:imisi/Utils/navigator.dart';
-import 'package:imisi/onboard/Screens/signup_options_screen.dart';
-import 'package:scaled_size/scaled_size.dart';
+import 'package:imisi/onboard/Onboard_pages/first_onboard_page.dart';
+import 'package:imisi/onboard/Onboard_pages/second_onboard_page.dart';
+import 'package:imisi/onboard/Onboard_pages/third_onboard_page.dart';
 
-import '../Onboard_model/onboard_model.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardScreen extends StatefulWidget {
   const OnboardScreen({super.key});
@@ -17,12 +18,17 @@ class OnboardScreen extends StatefulWidget {
 }
 
 class _OnboardScreenState extends State<OnboardScreen> {
-  late PageController pageController;
+  PageController pageController = PageController(initialPage: 0);
   int currentPage = 0;
+
   @override
   void initState() {
-    pageController = PageController(initialPage: 0);
     super.initState();
+    pageController.addListener(() {
+      setState(() {
+        currentPage = pageController.page?.round() ?? 0;
+      });
+    });
   }
 
   @override
@@ -34,106 +40,68 @@ class _OnboardScreenState extends State<OnboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.secondaryColor,
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            Expanded(
-              child: PageView.builder(
-                controller: pageController,
-                itemCount: contents.length,
-                onPageChanged: (index) {
-                  setState(() {
-                    currentPage = index;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  return Stack(
-                    children: [
-                      Container(
-                        height: double.infinity,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Image.asset(
-                          contents[index].image,
-                          fit: BoxFit.cover,
-                        ),
+            PageView(
+              controller: pageController,
+              children: const [
+                FirstOnboardPage(),
+                SecondOnboardPage(),
+              ],
+            ),
+            Positioned(
+              left: 5,
+              right: 5,
+              bottom: 15,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SmoothPageIndicator(
+                      controller: pageController,
+                      count: 2,
+                      effect: const ExpandingDotsEffect(
+                        dotColor: Color(0xFF585757),
+                        dotWidth: 22,
+                        dotHeight: 10,
+                        activeDotColor: AppColors.primaryColor,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                InkWell(
-                                  onTap: () {},
-                                  child: const Text(
-                                    'Skip',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            gapHeight(16),
-                            Text(
-                              contents[index].titleText,
-                              style: AppStyles.h5.copyWith(color: Colors.white),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            const Spacer(),
-                            Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(
-                                    contents.length,
-                                    (index) => Container(
-                                      margin: const EdgeInsets.all(5),
-                                      height: 8,
-                                      width: currentPage == index ? 50 : 20,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: currentPage == index
-                                            ? AppColors.primaryColor
-                                            : const Color(0xFF585757),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                gapHeight(16),
-                                ButtonWidget(
-                                  onTap: () {
-                                    if (currentPage == contents.length - 1) {
-                                      nextPage(
-                                          const SignupOptionScreens(), context);
-                                    }
-                                    pageController.nextPage(
-                                        duration:
-                                            const Duration(milliseconds: 300),
-                                        curve: Curves.bounceIn);
-                                  },
-                                  width: 335.rw,
-                                  color: AppColors.primaryColor,
-                                  text: currentPage == index - 1
-                                      ? 'Next'
-                                      : 'Continue',
-                                  textColor: AppColors.secondaryColor,
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                },
+                    ),
+                    gapHeight(80),
+                    ButtonWidget(
+                        onTap: () {
+                          if (currentPage == 0) {
+                            pageController.nextPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.bounceInOut);
+                          } else {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ThirdOnboardPage()));
+                          }
+                        },
+                        color: AppColors.primaryColor,
+                        text: 'Continue')
+
+                    //    LongButtonContainer(
+                    //     callback: () {},
+                    //     buttonColor: AppColors.primaryColor,
+                    //     buttonWidget: Text(
+                    //       'Continue',
+                    //       style: AppStyles.buttonText.copyWith(
+                    //         color: AppColors.secondaryColor,
+                    //       ),
+                    //     ),
+                    //     textColor: AppColors.secondaryColor,
+                    //   ),
+                    // )
+                  ],
+                ),
               ),
             )
           ],
