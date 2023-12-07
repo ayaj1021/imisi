@@ -5,6 +5,7 @@ import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/onboard/Onboard%20Screens/Base/Basepages/home_page.dart';
 import 'package:imisi/onboard/Onboard%20Screens/Base/Basepages/upload_pages.dart';
 
+
 class BasePage extends StatefulWidget {
   const BasePage({super.key});
 

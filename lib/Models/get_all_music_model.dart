@@ -95,7 +95,7 @@ class AudioClass {
 enum FileType {
     AUDIO_MPEG,
     IMAGE_JPEG,
-    IMAGE_PNG
+    IMAGE_PNG, media
 }
 
 final fileTypeValues = EnumValues({
