@@ -20,10 +20,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<List<GetAllMusicModel>> getMusic() async {
+  Future getMusic() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? token = pref.getString("token");
-    print(token);
 
     String url = 'https://imisi-backend-service.onrender.com/api/musics';
     var response = await http.get(Uri.parse(url), headers: {
@@ -31,16 +30,9 @@ class _HomePageState extends State<HomePage> {
       'Authorization': "Bearer $token",
     });
     var body = jsonDecode(response.body);
-    List<GetAllMusicModel> allMusic = [];
-    for (var music in body) {
-      GetAllMusicModel getAllMusicModel = GetAllMusicModel.fromJson(music);
-      allMusic.add(getAllMusicModel);
-    }
-    print(body);
-    return allMusic;
+print(body);
+    return body;
   }
-
-  List<GetAllMusicModel> allMusic = [];
 
   @override
   Widget build(BuildContext context) {
@@ -87,67 +79,56 @@ class _HomePageState extends State<HomePage> {
               ),
               gapHeight(20),
 
-              FutureBuilder<List<GetAllMusicModel>>(
+              FutureBuilder(
                   future: getMusic(),
                   builder: (context, snapshot) {
-                    return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: snapshot.data!.length,
-                      //     shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          height: 150,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              snapshot.data![index].image == null
-                                  ? Container(
-                                      //  height: 130.rw,
-                                      width: 110.rh,
-                                      color: Colors.blue,
-                                    )
-                                  : Container(
-                                      //height: 130.rw,
-                                      width: 110.rh,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image: NetworkImage(snapshot
-                                              .data![index].image!.filePath
-                                              .toString()),
+                    return SizedBox(
+                      height: 200,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snapshot.data.length,
+                            shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return SizedBox(
+                            height: 150,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                               Container(
+                                        height: 130.rw,
+                                        width: 110.rh,
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          // image: DecorationImage(
+                                          //   fit: BoxFit.fill,
+                                          //   image: NetworkImage(snapshot
+                                          //       .data![index].image!.filePath
+                                          //       .toString()),
+                                          // ),
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
-                                        borderRadius: BorderRadius.circular(8),
                                       ),
-                                    ),
-                              gapHeight(5),
-                              Text(snapshot.data![index].artist!,
-                                  style: AppStyles.bodyBold.copyWith(
-                                      color: AppColors.onPrimaryColor)),
-                              gapHeight(2),
-                              Text("Excess love",
-                                  style: AppStyles.bodyRegularText.copyWith(
-                                      color: AppColors.onPrimaryColor))
-                            ],
-                          ),
-                        );
-                      },
+                                gapHeight(5),
+                                Text(snapshot.data![index]["artist"] ?? "Davido",
+                                    style: AppStyles.bodyBold.copyWith(
+                                        color: AppColors.onPrimaryColor)),
+                                gapHeight(2),
+                                Text(snapshot.data![index]["name"],
+                                    style: AppStyles.bodyRegularText.copyWith(
+                                        color: AppColors.onPrimaryColor))
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     );
                   }),
-              // const SingleChildScrollView(
-              //   scrollDirection: Axis.horizontal,
-              //   child: Padding(
-              //     padding: EdgeInsets.only(left: 15.0),
-              //     child: Row(
-              //       children: [
-              //         TopSongsWidget(),
-              //         TopSongsWidget(),
-              //         TopSongsWidget(),
-              //         TopSongsWidget(),
-              //       ],
-              //     ),
-              //   ),
-              // ),
+              ElevatedButton(
+                  onPressed: () {
+                    getMusic();
+                  },
+                  child: Text("Press")),
               gapHeight(20),
               Padding(
                 padding: const EdgeInsets.only(left: 15),
