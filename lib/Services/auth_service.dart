@@ -1,9 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:imisi/Constants/url_constants.dart';
 import 'package:imisi/Database/database.dart';
+import 'package:imisi/Utils/navigator.dart';
+
+import 'package:imisi/onboard/Onboard%20Screens/Base/base_page.dart';
 
 class AuthService {
   signUp(
@@ -30,17 +35,20 @@ class AuthService {
       );
       var json = jsonDecode(response.body);
       if (response.statusCode == 201 || response.statusCode == 200) {
-        SharedPref().saveUserToken('token', json['token']);
+        SharedPref().saveUserToken(json['token']);
+        nextPage(const BasePage(), context);
         // showSnackBar(isError: true, context: context, message: "Successful");
         debugPrint(response.body);
         return json;
       } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              json['message'],
+              style: const TextStyle(color: Colors.white),
+            )));
+        //showSnackBar(isError: true, context: context, message: json['message']);
         debugPrint(json['message']);
-        // ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
-        //     backgroundColor: Colors.red, content: Text(json['message'])));
-        //   debugPrint(response.body);
-        // showSnackBar(
-        //     isError: true, context: context, message: "${json['message']}");
 
         debugPrint(response.statusCode.toString());
 
@@ -51,7 +59,10 @@ class AuthService {
     }
   }
 
-  Future<void> login({required String email, required String password}) async {
+  Future<void> login(
+      {required String email,
+      required String password,
+      required BuildContext context}) async {
     // String url = AppConstants.baseUrl + AppConstants.login;
     String url = 'https://imisi-backend-service.onrender.com/api/users/login';
     Map<String, dynamic> body = {
@@ -72,15 +83,24 @@ class AuthService {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
+
+          SharedPref().saveUserToken(data['token']);
+         nextPage(const BasePage(), context);
         debugPrint(response.body);
         debugPrint(response.statusCode.toString());
+
         return data;
       } else {
-        debugPrint(data);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              data['message'],
+              style: const TextStyle(color: Colors.white),
+            )));
+        debugPrint(response.body);
         debugPrint(response.statusCode.toString());
         // var json = jsonDecode(response.body);
-        print("problem");
-        showSnackBar(isError: false, context: context, message: 'message');
+
         // ScaffoldMessenger.of(context)
         //     .showSnackBar(SnackBar(content: Text("h")));
       }

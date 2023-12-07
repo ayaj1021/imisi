@@ -8,7 +8,7 @@ import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Widget/button_widget.dart';
 import 'package:imisi/Widget/custom_text_field.dart';
 import 'package:imisi/Authentication_pages/sign_up.dart';
-import 'package:imisi/onboard/Screens/Base/base_page.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -96,14 +96,15 @@ class _LoginPageState extends State<LoginPage> {
                       });
                       AuthService()
                           .login(
+                        context: context,
                         email: emailController.text,
                         password: passwordController.text,
                       )
                           .then((_) {
-                        nextPage(const BasePage(), context);
                         setState(() {
                           isLoading = false;
                         });
+                       
                       });
                     },
                   ),

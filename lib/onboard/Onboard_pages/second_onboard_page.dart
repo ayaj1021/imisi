@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
-import 'package:imisi/onboard/Screens/signup_options_screen.dart';
+import 'package:imisi/onboard/Onboard%20Screens/signup_options_screen.dart';
 
 class SecondOnboardPage extends StatelessWidget {
   const SecondOnboardPage({super.key});

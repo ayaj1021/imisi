@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:imisi/Onboard/Screens/splash_screen.dart';
+import 'package:imisi/onboard/Onboard%20Screens/splash_screen.dart';
 import 'package:scaled_size/scaled_size.dart';
 
 class MyApp extends StatelessWidget {
