@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:imisi/Database/database.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/onboard/Screens/Base/Basepages/home_page.dart';
-import 'package:imisi/onboard/Screens/Base/Basepages/upload_pages.dart';
+import 'package:imisi/onboard/Screens/Base/Basepages/upload_page.dart';
 
 class BasePage extends StatefulWidget {
   const BasePage({super.key});

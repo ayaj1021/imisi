@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
+import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Widget/button_widget.dart';
 import 'package:imisi/Widget/upload_widget.dart';
-
+import 'package:imisi/onboard/Screens/Base/Basepages/UploadPages/send_file.dart';
 
 class UpLoadPage extends StatefulWidget {
   const UpLoadPage({super.key});
@@ -81,6 +82,9 @@ class _UpLoadPageState extends State<UpLoadPage> {
                   textColor: selectedIndex == null
                       ? AppColors.hintTextColor
                       : AppColors.disabledButtonColor,
+                  onTap: () {
+                    nextPage(const UpLoadFilePage(), context);
+                  },
                 ),
               )
             ],
