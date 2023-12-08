@@ -1,14 +1,17 @@
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:imisi/Provider/artiste_provider.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class UpLoadFilePage extends StatefulWidget {
+  final String artistName;
+  final String songTitle;
+  final String artistName;
+  final String artistName;
+  final String artistName;
+
   const UpLoadFilePage({super.key});
 
   @override
@@ -16,8 +19,6 @@ class UpLoadFilePage extends StatefulWidget {
 }
 
 class _UpLoadFilePageState extends State<UpLoadFilePage> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,65 +37,69 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
         ],
       ),
       backgroundColor: AppColors.secondaryColor,
-      body: Center(
-        child: Column(
-          children: [
-            gapHeight(30),
-            SizedBox(
-              height: 60,
-              width: 40,
-              child: Image.asset(
-                'assets/logos/Imisi_logo1.png',
-              ),
-            ),
-            gapHeight(20),
-            Text(
-              "Please select file to upload",
-              style: AppStyles.agTitle3Bold.copyWith(color: Colors.white),
-            ),
-            gapHeight(30),
-            Container(
-              padding: const EdgeInsets.all(50),
-              margin: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: AppColors.overlayColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: InkWell(
-                  onTap: () {
-                    // getImageGallery().then((value) {
-                    //   print(imageFile!.path);
-                    //   postFile(file: imageFile!.path);
-                    // });
-                  },
-                  child: Column(
-                    children: [
-                      const CircleAvatar(
-                        backgroundColor: AppColors.primaryColor,
-                        child: Icon(Icons.add),
-                      ),
-                      gapHeight(15),
-                      Text(
-                        "Tap here to browse and add your file",
-                        style: AppStyles.captionText.copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
+      body: Consumer<ArtistProvider>(
+        builder: (context, artist, child) {
+          return Center(
+            child: Column(
+              children: [
+                gapHeight(30),
+                SizedBox(
+                  height: 60,
+                  width: 40,
+                  child: Image.asset(
+                    'assets/logos/Imisi_logo1.png',
                   ),
                 ),
-              ),
+                gapHeight(20),
+                Text(
+                  "Please select file to upload",
+                  style: AppStyles.agTitle3Bold.copyWith(color: Colors.white),
+                ),
+                gapHeight(30),
+                Container(
+                  padding: const EdgeInsets.all(50),
+                  margin: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: AppColors.overlayColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: InkWell(
+                      onTap: () {
+                        // getImageGallery().then((value) {
+                        //   print(imageFile!.path);
+                        //   postFile(file: imageFile!.path);
+                        // });
+                      },
+                      child: Column(
+                        children: [
+                          const CircleAvatar(
+                            backgroundColor: AppColors.primaryColor,
+                            child: Icon(Icons.add),
+                          ),
+                          gapHeight(15),
+                          Text(
+                            "Tap here to browse and add your file",
+                            style: AppStyles.captionText.copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  // child:
+                  // Text(
+                  //   imageFile == null ? "Empty" : imageFile!.path,
+                  // ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              // child:
-              // Text(
-              //   imageFile == null ? "Empty" : imageFile!.path,
-              // ),
-            ),
-          ],
-        ),
+          );
+        }
       ),
     );
   }

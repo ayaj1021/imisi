@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:imisi/Provider/artiste_provider.dart';
 
 import 'package:imisi/onboard/Onboard%20Screens/splash_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:scaled_size/scaled_size.dart';
 
 class MyApp extends StatelessWidget {
@@ -12,14 +14,21 @@ class MyApp extends StatelessWidget {
     return ScaledSize(
         allowTextScaling: true,
         builder: () {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Flutter Demo',
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-              useMaterial3: true,
+          return MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (context) => ArtistProvider(),
+              ),
+            ],
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Flutter Demo',
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+                useMaterial3: true,
+              ),
+              home: const SplashScreen(),
             ),
-            home: const SplashScreen(),
           );
         });
   }

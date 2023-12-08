@@ -43,7 +43,7 @@ showSnackBar({
               color: const Color(0xff03172B),
               fontFamily: "Poppins",
               fontWeight: FontWeight.w400,
-              fontSize: 13.rfs,
+              fontSize: 13,
             ),
           ),
         ],

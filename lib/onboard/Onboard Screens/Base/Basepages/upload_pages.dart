@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:imisi/Screens/upload_steper.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
@@ -6,7 +7,6 @@ import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Widget/button_widget.dart';
 import 'package:imisi/Widget/upload_widget.dart';
 import 'package:imisi/onboard/Onboard%20Screens/Base/Basepages/UploadPages/send_file.dart';
-
 
 class UpLoadPage extends StatefulWidget {
   const UpLoadPage({super.key});
@@ -66,9 +66,8 @@ class _UpLoadPageState extends State<UpLoadPage> {
                     image: fileType[index]["image"],
                     title: fileType[index]["title"],
                     subTitle: fileType[index]["subTitle"],
-                    selectColor: selectedIndex == index
-                        ? AppColors.primaryColor
-                        : AppColors.overlayColor,
+                    selectColor:
+                        selectedIndex == index ? AppColors.primaryColor : AppColors.overlayColor,
                   );
                 },
               ),
@@ -84,7 +83,13 @@ class _UpLoadPageState extends State<UpLoadPage> {
                       ? AppColors.hintTextColor
                       : AppColors.disabledButtonColor,
                   onTap: () {
-                    nextPage(const UpLoadFilePage(), context);
+                    // nextPage(const UpLoadFilePage(), context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const UploadStepperWidget(),
+                      ),
+                    );
                   },
                 ),
               )
