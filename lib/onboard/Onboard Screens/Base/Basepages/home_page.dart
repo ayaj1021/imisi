@@ -41,123 +41,108 @@ class _HomePageState extends State<HomePage> {
       drawer: const DrawerWidget(),
       backgroundColor: AppColors.secondaryColor,
       body: SafeArea(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0, top: 20),
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.menu,
-                  ),
-                  color: Colors.white,
-                ),
-              ),
-              gapHeight(40),
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0),
-                child: Row(
-                  children: [
-                    Text(
-                      "Top Songs",
-                      style: AppStyles.agTitle3Bold.copyWith(
-                        color: Colors.white,
-                      ),
-                    ),
-                    const Spacer(),
-                    //  Image.asset("assets/images/point.png"),
-                    gapWidth(5),
-                    Text(
-                      "8 Points",
-                      style: AppStyles.bodyBold.copyWith(color: Colors.white),
-                    ),
-                    gapWidth(15)
-                  ],
-                ),
-              ),
-              gapHeight(20),
-
-              FutureBuilder(
-                  future: getMusic(),
-                  builder: (context, snapshot) {
-                    return SizedBox(
-                      height: 200,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: snapshot.data.length,
-                            shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return SizedBox(
-                            height: 150,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                               Container(
-                                        height: 130.rw,
-                                        width: 110.rh,
-                                        decoration: BoxDecoration(
-                                          color: Colors.red,
-                                          // image: DecorationImage(
-                                          //   fit: BoxFit.fill,
-                                          //   image: NetworkImage(snapshot
-                                          //       .data![index].image!.filePath
-                                          //       .toString()),
-                                          // ),
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                      ),
-                                gapHeight(5),
-                                Text(snapshot.data![index]["artist"],
-                                    style: AppStyles.bodyBold.copyWith(
-                                        color: AppColors.onPrimaryColor)),
-                                gapHeight(2),
-                                Text("Excess love",
-                                    style: AppStyles.bodyRegularText.copyWith(
-                                        color: AppColors.onPrimaryColor))
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  }),
-              ElevatedButton(
-                  onPressed: () {
-                    getMusic();
-                  },
-                  child: Text("Press")),
-              gapHeight(20),
-              Padding(
-                padding: const EdgeInsets.only(left: 15),
-                child: Text(
-                  "Top Artistes",
-                  style: AppStyles.agTitle3Bold.copyWith(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              gapHeight(20),
-              const Padding(
-                padding: EdgeInsets.only(left: 15),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
+          child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 15.0),
                   child: Row(
                     children: [
-                      TopArtisteWidget(),
-                      TopArtisteWidget(),
-                      TopArtisteWidget(),
+                      Text(
+                        "Top Songs",
+                        style: AppStyles.agTitle3Bold.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                      const Spacer(),
+                      //  Image.asset("assets/images/point.png"),
+                      gapWidth(5),
+                      Text(
+                        "8 Points",
+                        style: AppStyles.bodyBold.copyWith(color: Colors.white),
+                      ),
+                      gapWidth(15)
                     ],
                   ),
                 ),
-              )
-            ],
-          ),
-        ],
+                gapHeight(20),
+                FutureBuilder(
+                    future: getMusic(),
+                    builder: (context, snapshot) {
+                      return SizedBox(
+                        height: 200,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snapshot.data.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return SizedBox(
+                              height: 150,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 130.rw,
+                                    width: 110.rh,
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      // image: DecorationImage(
+                                      //   fit: BoxFit.fill,
+                                      //   image: NetworkImage(snapshot
+                                      //       .data![index].image!.filePath
+                                      //       .toString()),
+                                      // ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  gapHeight(5),
+                                  Text(snapshot.data![index]["artist"],
+                                      style: AppStyles.bodyBold.copyWith(
+                                          color: AppColors.onPrimaryColor)),
+                                  gapHeight(2),
+                                  Text("Excess love",
+                                      style: AppStyles.bodyRegularText.copyWith(
+                                          color: AppColors.onPrimaryColor))
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    }),
+                gapHeight(20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Text(
+                    "Top Artistes",
+                    style: AppStyles.agTitle3Bold.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                gapHeight(20),
+                const Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        TopArtisteWidget(),
+                        TopArtisteWidget(),
+                        TopArtisteWidget(),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       )),
     );
   }
