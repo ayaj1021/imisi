@@ -264,7 +264,7 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
                 color:
                     selectedIndex == null ? AppColors.disabledButtonColor : AppColors.primaryColor,
                 onTap: () {
-                  nextPage(const UpLoadFilePage(), context);
+                  nextPage(const UpLoadFilePage(artistName: "", songTitle: ""), context);
                 },
               ),
             ),

@@ -8,11 +8,11 @@ import 'package:provider/provider.dart';
 class UpLoadFilePage extends StatefulWidget {
   final String artistName;
   final String songTitle;
-  final String artistName;
-  final String artistName;
-  final String artistName;
+  // final String artistName;
+  // final String artistName;
+  // final String artistName;
 
-  const UpLoadFilePage({super.key});
+  const UpLoadFilePage({super.key, required this.artistName, required this.songTitle});
 
   @override
   State<UpLoadFilePage> createState() => _UpLoadFilePageState();

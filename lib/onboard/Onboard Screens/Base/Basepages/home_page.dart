@@ -73,6 +73,11 @@ class _HomePageState extends State<HomePage> {
                 FutureBuilder(
                     future: getMusic(),
                     builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
                       return SizedBox(
                         height: 200,
                         child: ListView.builder(
@@ -102,12 +107,12 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   gapHeight(5),
                                   Text(snapshot.data![index]["artist"],
-                                      style: AppStyles.bodyBold.copyWith(
-                                          color: AppColors.onPrimaryColor)),
+                                      style: AppStyles.bodyBold
+                                          .copyWith(color: AppColors.onPrimaryColor)),
                                   gapHeight(2),
                                   Text("Excess love",
-                                      style: AppStyles.bodyRegularText.copyWith(
-                                          color: AppColors.onPrimaryColor))
+                                      style: AppStyles.bodyRegularText
+                                          .copyWith(color: AppColors.onPrimaryColor))
                                 ],
                               ),
                             );

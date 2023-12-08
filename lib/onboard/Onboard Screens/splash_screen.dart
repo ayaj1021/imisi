@@ -7,8 +7,7 @@ import 'package:imisi/Utils/navigator.dart';
 
 import 'package:imisi/onboard/Onboard%20Screens/Base/base_page.dart';
 import 'package:imisi/onboard/Onboard%20Screens/onboard_screen.dart';
-
-String? token;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,28 +17,23 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  // bool newUser;
-  SharedPref pref = SharedPref();
-  @override
-  void initState() {
-    super.initState();
-    pref.getUserToken().then((value) {
-      token = value;
-    });
-    Timer(const Duration(seconds: 4), () {
-      token == null
-          ? nextPage(const OnboardScreen(), context)
-          : nextPage(const BasePage(), context);
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => const OnboardScreen(),
-      //   ),
-      // );
+  void userLoggedIn() {
+    Timer(const Duration(seconds: 3), () async {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      String? token = preferences.getString("token");
+      if (token == null) {
+        nextPage(const OnboardScreen(), context);
+      } else {
+        nextPage(BasePage(), context);
+      }
     });
   }
 
-  void userLoggedIn() {}
+  @override
+  void initState() {
+    userLoggedIn();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

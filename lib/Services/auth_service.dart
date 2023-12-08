@@ -86,8 +86,6 @@ class AuthService {
 
           SharedPref().saveUserToken(data['token']);
          nextPage(const BasePage(), context);
-        print(response.body);
-        print(response.statusCode.toString());
 
         return data;
       } else {
