@@ -72,7 +72,7 @@ class AuthService {
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
-    debugPrint(body.toString());
+    print(body.toString());
     try {
       var response = await http.post(
         Uri.parse(url),
@@ -86,8 +86,8 @@ class AuthService {
 
           SharedPref().saveUserToken(data['token']);
          nextPage(const BasePage(), context);
-        debugPrint(response.body);
-        debugPrint(response.statusCode.toString());
+        print(response.body);
+        print(response.statusCode.toString());
 
         return data;
       } else {

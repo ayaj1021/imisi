@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UpLoadFilePage extends StatefulWidget {
   const UpLoadFilePage({super.key});
@@ -15,25 +16,7 @@ class UpLoadFilePage extends StatefulWidget {
 }
 
 class _UpLoadFilePageState extends State<UpLoadFilePage> {
-  File? imageFile;
-  bool sendingImage = false;
-  bool sendingImageFailed = false;
 
-  Future<File?> getImageGallery() async {
-    try {
-      final FilePickerResult? result = await FilePicker.platform
-          .pickFiles(allowCompression: true, type: FileType.media);
-      if (result != null) {
-        setState(() {
-          imageFile = File(result.files.first.path!);
-          sendingImage = true;
-        });
-      }
-    } catch (e) {
-      sendingImageFailed = true;
-    }
-    return null;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +63,10 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
               child: Center(
                 child: InkWell(
                   onTap: () {
-                    getImageGallery();
+                    // getImageGallery().then((value) {
+                    //   print(imageFile!.path);
+                    //   postFile(file: imageFile!.path);
+                    // });
                   },
                   child: Column(
                     children: [
@@ -102,8 +88,11 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(imageFile!.path),
-            )
+              // child:
+              // Text(
+              //   imageFile == null ? "Empty" : imageFile!.path,
+              // ),
+            ),
           ],
         ),
       ),
