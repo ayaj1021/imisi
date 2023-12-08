@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
       'Authorization': "Bearer $token",
     });
     var body = jsonDecode(response.body);
-print(body);
+
     return body;
   }
 
@@ -110,11 +110,11 @@ print(body);
                                         ),
                                       ),
                                 gapHeight(5),
-                                Text(snapshot.data![index]["artist"] ?? "Davido",
+                                Text(snapshot.data![index]["artist"],
                                     style: AppStyles.bodyBold.copyWith(
                                         color: AppColors.onPrimaryColor)),
                                 gapHeight(2),
-                                Text(snapshot.data![index]["name"],
+                                Text("Excess love",
                                     style: AppStyles.bodyRegularText.copyWith(
                                         color: AppColors.onPrimaryColor))
                               ],
