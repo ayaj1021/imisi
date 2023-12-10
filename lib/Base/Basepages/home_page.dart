@@ -84,8 +84,7 @@ class _HomePageState extends State<HomePage> {
                       } else if (!snapshot.hasData) {
                         return Text(
                           'No data',
-                          style: AppStyles.bodyBold
-                              .copyWith(color: AppColors.primaryColor),
+                          style: AppStyles.bodyBold.copyWith(color: AppColors.primaryColor),
                         );
                       }
                       return SizedBox(
@@ -95,7 +94,8 @@ class _HomePageState extends State<HomePage> {
                           itemCount: snapshot.data.length,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            return SizedBox(
+                            return Container(
+                              margin: const EdgeInsets.only(left: 15),
                               height: 150,
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -116,13 +116,19 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
                                   gapHeight(5),
-                                  Text(snapshot.data![index]["artist"],
-                                      style: AppStyles.bodyBold.copyWith(
-                                          color: AppColors.onPrimaryColor)),
+                                  Text(
+                                    snapshot.data![index]["artist"],
+                                    style: AppStyles.bodyBold.copyWith(
+                                      color: AppColors.onPrimaryColor,
+                                    ),
+                                  ),
                                   gapHeight(2),
-                                  Text("Excess love",
-                                      style: AppStyles.bodyRegularText.copyWith(
-                                          color: AppColors.onPrimaryColor))
+                                  Text(
+                                    snapshot.data![index]["name"],
+                                    style: AppStyles.bodyRegularText.copyWith(
+                                      color: AppColors.onPrimaryColor,
+                                    ),
+                                  )
                                 ],
                               ),
                             );

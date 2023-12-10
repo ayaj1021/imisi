@@ -14,14 +14,11 @@ import 'package:scaled_size/scaled_size.dart';
 import '../Styles/app_colors.dart';
 
 class UploadStepperWidget extends StatefulWidget {
+  final String? file;
   const UploadStepperWidget(
-      {super.key,
-      required this.artisteName,
-      required this.songTitle,
-      required this.file});
-  final String artisteName;
-  final String songTitle;
-  final String file;
+      {super.key, this.file});
+
+
 
   @override
   State<UploadStepperWidget> createState() => _UploadStepperWidgetState();
@@ -42,40 +39,11 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
 
   PageController controller = PageController(initialPage: 0);
   int? selectedIndex;
-  List<Step> steps() => [
-        Step(
-            isActive: currentStep >= 0,
-            label: const Text("Basic steps"),
-            content: const Column(
-              children: [
-                TextField(),
-                TextField(),
-                TextField(),
-                TextField(),
-                TextField(),
-              ],
-            ),
-            title: const Text("")),
-        Step(
-          isActive: currentStep >= 1,
-          label: const Text("Release"),
-          content: const Text("data"),
-          title: const Text(""),
-        ),
-      ];
-  int currentStep = 0;
   bool isSecondTab = false;
-  @override
-  void initState() {
-    // currentPage = controller.page!;
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
-    // var height = MediaQuery.of(context).size.height;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: AppColors.secondaryColor,
@@ -109,167 +77,191 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
         ],
       ),
       backgroundColor: AppColors.secondaryColor,
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          // mainAxisSize: MainAxisSize.min,
+      body: Consumer<ArtistProvider>(builder: (context, artist, child) {
+        return Stack(
           children: [
-            Text(
-              "Your song is uploaded",
-              style: AppStyles.agTitle3Bold.copyWith(color: Colors.white),
-            ),
-            Text(
-              "Follow these steps to complete upload ",
-              style: AppStyles.bodyRegularText.copyWith(color: Colors.white),
-            ),
-            gapHeight(15),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 15),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-              color: AppColors.overlayColor,
-              child: Row(
+            SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isSecondTab = false;
-                      });
-                      controller.animateToPage(
-                        0,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.ease,
-                      );
-                    },
-                    child: Container(
-                      height: 20,
-                      width: 20,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isSecondTab
-                            ? AppColors.secondaryColor
-                            : AppColors.primaryColor,
-                        border: Border.all(
-                          color: isSecondTab
-                              ? AppColors.upLoadContainerColor
-                              : AppColors.primaryColor,
+                  Text(
+                    "Your song is uploaded",
+                    style: AppStyles.agTitle3Bold.copyWith(color: Colors.white),
+                  ),
+                  Text(
+                    "Follow these steps to complete upload ",
+                    style: AppStyles.bodyRegularText.copyWith(color: Colors.white),
+                  ),
+                  gapHeight(15),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                    color: AppColors.overlayColor,
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isSecondTab = false;
+                            });
+                            controller.animateToPage(
+                              0,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.ease,
+                            );
+                          },
+                          child: Container(
+                            height: 20,
+                            width: 20,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color:
+                                  isSecondTab ? AppColors.secondaryColor : AppColors.primaryColor,
+                              border: Border.all(
+                                color: isSecondTab
+                                    ? AppColors.upLoadContainerColor
+                                    : AppColors.primaryColor,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        const Flexible(
+                          child: Divider(),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isSecondTab = true;
+                            });
+                            controller.animateToPage(
+                              1,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.ease,
+                            );
+                          },
+                          child: Container(
+                            height: 20,
+                            width: 20,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: isSecondTab == true
+                                  ? AppColors.primaryColor
+                                  : AppColors.secondaryColor,
+                              border: Border.all(
+                                color: selectedIndex == 0
+                                    ? AppColors.upLoadContainerColor
+                                    : AppColors.secondaryColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const Flexible(
-                    child: Divider(),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isSecondTab = true;
-                      });
-                      controller.animateToPage(
-                        1,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.ease,
-                      );
-                    },
-                    child: Container(
-                      height: 20,
-                      width: 20,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isSecondTab == true
-                            ? AppColors.primaryColor
-                            : AppColors.secondaryColor,
-                        border: Border.all(
-                          color: selectedIndex == 0
-                              ? AppColors.upLoadContainerColor
-                              : AppColors.secondaryColor,
-                        ),
-                      ),
+                  gapHeight(20),
+                  SizedBox(
+                    height: 500.rh,
+                    child: PageView(
+                      controller: controller,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: pages(),
                     ),
                   ),
                 ],
               ),
             ),
-            gapHeight(20),
-            Expanded(
-              child: PageView(
-                controller: controller,
-                physics: const NeverScrollableScrollPhysics(),
-                children: pages(),
-              ),
-            ),
+            artist.isUploading
+                ? Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.black.withOpacity(0.6),
+                  child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const CircularProgressIndicator(),
+                      gapHeight(15),
+                      const Text(
+                        "Uploading Sing",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      )
+                    ],
+                  ),
+                )
+                : const SizedBox(),
           ],
-        ),
-      ),
+        );
+      }),
     );
   }
 
   List<Widget> pages() => [
         Container(
           padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
-          child: Column(
-            children: [
-              TextField(
-                style: AppStyles.bodyRegularText
-                    .copyWith(color: AppColors.onPrimaryColor),
-                controller: artistNameController,
-                decoration: getDecoration("Artist name", "*", Colors.red),
-              ),
-              TextField(
-                style: AppStyles.bodyRegularText
-                    .copyWith(color: AppColors.onPrimaryColor),
-                controller: songTitleController,
-                decoration: getDecoration("Song title", "*", Colors.red),
-              ),
-              TextField(
-                style: AppStyles.bodyRegularText
-                    .copyWith(color: AppColors.onPrimaryColor),
-                controller: featuringController,
-                decoration: getDecoration("Featuring",
-                    "(Separate names using comas)", AppColors.hintTextColor),
-              ),
-              TextField(
-                style: AppStyles.bodyRegularText
-                    .copyWith(color: AppColors.onPrimaryColor),
-                controller: producersController,
-                decoration: getDecoration("Producer(s)",
-                    "(Separate names using comas)", AppColors.hintTextColor),
-              ),
-              TextField(
-                style: AppStyles.bodyRegularText
-                    .copyWith(color: AppColors.onPrimaryColor),
-                controller: albumController,
-                decoration: getDecoration("Album", "", Colors.red),
-              ),
-              TextField(
-                style: AppStyles.bodyRegularText
-                    .copyWith(color: AppColors.onPrimaryColor),
-                controller: descriptionController,
-                decoration: getDecoration("Description", "", Colors.red),
-              ),
-              TextField(
-                style: AppStyles.bodyRegularText
-                    .copyWith(color: AppColors.onPrimaryColor),
-                controller: genreController,
-                decoration: getDecoration("Genre", "", Colors.red),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 50),
-                width: 135.rw,
-                child: ButtonWidget(
-                  text: "Next",
-                  onTap: () {
-                    setState(() {
-                      isSecondTab = true;
-                    });
-                    controller.nextPage(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeIn,
-                    );
-                  },
-                  color: AppColors.primaryColor,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  style: AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
+                  controller: artistNameController,
+                  decoration: getDecoration("Artist name", "*", Colors.red),
                 ),
-              ),
-            ],
+                TextField(
+                  style: AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
+                  controller: songTitleController,
+                  decoration: getDecoration("Song title", "*", Colors.red),
+                ),
+                TextField(
+                  style: AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
+                  controller: featuringController,
+                  decoration: getDecoration(
+                      "Featuring", "(Separate names using comas)", AppColors.hintTextColor),
+                ),
+                TextField(
+                  style: AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
+                  controller: producersController,
+                  decoration: getDecoration(
+                      "Producer(s)", "(Separate names using comas)", AppColors.hintTextColor),
+                ),
+                TextField(
+                  style: AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
+                  controller: albumController,
+                  decoration: getDecoration("Album", "", Colors.red),
+                ),
+                TextField(
+                  style: AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
+                  controller: descriptionController,
+                  decoration: getDecoration("Description", "", Colors.red),
+                ),
+                TextField(
+                  style: AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
+                  controller: genreController,
+                  decoration: getDecoration("Genre", "", Colors.red),
+                ),
+                const SizedBox(height: 30),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 50),
+                  width: 135.rw,
+                  child: ButtonWidget(
+                    text: "Next",
+                    onTap: () {
+                      setState(() {
+                        isSecondTab = true;
+                      });
+                      controller.nextPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeIn,
+                      );
+                    },
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         Column(
@@ -316,11 +308,11 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
                 );
               },
             ),
+            const SizedBox(height: 50),
             Container(
               width: 135.rw,
               padding: const EdgeInsets.only(bottom: 50),
-              child: Consumer<ArtistProvider>(
-                  builder: (context, artistProvider, child) {
+              child: Consumer<ArtistProvider>(builder: (context, artistProvider, child) {
                 return ButtonWidget(
                   text: "Finish",
                   color: selectedIndex == null
@@ -328,10 +320,13 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
                       : AppColors.primaryColor,
                   onTap: () {
                     artistProvider.postFile(
-                        artist: artistNameController.text,
-                        name: songTitleController.text,
-                        description: descriptionController.text,
-                        genre: genreController.text);
+                      artist: artistNameController.text,
+                      name: songTitleController.text,
+                      description: descriptionController.text,
+                      genre: genreController.text,
+                      file: widget.file,
+                      context: context,
+                    );
                   },
                 );
               }),
@@ -342,8 +337,7 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
 
   InputDecoration getDecoration(String label, String type, Color typeColor) {
     return InputDecoration(
-      labelStyle:
-          AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
+      labelStyle: AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
       label: Row(
         children: [
           Text(label),

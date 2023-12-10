@@ -125,8 +125,7 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
                       onTap: () {
                         nextPage(
                             UploadStepperWidget(
-                              artisteName: widget.artistName,
-                              songTitle: widget.songTitle,
+
                               file: artist.imageFile!.path,
                             ),
                             context);

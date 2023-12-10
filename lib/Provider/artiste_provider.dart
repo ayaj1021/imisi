@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:imisi/Base/base_page.dart';
+import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/snackBar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,15 +19,11 @@ class ArtistProvider with ChangeNotifier {
     BuildContext context,
   ) async {
     try {
-      final FilePickerResult? result = await FilePicker.platform
-          .pickFiles(allowCompression: true, type: FileType.audio);
+      final FilePickerResult? result =
+          await FilePicker.platform.pickFiles(allowCompression: true, type: FileType.audio);
       if (result != null) {
         imageFile = File(result.files.first.path!);
-        // postFile(
-        //   file: imageFile!.path,
-        //   context: context,
 
-        // );
         notifyListeners();
       } else {
         status = "Image problem";
@@ -58,34 +56,23 @@ class ArtistProvider with ChangeNotifier {
       "name": name,
       "genre": genre,
       "description": description,
-      "image": image,
+      "image": "assets/images/joe.png",
       "audio": file,
       "artist": artist,
     };
-
-    var response = await http.post(Uri.parse(url),
-        body: body,
-        //  {
-        //   "name": "chima",
-        //   "genre": "xoxo",
-        //   "description": "xoxo",
-        //   "image": "assets/images/ad.png",
-        //   "audio": file,
-        //   "artist": "Chima",
-        // },
-        headers: {
-          "Authorization": "Bearer $token",
-        });
-
-    if (response.statusCode != 200 || response.statusCode != 201) {
-      isUploading = false;
-      status = "Upload unsuccessful";
-      notifyListeners();
-      showSnackBar(context: context!, message: status, isError: true);
-    } else {
+    var response = await http.post(Uri.parse(url), body: body, headers: {
+      "Authorization": "Bearer $token",
+    });
+    if (response.statusCode == 201) {
       isUploading = false;
       status = "Upload Successful";
-      showSnackBar(context: context!, message: status);
+      showSnackBar(context: context!, message: status, isError: false);
+      notifyListeners();
+      nextPageAndremoveUntil(const BasePage(), context);
+    } else {
+      isUploading = false;
+      status = "Upload Unsuccessful";
+      showSnackBar(context: context!, message: status, isError: true);
       notifyListeners();
     }
   }
