@@ -13,7 +13,7 @@ class SharedPref {
   //   // print(key);
   // }
 
-  getUserToken() async {
+  getUserToken(String token) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? type = pref.getString("token");
     return type;
@@ -27,8 +27,8 @@ class SharedPref {
   }
 
   saveUserToken(String token) async {
-  SharedPreferences sf = await SharedPreferences.getInstance();
-  sf.setString("token", token);
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    sf.setString("token", token);
   }
 
   // saveUserRefreshToken(String refreshToken) async {

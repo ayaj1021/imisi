@@ -81,6 +81,12 @@ class _HomePageState extends State<HomePage> {
                         return const Center(
                           child: CircularProgressIndicator(),
                         );
+                      } else if (!snapshot.hasData) {
+                        return Text(
+                          'No data',
+                          style: AppStyles.bodyBold
+                              .copyWith(color: AppColors.primaryColor),
+                        );
                       }
                       return SizedBox(
                         height: 200,

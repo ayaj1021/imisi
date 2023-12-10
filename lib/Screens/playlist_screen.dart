@@ -55,15 +55,17 @@ class PlayListScreen extends StatelessWidget {
                       ],
                     ),
                   );
-                } else if (snapshot.hasError) {
-                  return Text(snapshot.error.toString(),
-                      style: AppStyles.bodyBold
-                          .copyWith(color: AppColors.onPrimaryColor));
-                } else {
-                  return Text(snapshot.data.toString(),
-                      style: AppStyles.bodyBold
-                          .copyWith(color: AppColors.onPrimaryColor));
                 }
+                return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      return Text(
+                        'Playlist',
+                        style: AppStyles.bodyBold
+                            .copyWith(color: AppColors.primaryColor),
+                      );
+                    });
               })
         ],
       )),

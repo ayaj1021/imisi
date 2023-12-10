@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:imisi/Screens/upload_steper.dart';
+import 'package:imisi/Base/Basepages/UploadPages/send_file.dart';
+
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
+import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Widget/button_widget.dart';
 import 'package:imisi/Widget/upload_widget.dart';
 
@@ -87,12 +89,19 @@ class _UpLoadPageState extends State<UpLoadPage> {
                     // nextPage(const UpLoadFilePage(), context);
                     selectedIndex == null
                         ? () {}
-                        : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const UploadStepperWidget(),
+                        : nextPage(
+                            const UpLoadFilePage(
+                              artistName: '',
+                              songTitle: '',
                             ),
-                          );
+                            context);
+
+                    //  Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => const UploadStepperWidget(),
+                    //     ),
+                    //   );
                   },
                 ),
               )

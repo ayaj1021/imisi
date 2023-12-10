@@ -12,9 +12,8 @@ class GetPlayList {
 
     var response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
-
       'Authorization': "Bearer $token",
-      //  'Authorization': " $token",
+      //'Authorization': " $token",
     });
 
     var data = jsonDecode(response.body);

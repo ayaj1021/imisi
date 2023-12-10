@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -14,13 +13,19 @@ class ArtistProvider with ChangeNotifier {
   File? imageFile;
   bool sendingImageFailed = false;
 
-  Future<File?> getImageGallery(BuildContext context) async {
+  Future<File?> getImageGallery(
+    BuildContext context,
+  ) async {
     try {
       final FilePickerResult? result = await FilePicker.platform
           .pickFiles(allowCompression: true, type: FileType.audio);
       if (result != null) {
         imageFile = File(result.files.first.path!);
-        postFile(file: imageFile!.path, context: context);
+        // postFile(
+        //   file: imageFile!.path,
+        //   context: context,
+
+        // );
         notifyListeners();
       } else {
         status = "Image problem";

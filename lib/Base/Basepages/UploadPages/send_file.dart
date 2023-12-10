@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:imisi/Provider/artiste_provider.dart';
+import 'package:imisi/Screens/upload_steper.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/show_alert_dialog.dart';
 import 'package:imisi/Base/base_page.dart';
+import 'package:imisi/Widget/button_widget.dart';
 import 'package:provider/provider.dart';
 
 class UpLoadFilePage extends StatefulWidget {
@@ -59,65 +61,92 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
       ),
       backgroundColor: AppColors.secondaryColor,
       body: Consumer<ArtistProvider>(builder: (context, artist, child) {
-        return Center(
-          child: Column(
-            children: [
-              gapHeight(30),
-              SizedBox(
-                height: 60,
-                width: 40,
-                child: Image.asset(
-                  'assets/logos/Imisi_logo1.png',
-                ),
-              ),
-              gapHeight(20),
-              Text(
-                "Please select file to upload",
-                style: AppStyles.agTitle3Bold.copyWith(color: Colors.white),
-              ),
-              gapHeight(30),
-              Container(
-                padding: const EdgeInsets.all(50),
-                margin: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: AppColors.overlayColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Center(
-                  child: InkWell(
-                    onTap: () {
-                      // getImageGallery().then((value) {
-                      //   print(imageFile!.path);
-                      //   postFile(file: imageFile!.path);
-                      // });
-                    },
-                    child: Column(
-                      children: [
-                        const CircleAvatar(
-                          backgroundColor: AppColors.primaryColor,
-                          child: Icon(Icons.add),
-                        ),
-                        gapHeight(15),
-                        Text(
-                          "Tap here to browse and add your file",
-                          style: AppStyles.captionText.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+        return Stack(
+          children: [
+            Center(
+              child: Column(
+                children: [
+                  gapHeight(30),
+                  SizedBox(
+                    height: 60,
+                    width: 40,
+                    child: Image.asset(
+                      'assets/logos/Imisi_logo1.png',
                     ),
                   ),
-                ),
+                  gapHeight(20),
+                  Text(
+                    "Please select file to upload",
+                    style: AppStyles.agTitle3Bold.copyWith(color: Colors.white),
+                  ),
+                  gapHeight(30),
+                  Container(
+                    padding: const EdgeInsets.all(50),
+                    margin: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: AppColors.overlayColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: InkWell(
+                        onTap: () {
+                          artist.getImageGallery(context);
+                        },
+                        child: Column(
+                          children: [
+                            const CircleAvatar(
+                              backgroundColor: AppColors.primaryColor,
+                              child: Icon(Icons.add),
+                            ),
+                            gapHeight(15),
+                            Text(
+                              "Tap here to browse and add your file",
+                              style: AppStyles.captionText.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      artist.imageFile == null
+                          ? "Empty"
+                          : artist.imageFile!.path,
+                      style: AppStyles.bodyBold.copyWith(color: Colors.white),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ButtonWidget(
+                      onTap: () {
+                        nextPage(
+                            UploadStepperWidget(
+                              artisteName: widget.artistName,
+                              songTitle: widget.songTitle,
+                              file: artist.imageFile!.path,
+                            ),
+                            context);
+                      },
+                      text: 'Add details',
+                      color: AppColors.primaryColor,
+                    ),
+                  )
+                ],
               ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                // child:
-                // Text(
-                //   imageFile == null ? "Empty" : imageFile!.path,
-                // ),
-              ),
-            ],
-          ),
+            ),
+            artist.isUploading
+                ? Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : const SizedBox(),
+          ],
         );
       }),
     );

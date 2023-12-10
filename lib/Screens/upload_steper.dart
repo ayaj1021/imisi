@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:imisi/Provider/artiste_provider.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/show_alert_dialog.dart';
 import 'package:imisi/Widget/button_widget.dart';
-import 'package:imisi/Base/Basepages/UploadPages/send_file.dart';
+
 import 'package:imisi/Base/Basepages/upload_pages.dart';
 import 'package:imisi/Base/base_page.dart';
+import 'package:provider/provider.dart';
 import 'package:scaled_size/scaled_size.dart';
 
 import '../Styles/app_colors.dart';
 
 class UploadStepperWidget extends StatefulWidget {
-  const UploadStepperWidget({super.key});
+  const UploadStepperWidget(
+      {super.key,
+      required this.artisteName,
+      required this.songTitle,
+      required this.file});
+  final String artisteName;
+  final String songTitle;
+  final String file;
 
   @override
   State<UploadStepperWidget> createState() => _UploadStepperWidgetState();
@@ -24,6 +33,8 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
   TextEditingController featuringController = TextEditingController();
   TextEditingController producersController = TextEditingController();
   TextEditingController albumController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController genreController = TextEditingController();
   List type = [
     {"type": "Public"},
     {"type": "Private"}
@@ -98,99 +109,95 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
         ],
       ),
       backgroundColor: AppColors.secondaryColor,
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            // mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Your song is uploaded",
-                style: AppStyles.agTitle3Bold.copyWith(color: Colors.white),
-              ),
-              Text(
-                "Follow these steps to complete upload ",
-                style: AppStyles.bodyRegularText.copyWith(color: Colors.white),
-              ),
-              gapHeight(15),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 15),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                color: AppColors.overlayColor,
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isSecondTab = false;
-                        });
-                        controller.animateToPage(
-                          0,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.ease,
-                        );
-                      },
-                      child: Container(
-                        height: 20,
-                        width: 20,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          // mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Your song is uploaded",
+              style: AppStyles.agTitle3Bold.copyWith(color: Colors.white),
+            ),
+            Text(
+              "Follow these steps to complete upload ",
+              style: AppStyles.bodyRegularText.copyWith(color: Colors.white),
+            ),
+            gapHeight(15),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              color: AppColors.overlayColor,
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isSecondTab = false;
+                      });
+                      controller.animateToPage(
+                        0,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.ease,
+                      );
+                    },
+                    child: Container(
+                      height: 20,
+                      width: 20,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isSecondTab
+                            ? AppColors.secondaryColor
+                            : AppColors.primaryColor,
+                        border: Border.all(
                           color: isSecondTab
-                              ? AppColors.secondaryColor
+                              ? AppColors.upLoadContainerColor
                               : AppColors.primaryColor,
-                          border: Border.all(
-                            color: isSecondTab
-                                ? AppColors.upLoadContainerColor
-                                : AppColors.primaryColor,
-                          ),
                         ),
                       ),
                     ),
-                    const Flexible(
-                      child: Divider(),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isSecondTab = true;
-                        });
-                        controller.animateToPage(
-                          1,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.ease,
-                        );
-                      },
-                      child: Container(
-                        height: 20,
-                        width: 20,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: isSecondTab == true
-                              ? AppColors.primaryColor
+                  ),
+                  const Flexible(
+                    child: Divider(),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isSecondTab = true;
+                      });
+                      controller.animateToPage(
+                        1,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.ease,
+                      );
+                    },
+                    child: Container(
+                      height: 20,
+                      width: 20,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isSecondTab == true
+                            ? AppColors.primaryColor
+                            : AppColors.secondaryColor,
+                        border: Border.all(
+                          color: selectedIndex == 0
+                              ? AppColors.upLoadContainerColor
                               : AppColors.secondaryColor,
-                          border: Border.all(
-                            color: selectedIndex == 0
-                                ? AppColors.upLoadContainerColor
-                                : AppColors.secondaryColor,
-                          ),
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              gapHeight(20),
-              Expanded(
-                child: PageView(
-                  controller: controller,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: pages(),
-                ),
+            ),
+            gapHeight(20),
+            Expanded(
+              child: PageView(
+                controller: controller,
+                physics: const NeverScrollableScrollPhysics(),
+                children: pages(),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -233,21 +240,31 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
                 controller: albumController,
                 decoration: getDecoration("Album", "", Colors.red),
               ),
-              const Spacer(),
+              TextField(
+                style: AppStyles.bodyRegularText
+                    .copyWith(color: AppColors.onPrimaryColor),
+                controller: descriptionController,
+                decoration: getDecoration("Description", "", Colors.red),
+              ),
+              TextField(
+                style: AppStyles.bodyRegularText
+                    .copyWith(color: AppColors.onPrimaryColor),
+                controller: genreController,
+                decoration: getDecoration("Genre", "", Colors.red),
+              ),
               Container(
                 margin: const EdgeInsets.only(bottom: 50),
                 width: 135.rw,
                 child: ButtonWidget(
                   text: "Next",
                   onTap: () {
-                    print(artistNameController.text);
-                    // setState(() {
-                    //   isSecondTab = true;
-                    // });
-                    // controller.nextPage(
-                    //   duration: const Duration(milliseconds: 300),
-                    //   curve: Curves.easeIn,
-                    // );
+                    setState(() {
+                      isSecondTab = true;
+                    });
+                    controller.nextPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeIn,
+                    );
                   },
                   color: AppColors.primaryColor,
                 ),
@@ -299,20 +316,25 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
                 );
               },
             ),
-            const Spacer(),
             Container(
               width: 135.rw,
               padding: const EdgeInsets.only(bottom: 50),
-              child: ButtonWidget(
-                text: "Finish",
-                color: selectedIndex == null
-                    ? AppColors.disabledButtonColor
-                    : AppColors.primaryColor,
-                onTap: () {
-                  nextPage(const UpLoadFilePage(artistName: "", songTitle: ""),
-                      context);
-                },
-              ),
+              child: Consumer<ArtistProvider>(
+                  builder: (context, artistProvider, child) {
+                return ButtonWidget(
+                  text: "Finish",
+                  color: selectedIndex == null
+                      ? AppColors.disabledButtonColor
+                      : AppColors.primaryColor,
+                  onTap: () {
+                    artistProvider.postFile(
+                        artist: artistNameController.text,
+                        name: songTitleController.text,
+                        description: descriptionController.text,
+                        genre: genreController.text);
+                  },
+                );
+              }),
             ),
           ],
         )

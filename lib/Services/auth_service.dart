@@ -35,7 +35,6 @@ class AuthService {
       );
       var json = jsonDecode(response.body);
       if (response.statusCode == 201 || response.statusCode == 200) {
-        
         SharedPref().saveUserToken(json['token']);
         nextPage(const BasePage(), context);
         // showSnackBar(isError: true, context: context, message: "Successful");
@@ -60,7 +59,7 @@ class AuthService {
     }
   }
 
-  Future<void> login(
+  Future<void> artisteLogin(
       {required String email,
       required String password,
       required BuildContext context}) async {
@@ -84,9 +83,58 @@ class AuthService {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
+        SharedPref().getUserToken(data['token']);
+        SharedPref().saveUserToken(data['token']);
+        nextPage(const BasePage(), context);
 
-          SharedPref().saveUserToken(data['token']);
-         nextPage(const BasePage(), context);
+        return data;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              data['message'],
+              style: const TextStyle(color: Colors.white),
+            )));
+        debugPrint(response.body);
+        debugPrint(response.statusCode.toString());
+        // var json = jsonDecode(response.body);
+
+        // ScaffoldMessenger.of(context)
+        //     .showSnackBar(SnackBar(content: Text("h")));
+      }
+    } catch (e) {
+      log('Error $e');
+    }
+  }
+
+  Future<void> listenerLogin(
+      {required String email,
+      required String password,
+      required BuildContext context}) async {
+    // String url = AppConstants.baseUrl + AppConstants.login;
+    String url =
+        'https://imisi-backend-service.onrender.com/api/listeners/login';
+    Map<String, dynamic> body = {
+      "email": email,
+      "password": password,
+    };
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+    print(body.toString());
+    try {
+      var response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(body),
+        // body: body,
+        headers: headers,
+      );
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        SharedPref().getUserToken(data['token']);
+        SharedPref().saveUserToken(data['token']);
+        nextPage(const BasePage(), context);
 
         return data;
       } else {
