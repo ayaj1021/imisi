@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:imisi/Authentication_pages/login.dart';
 import 'package:imisi/Styles/app_colors.dart';
 
 import 'package:imisi/Utils/gap.dart';
@@ -81,7 +82,8 @@ class _ThirdOnboardPageState extends State<ThirdOnboardPage> {
                   //   ),
                   // ),
                   gapHeight(15),
-                  const ButtonWidget(
+                  ButtonWidget(
+                    onTap: () => nextPage(const LoginPage(), context),
                     text: 'Login',
                     textColor: AppColors.primaryColor,
                   )

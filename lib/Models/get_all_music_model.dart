@@ -2,6 +2,8 @@
 //
 //     final getAllMusicModel = getAllMusicModelFromJson(jsonString);
 
+// ignore_for_file: constant_identifier_names
+
 import 'dart:convert';
 
 List<GetAllMusicModel> getAllMusicModelFromJson(String str) => List<GetAllMusicModel>.from(json.decode(str).map((x) => GetAllMusicModel.fromJson(x)));

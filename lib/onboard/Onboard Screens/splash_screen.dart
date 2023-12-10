@@ -1,11 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:imisi/Database/database.dart';
 import 'package:imisi/Styles/app_colors.dart';
-
 import 'package:imisi/Utils/navigator.dart';
-
-import 'package:imisi/onboard/Onboard%20Screens/Base/base_page.dart';
+import 'package:imisi/Base/base_page.dart';
 import 'package:imisi/onboard/Onboard%20Screens/onboard_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (token == null) {
         nextPage(const OnboardScreen(), context);
       } else {
-        nextPage(BasePage(), context);
+        nextPage(const BasePage(), context);
       }
     });
   }

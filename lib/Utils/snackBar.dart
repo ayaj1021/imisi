@@ -39,8 +39,8 @@ showSnackBar({
           SizedBox(width: 10.rw),
           Text(
             message,
-            style: TextStyle(
-              color: const Color(0xff03172B),
+            style: const TextStyle(
+              color: Color(0xff03172B),
               fontFamily: "Poppins",
               fontWeight: FontWeight.w400,
               fontSize: 13,

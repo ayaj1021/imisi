@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:imisi/Screens/playlist_screen.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
+import 'package:imisi/Utils/navigator.dart';
 import 'package:scaled_size/scaled_size.dart';
 
 class DrawerWidget extends StatelessWidget {
@@ -37,9 +39,9 @@ class DrawerWidget extends StatelessWidget {
 
             ListTile(
               contentPadding: const EdgeInsets.symmetric(horizontal: 28),
-              leading: Image.asset(
-                'assets/images/badge_icon.png',
-                scale: 3,
+              leading: const Icon(
+                Icons.workspace_premium_rounded,
+                color: AppColors.onPrimaryColor,
               ),
               title: Text(
                 'Points',
@@ -48,6 +50,7 @@ class DrawerWidget extends StatelessWidget {
               ),
             ),
             ListTile(
+              onTap: () => nextPage(const PlayListScreen(), context),
               contentPadding: const EdgeInsets.symmetric(horizontal: 28),
               leading: const Icon(
                 Icons.queue_music_outlined,

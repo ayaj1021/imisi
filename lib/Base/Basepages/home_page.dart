@@ -9,6 +9,7 @@ import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Widget/top_artist_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:scaled_size/scaled_size.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,12 +23,14 @@ class _HomePageState extends State<HomePage> {
   Future getMusic() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? token = pref.getString("token");
+
     String url = 'https://imisi-backend-service.onrender.com/api/musics';
     var response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': "Bearer $token",
     });
     var body = jsonDecode(response.body);
+    print(response.body);
 
     return body;
   }
@@ -36,6 +39,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: AppColors.onPrimaryColor,
         backgroundColor: AppColors.secondaryColor,
       ),
       drawer: const DrawerWidget(),
@@ -107,12 +111,12 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   gapHeight(5),
                                   Text(snapshot.data![index]["artist"],
-                                      style: AppStyles.bodyBold
-                                          .copyWith(color: AppColors.onPrimaryColor)),
+                                      style: AppStyles.bodyBold.copyWith(
+                                          color: AppColors.onPrimaryColor)),
                                   gapHeight(2),
                                   Text("Excess love",
-                                      style: AppStyles.bodyRegularText
-                                          .copyWith(color: AppColors.onPrimaryColor))
+                                      style: AppStyles.bodyRegularText.copyWith(
+                                          color: AppColors.onPrimaryColor))
                                 ],
                               ),
                             );

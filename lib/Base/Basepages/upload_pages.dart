@@ -3,10 +3,8 @@ import 'package:imisi/Screens/upload_steper.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
-import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Widget/button_widget.dart';
 import 'package:imisi/Widget/upload_widget.dart';
-import 'package:imisi/onboard/Onboard%20Screens/Base/Basepages/UploadPages/send_file.dart';
 
 class UpLoadPage extends StatefulWidget {
   const UpLoadPage({super.key});
@@ -26,7 +24,7 @@ class _UpLoadPageState extends State<UpLoadPage> {
       "title": "Video",
       "subTitle": "Upload your Video",
       "image": "assets/images/video.png",
-    }
+    },
   ];
 
   int? selectedIndex;
@@ -59,15 +57,18 @@ class _UpLoadPageState extends State<UpLoadPage> {
                 itemBuilder: (context, index) {
                   return UpLoadButton(
                     onTap: () {
-                      setState(() {
-                        selectedIndex = index;
-                      });
+                      setState(
+                        () {
+                          selectedIndex = index;
+                        },
+                      );
                     },
                     image: fileType[index]["image"],
                     title: fileType[index]["title"],
                     subTitle: fileType[index]["subTitle"],
-                    selectColor:
-                        selectedIndex == index ? AppColors.primaryColor : AppColors.overlayColor,
+                    selectColor: selectedIndex == index
+                        ? AppColors.primaryColor
+                        : AppColors.overlayColor,
                   );
                 },
               ),
@@ -84,12 +85,14 @@ class _UpLoadPageState extends State<UpLoadPage> {
                       : AppColors.disabledButtonColor,
                   onTap: () {
                     // nextPage(const UpLoadFilePage(), context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const UploadStepperWidget(),
-                      ),
-                    );
+                    selectedIndex == null
+                        ? () {}
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const UploadStepperWidget(),
+                            ),
+                          );
                   },
                 ),
               )

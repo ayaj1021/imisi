@@ -1,11 +1,12 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
+import 'package:imisi/Utils/show_alert_dialog.dart';
 import 'package:imisi/Widget/button_widget.dart';
-import 'package:imisi/Widget/upload_widget.dart';
-import 'package:imisi/onboard/Onboard%20Screens/Base/Basepages/UploadPages/send_file.dart';
+import 'package:imisi/Base/Basepages/UploadPages/send_file.dart';
+import 'package:imisi/Base/Basepages/upload_pages.dart';
+import 'package:imisi/Base/base_page.dart';
 import 'package:scaled_size/scaled_size.dart';
 
 import '../Styles/app_colors.dart';
@@ -18,6 +19,11 @@ class UploadStepperWidget extends StatefulWidget {
 }
 
 class _UploadStepperWidgetState extends State<UploadStepperWidget> {
+  TextEditingController artistNameController = TextEditingController();
+  TextEditingController songTitleController = TextEditingController();
+  TextEditingController featuringController = TextEditingController();
+  TextEditingController producersController = TextEditingController();
+  TextEditingController albumController = TextEditingController();
   List type = [
     {"type": "Public"},
     {"type": "Private"}
@@ -56,20 +62,39 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
+    // var height = MediaQuery.of(context).size.height;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: AppColors.secondaryColor,
-        leading: const Icon(
-          Icons.arrow_back_ios_new,
-          color: Colors.white,
-        ),
-        actions: const [
-          Icon(
-            Icons.close,
+        leading: IconButton(
+          onPressed: () {
+            nextPage(const BasePage(), context);
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
             color: Colors.white,
           ),
-          SizedBox(width: 15)
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showAlertDialog(
+                context,
+                yesTextOnTap: () {
+                  nextPage(const UpLoadPage(), context);
+                },
+                message:
+                    'Are you sure you want to leave this upload incomplete? You may lose any unsaved progress.',
+              );
+            },
+            icon: const Icon(
+              Icons.close,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(width: 15)
         ],
       ),
       backgroundColor: AppColors.secondaryColor,
@@ -91,7 +116,8 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
               gapHeight(15),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 15),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
                 color: AppColors.overlayColor,
                 child: Row(
                   children: [
@@ -111,7 +137,9 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
                         width: 20,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: isSecondTab ? AppColors.secondaryColor : AppColors.primaryColor,
+                          color: isSecondTab
+                              ? AppColors.secondaryColor
+                              : AppColors.primaryColor,
                           border: Border.all(
                             color: isSecondTab
                                 ? AppColors.upLoadContainerColor
@@ -174,20 +202,35 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
           child: Column(
             children: [
               TextField(
+                style: AppStyles.bodyRegularText
+                    .copyWith(color: AppColors.onPrimaryColor),
+                controller: artistNameController,
                 decoration: getDecoration("Artist name", "*", Colors.red),
               ),
               TextField(
+                style: AppStyles.bodyRegularText
+                    .copyWith(color: AppColors.onPrimaryColor),
+                controller: songTitleController,
                 decoration: getDecoration("Song title", "*", Colors.red),
               ),
               TextField(
-                decoration: getDecoration(
-                    "Featuring", "(Separate names using comas)", AppColors.hintTextColor),
+                style: AppStyles.bodyRegularText
+                    .copyWith(color: AppColors.onPrimaryColor),
+                controller: featuringController,
+                decoration: getDecoration("Featuring",
+                    "(Separate names using comas)", AppColors.hintTextColor),
               ),
               TextField(
-                decoration: getDecoration(
-                    "Producer(s)", "(Separate names using comas)", AppColors.hintTextColor),
+                style: AppStyles.bodyRegularText
+                    .copyWith(color: AppColors.onPrimaryColor),
+                controller: producersController,
+                decoration: getDecoration("Producer(s)",
+                    "(Separate names using comas)", AppColors.hintTextColor),
               ),
               TextField(
+                style: AppStyles.bodyRegularText
+                    .copyWith(color: AppColors.onPrimaryColor),
+                controller: albumController,
                 decoration: getDecoration("Album", "", Colors.red),
               ),
               const Spacer(),
@@ -197,13 +240,14 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
                 child: ButtonWidget(
                   text: "Next",
                   onTap: () {
-                    setState(() {
-                      isSecondTab = true;
-                    });
-                    controller.nextPage(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeIn,
-                    );
+                    print(artistNameController.text);
+                    // setState(() {
+                    //   isSecondTab = true;
+                    // });
+                    // controller.nextPage(
+                    //   duration: const Duration(milliseconds: 300),
+                    //   curve: Curves.easeIn,
+                    // );
                   },
                   color: AppColors.primaryColor,
                 ),
@@ -261,10 +305,12 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
               padding: const EdgeInsets.only(bottom: 50),
               child: ButtonWidget(
                 text: "Finish",
-                color:
-                    selectedIndex == null ? AppColors.disabledButtonColor : AppColors.primaryColor,
+                color: selectedIndex == null
+                    ? AppColors.disabledButtonColor
+                    : AppColors.primaryColor,
                 onTap: () {
-                  nextPage(const UpLoadFilePage(artistName: "", songTitle: ""), context);
+                  nextPage(const UpLoadFilePage(artistName: "", songTitle: ""),
+                      context);
                 },
               ),
             ),
@@ -274,7 +320,8 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
 
   InputDecoration getDecoration(String label, String type, Color typeColor) {
     return InputDecoration(
-      labelStyle: AppStyles.captionText.copyWith(color: AppColors.hintTextColor),
+      labelStyle:
+          AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
       label: Row(
         children: [
           Text(label),

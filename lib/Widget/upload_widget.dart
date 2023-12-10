@@ -49,7 +49,7 @@ class UpLoadButton extends StatelessWidget {
                 gapHeight(3),
                 Text(
                   subTitle,
-                  style: AppStyles.captionText.copyWith(
+                  style: AppStyles.bodyRegularText.copyWith(
                     color: Colors.white,
                   ),
                 ),

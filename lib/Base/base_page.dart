@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:imisi/Database/database.dart';
 import 'package:imisi/Styles/app_colors.dart';
-import 'package:imisi/onboard/Onboard%20Screens/Base/Basepages/home_page.dart';
-import 'package:imisi/onboard/Onboard%20Screens/Base/Basepages/upload_pages.dart';
+import 'package:imisi/Base/Basepages/home_page.dart';
+import 'package:imisi/Base/Basepages/upload_pages.dart';
 
 
 class BasePage extends StatefulWidget {

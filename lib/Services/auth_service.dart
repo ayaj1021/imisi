@@ -8,7 +8,7 @@ import 'package:imisi/Constants/url_constants.dart';
 import 'package:imisi/Database/database.dart';
 import 'package:imisi/Utils/navigator.dart';
 
-import 'package:imisi/onboard/Onboard%20Screens/Base/base_page.dart';
+import 'package:imisi/Base/base_page.dart';
 
 class AuthService {
   signUp(
@@ -35,6 +35,7 @@ class AuthService {
       );
       var json = jsonDecode(response.body);
       if (response.statusCode == 201 || response.statusCode == 200) {
+        
         SharedPref().saveUserToken(json['token']);
         nextPage(const BasePage(), context);
         // showSnackBar(isError: true, context: context, message: "Successful");
