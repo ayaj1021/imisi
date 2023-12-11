@@ -90,20 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                     text: isLoading == true ? "Loading..." : "Login",
                     color: AppColors.primaryColor,
                     onTap: () {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      AuthService()
-                          .listenerLogin(
-                        context: context,
-                        email: emailController.text,
-                        password: passwordController.text,
-                      )
-                          .then((_) {
-                        setState(() {
-                          isLoading = false;
-                        });
-                      });
+
                     },
                   ),
                   gapHeight(20),

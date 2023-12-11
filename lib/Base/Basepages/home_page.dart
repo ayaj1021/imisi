@@ -2,10 +2,12 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:imisi/Authentication_pages/login.dart';
 import 'package:imisi/Screens/drawer.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
+import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Widget/top_artist_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:scaled_size/scaled_size.dart';
@@ -56,10 +58,18 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.only(left: 15.0),
                   child: Row(
                     children: [
-                      Text(
-                        "Top Songs",
-                        style: AppStyles.agTitle3Bold.copyWith(
-                          color: Colors.white,
+                      InkWell(
+                        onTap:() async{
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          prefs.clear().then((_) {
+                            nextPageAndremoveUntil(const LoginPage(), context);
+                          });
+                        },
+                        child: Text(
+                          "Top Songs",
+                          style: AppStyles.agTitle3Bold.copyWith(
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                       const Spacer(),
