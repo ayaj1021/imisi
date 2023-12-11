@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+// import 'package:flutter/cupertino.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:imisi/Base/base_page.dart';
 import 'package:imisi/Constants/url_constants.dart';
@@ -43,13 +45,16 @@ class AuthService with ChangeNotifier {
         debugPrint(response.body);
         return json;
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            backgroundColor: Colors.red,
-            content: Text(
-              json['message'],
-              style: const TextStyle(color: Colors.white),
-            )));
-        //showSnackBar(isError: true, context: context, message: json['message']);
+        // ScaffoldMessenger.of(context!).showSnackBar(
+        //   SnackBar(
+        //     backgroundColor: Colors.red,
+        //     content: Text(
+        //       json['message'],
+        //       style: const TextStyle(color: Colors.white),
+        //     ),
+        //   ),
+        // );
+        showSnackBar(isError: true, context: context, message: json['message']);
         debugPrint(json['message']);
 
         debugPrint(response.statusCode.toString());
@@ -65,7 +70,9 @@ class AuthService with ChangeNotifier {
     required String email,
     required String password,
     BuildContext? context,
+
   }) async {
+    isLoggingIn = true;
     SharedPreferences sf = await SharedPreferences.getInstance();
     String? accountType = sf.getString("account_type");
 
@@ -75,9 +82,10 @@ class AuthService with ChangeNotifier {
     } else if (accountType == "Listener") {
       accountTypes = "listeners";
       notifyListeners();
-    }
-    else if(accountType == null){
-      showSnackBar(context: context!, message: "message");
+    } else if (accountType == null) {
+      isLoggingIn = false;
+      notifyListeners();
+      showSnackBar(context: context, message: "message");
     }
 
     String url = 'https://imisi-backend-service.onrender.com/api/$accountTypes/login';
@@ -86,20 +94,25 @@ class AuthService with ChangeNotifier {
       "password": password,
     };
     try {
-      var response = await http.post(Uri.parse(url), body: jsonEncode(body), headers: {
-        'Content-Type': 'application/json',
-      });
+      var response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(body),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
       final data = jsonDecode(response.body);
-
       if (response.statusCode == 200) {
-
         SharedPref().saveUserToken(data['token']);
-        showSnackBar(context: context!, message: "Logged in Successfully");
-        nextPage(const BasePage(), context);
+        showSnackBar(context: context, message: "Logged in Successfully", isError: false);
+        nextPage(const BasePage(), context!);
+        isLoggingIn = false;
+        notifyListeners();
         return data;
-      } else if(response.statusCode == 400) {
-        // showSnackBar(context: context, message: data['message']);
-
+      } else if (response.statusCode == 400) {
+        isLoggingIn = false;
+        notifyListeners();
+        showSnackBar(context: context, message: data['message'], isError: true);
       }
     } catch (e) {
       log('Error $e');

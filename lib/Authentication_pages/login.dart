@@ -5,9 +5,11 @@ import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
+import 'package:imisi/Utils/snackBar.dart';
 import 'package:imisi/Widget/button_widget.dart';
 import 'package:imisi/Widget/custom_text_field.dart';
 import 'package:imisi/Authentication_pages/sign_up.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -86,13 +88,24 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   gapHeight(50),
-                  ButtonWidget(
-                    text: isLoading == true ? "Loading..." : "Login",
-                    color: AppColors.primaryColor,
-                    onTap: () {
+                  Consumer<AuthService>(builder: (ctx, auth, child) {
+                    return ButtonWidget(
+                      text: auth.isLoggingIn == true ? "Loading..." : "Login",
+                      color: AppColors.primaryColor,
+                      onTap: () {
+                        if(emailController.text.isEmpty || passwordController.text.isEmpty){
+                          showSnackBar(context: context, message: "message", isError: true);
+                        }else{
+                          auth.login(
+                            email: emailController.text,
+                            password: passwordController.text,
+context: context
+                          );
+                        }
 
-                    },
-                  ),
+                      },
+                    );
+                  }),
                   gapHeight(20),
                   InkWell(
                     onTap: () {
