@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:imisi/Base/base_page.dart';
+import 'package:imisi/Constants/url_constants.dart';
 import 'package:imisi/Database/database.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/snackBar.dart';
@@ -12,53 +13,53 @@ class AuthService with ChangeNotifier {
   String? accountTypes;
   bool isLoggingIn = false;
 
-  // signUp(
-  //     {required String name,
-  //     required String email,
-  //     required String password,
-  //     required BuildContext context}) async {
-  //   String url = AppConstants.baseUrl + AppConstants.register;
-  //
-  //   Map<String, dynamic> body = {
-  //     "name": name,
-  //     "email": email,
-  //     "password": password,
-  //   };
-  //   Map<String, String> headers = {
-  //     'Content-Type': 'application/json',
-  //   };
-  //
-  //   try {
-  //     var response = await http.post(
-  //       Uri.parse(url),
-  //       body: jsonEncode(body),
-  //       headers: headers,
-  //     );
-  //     var json = jsonDecode(response.body);
-  //     if (response.statusCode == 201 || response.statusCode == 200) {
-  //       SharedPref().saveUserToken(json['token']);
-  //       nextPage(const BasePage(), context);
-  //       // showSnackBar(isError: true, context: context, message: "Successful");
-  //       debugPrint(response.body);
-  //       return json;
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //           backgroundColor: Colors.red,
-  //           content: Text(
-  //             json['message'],
-  //             style: const TextStyle(color: Colors.white),
-  //           )));
-  //       //showSnackBar(isError: true, context: context, message: json['message']);
-  //       debugPrint(json['message']);
-  //
-  //       debugPrint(response.statusCode.toString());
-  //
-  //       //  var json = jsonDecode(response.body);
-  //     }
-  //   } catch (e) {
-  //     log('Error $e');
-  //   }
-  // }
+  signUp(
+      {required String name,
+      required String email,
+      required String password,
+      required BuildContext context}) async {
+    String url = AppConstants.baseUrl + AppConstants.register;
+
+    Map<String, dynamic> body = {
+      "name": name,
+      "email": email,
+      "password": password,
+    };
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      var response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(body),
+        headers: headers,
+      );
+      var json = jsonDecode(response.body);
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        SharedPref().saveUserToken(json['token']);
+        nextPage(const BasePage(), context);
+        // showSnackBar(isError: true, context: context, message: "Successful");
+        debugPrint(response.body);
+        return json;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              json['message'],
+              style: const TextStyle(color: Colors.white),
+            )));
+        //showSnackBar(isError: true, context: context, message: json['message']);
+        debugPrint(json['message']);
+
+        debugPrint(response.statusCode.toString());
+
+        //  var json = jsonDecode(response.body);
+      }
+    } catch (e) {
+      log('Error $e');
+    }
+  }
 
   Future login({
     required String email,
