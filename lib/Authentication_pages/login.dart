@@ -87,11 +87,23 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   gapHeight(50),
                   ButtonWidget(
+                    onTap: () {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      AuthService()
+                          .login(
+                              context: context,
+                              email: emailController.text.trim(),
+                              password: passwordController.text.trim())
+                          .then((value) {
+                        setState(() {
+                          isLoading = false;
+                        });
+                      });
+                    },
                     text: isLoading == true ? "Loading..." : "Login",
                     color: AppColors.primaryColor,
-                    onTap: () {
-
-                    },
                   ),
                   gapHeight(20),
                   InkWell(

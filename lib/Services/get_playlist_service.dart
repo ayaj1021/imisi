@@ -6,7 +6,7 @@ class GetPlayList {
   Future getPlayList() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? token = pref.getString("token");
-    print(token);
+
     String url =
         'https://imisi-backend-service.onrender.com/api/playlists/list';
 
@@ -17,12 +17,14 @@ class GetPlayList {
     });
 
     var data = jsonDecode(response.body);
+    print(data);
     if (response.statusCode == 200) {
       return data;
     } else {
+      print(data);
       print(response.statusCode);
     }
-    print(data);
+
     return data;
   }
 }

@@ -114,7 +114,7 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       artist.imageFile == null
-                          ? "Empty"
+                          ? "You have not chosen any file"
                           : artist.imageFile!.path,
                       style: AppStyles.bodyBold.copyWith(color: Colors.white),
                     ),
@@ -125,8 +125,7 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
                       onTap: () {
                         nextPage(
                             UploadStepperWidget(
-
-                              file: artist.imageFile!.path,
+                              file: artist.imageFile,
                             ),
                             context);
                       },

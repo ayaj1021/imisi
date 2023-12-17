@@ -25,6 +25,9 @@ dependencies:
   audioplayers: ^5.2.1
   file_picker: ^6.1.1
   dotted_border: ^2.1.0
+  image_picker: ^1.0.5
+  dio: ^5.4.0
+  
 
 dev_dependencies:
   flutter_test:
