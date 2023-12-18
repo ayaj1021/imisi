@@ -15,29 +15,30 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScaledSize(
-        allowTextScaling: true,
-        builder: () {
-          return MultiProvider(
-            providers: [
-              ChangeNotifierProvider(
-                create: (context) => ArtistProvider(),
-              ),
-              ChangeNotifierProvider(
-                create: (context) => AuthService(),
-              ),
-              ChangeNotifierProvider(create: (context) => ArtistProvider()),
-              ChangeNotifierProvider(create: (context) => UploadFileService()),
-            ],
-            child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Flutter Demo',
-              theme: ThemeData(
-                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-                useMaterial3: true,
-              ),
-              home: const SplashScreen(),
+      allowTextScaling: true,
+      builder: () {
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (context) => ArtistProvider(),
             ),
-          );
-        });
+            ChangeNotifierProvider(
+              create: (context) => AuthService(),
+            ),
+            ChangeNotifierProvider(create: (context) => ArtistProvider()),
+            ChangeNotifierProvider(create: (context) => UploadFileService()),
+          ],
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              useMaterial3: true,
+            ),
+            home: const SplashScreen(),
+          ),
+        );
+      },
+    );
   }
 }

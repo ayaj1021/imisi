@@ -91,8 +91,7 @@ class _CreatePlayListScreenState extends State<CreatePlayListScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            SizedBox(
-                              width: 135,
+                            Expanded(
                               child: ButtonWidget(
                                 onTap: () => Navigator.pop(context),
                                 text: 'Cancel',
@@ -101,8 +100,8 @@ class _CreatePlayListScreenState extends State<CreatePlayListScreen> {
                                     Border.all(color: AppColors.onPrimaryColor),
                               ),
                             ),
-                            SizedBox(
-                              width: 135,
+                            gapWidth(15),
+                            Expanded(
                               child: ButtonWidget(
                                 onTap: () {
                                   setState(() {
@@ -113,7 +112,9 @@ class _CreatePlayListScreenState extends State<CreatePlayListScreen> {
                                           name: playlistNameController.text,
                                           context: context)
                                       .then((value) {
-                                    isLoading = false;
+                                    setState(() {
+                                      isLoading = false;
+                                    });
                                   });
                                 },
                                 text: 'Create',

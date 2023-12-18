@@ -85,6 +85,8 @@ class _HomePageState extends State<HomePage> {
                                   onTap: () {
                                     nextPage(
                                         PlayingMusicScreen(
+                                            index: index,
+                                            songs: snapshot.data,
                                             url: snapshot.data![index]["audio"]
                                                 ["filePath"],
                                             name: snapshot.data![index]["name"],

@@ -7,6 +7,8 @@ import 'package:scaled_size/scaled_size.dart';
 
 class PlayingMusicScreen extends StatefulWidget {
   const PlayingMusicScreen({
+    required this.index,
+    required this.songs,
     super.key,
     required this.name,
     required this.artist,
@@ -14,8 +16,10 @@ class PlayingMusicScreen extends StatefulWidget {
     required this.url,
   });
   final String name;
+  final int index;
   final String artist;
   final String image;
+  final List songs;
   final String url;
 
   @override
@@ -43,9 +47,6 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
 
   @override
   void initState() {
-
-
-
     audioPlayer.onPlayerStateChanged.listen((event) {
       setState(() {
         isPlaying = event == PlayerState.playing;
@@ -65,15 +66,20 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
     if (isPlaying) {
       audioPlayer.stop();
       audioPlayer.play(
-        AssetSource(widget.url.toString()),
+        UrlSource(widget.url.toString()),
       );
     } else {
       audioPlayer.play(
-        AssetSource(widget.url.toString()),
+        UrlSource(widget.url.toString()),
       );
     }
-
+    audioPlayer.play(
+      UrlSource(widget.url.toString()),
+    );
     super.initState();
+    //  audioPlayer.play(
+    //   (UrlSource(url)),
+    // );
     // audioPlayer.onPlayerStateChanged.listen((state) {
     //   isPlaying = state == PlayerState.playing;
     // });
@@ -206,46 +212,75 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                       size: 25,
                     )),
                 IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.skip_previous,
-                      color: AppColors.onPrimaryColor,
-                      size: 25,
-                    )),
+                  onPressed: () async {
+                    if (isPlaying) {
+                      setState(() async {
+                        await audioPlayer.stop();
+                      });
+                    } else {
+                      setState(() async {
+                        await audioPlayer.play(
+                          (UrlSource(
+                            widget.songs[widget.index - 1]["audio"]["filePath"],
+                          )),
+                        );
+                      });
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.skip_previous,
+                    color: AppColors.onPrimaryColor,
+                    size: 25,
+                  ),
+                ),
                 CircleAvatar(
                   backgroundColor: AppColors.onPrimaryColor,
                   radius: 20,
                   child: IconButton(
-                      onPressed: () async {
-                        if (isPlaying) {
-                          await audioPlayer.pause();
-                        } else {
-                          audioPlayer.play(
-                            (UrlSource(url)),
-                          );
-                          //  await audioPlayer.play(Source );
-                        }
-                      },
-                      icon: Icon(
-                        isPlaying == true ? Icons.pause : Icons.play_arrow,
-                        color: AppColors.secondaryColor,
-                        size: 25,
-                      )),
+                    onPressed: () async {
+                      if (isPlaying) {
+                        await audioPlayer.pause();
+                      } else {
+                        audioPlayer.play(
+                          (UrlSource(url)),
+                        );
+                      }
+                    },
+                    icon: Icon(
+                      isPlaying == true ? Icons.pause : Icons.play_arrow,
+                      color: AppColors.secondaryColor,
+                      size: 25,
+                    ),
+                  ),
                 ),
                 IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.skip_next,
-                      color: AppColors.onPrimaryColor,
-                      size: 25,
-                    )),
+                  onPressed: () async {
+                    if (isPlaying) {
+                      await audioPlayer.stop();
+                    } else {
+                      setState(() {
+                        audioPlayer.play(
+                          (UrlSource(
+                            widget.songs[widget.index + 1]["audio"]["filePath"],
+                          )),
+                        );
+                      });
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.skip_next,
+                    color: AppColors.onPrimaryColor,
+                    size: 25,
+                  ),
+                ),
                 IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.more_horiz,
-                      color: AppColors.onPrimaryColor,
-                      size: 25,
-                    )),
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.more_horiz,
+                    color: AppColors.onPrimaryColor,
+                    size: 25,
+                  ),
+                ),
               ],
             )
           ],
