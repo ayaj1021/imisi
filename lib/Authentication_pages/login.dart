@@ -6,6 +6,7 @@ import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/snackBar.dart';
+import 'package:imisi/Utils/snack_bar.dart';
 import 'package:imisi/Widget/button_widget.dart';
 import 'package:imisi/Widget/custom_text_field.dart';
 import 'package:imisi/Authentication_pages/sign_up.dart';
@@ -93,19 +94,40 @@ class _LoginPageState extends State<LoginPage> {
                       text: auth.isLoggingIn == true ? "Loading..." : "Login",
                       color: AppColors.primaryColor,
                       onTap: () {
-                        if(emailController.text.isEmpty || passwordController.text.isEmpty){
-                          showSnackBar(context: context, message: "message", isError: true);
-                        }else{
+                        if (emailController.text.isEmpty ||
+                            passwordController.text.isEmpty) {
+                          showSnackBar(
+                              context: context,
+                              message: "message",
+                              isError: true);
+                        } else {
                           auth.login(
-                            email: emailController.text,
-                            password: passwordController.text,
-context: context
-                          );
+                              email: emailController.text,
+                              password: passwordController.text,
+                              context: context);
                         }
-
                       },
                     );
                   }),
+                  ButtonWidget(
+                    onTap: () {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      AuthService()
+                          .login(
+                              context: context,
+                              email: emailController.text.trim(),
+                              password: passwordController.text.trim())
+                          .then((value) {
+                        setState(() {
+                          isLoading = false;
+                        });
+                      });
+                    },
+                    text: isLoading == true ? "Loading..." : "Login",
+                    color: AppColors.primaryColor,
+                  ),
                   gapHeight(20),
                   InkWell(
                     onTap: () {

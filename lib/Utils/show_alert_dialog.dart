@@ -6,7 +6,7 @@ import 'package:imisi/Utils/gap.dart';
 
 //showDialog()
 showAlertDialog(BuildContext context,
-    {required String message, required Function() yesTextOnTap}) {
+    {required String message, required void Function()? yesTextOnTap}) {
   return showDialog(
       barrierDismissible: false,
       barrierColor: Colors.black.withOpacity(0.5),
@@ -44,20 +44,23 @@ showAlertDialog(BuildContext context,
                       ),
                     ),
                     gapWidth(19),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: AppColors.primaryColor,
-                      ),
-                      height: 48,
-                      width: 78,
-                      child: TextButton(
-                          onPressed: yesTextOnTap,
+                    GestureDetector(
+                      onTap: yesTextOnTap,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: AppColors.primaryColor,
+                        ),
+                        height: 48,
+                        width: 78,
+                        child: Center(
                           child: Text(
                             'Yes',
                             style: AppStyles.buttonText
                                 .copyWith(color: AppColors.secondaryColor),
-                          )),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

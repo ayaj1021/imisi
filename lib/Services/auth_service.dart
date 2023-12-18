@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
@@ -8,7 +10,8 @@ import 'package:imisi/Base/base_page.dart';
 import 'package:imisi/Constants/url_constants.dart';
 import 'package:imisi/Database/database.dart';
 import 'package:imisi/Utils/navigator.dart';
-import 'package:imisi/Utils/snackBar.dart';
+
+import 'package:imisi/Utils/snack_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService with ChangeNotifier {
@@ -38,7 +41,7 @@ class AuthService with ChangeNotifier {
         headers: headers,
       );
       var json = jsonDecode(response.body);
-      if (response.statusCode == 201 || response.statusCode == 200) {
+      if (response.statusCode == 201) {
         SharedPref().saveUserToken(json['token']);
         nextPage(const BasePage(), context);
         // showSnackBar(isError: true, context: context, message: "Successful");
@@ -47,14 +50,23 @@ class AuthService with ChangeNotifier {
       } else {
         // ScaffoldMessenger.of(context!).showSnackBar(
         //   SnackBar(
+
+        showSnackBar(context: context, message: json['message']);
+        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+
         //     backgroundColor: Colors.red,
         //     content: Text(
         //       json['message'],
         //       style: const TextStyle(color: Colors.white),
+
         //     ),
         //   ),
         // );
         showSnackBar(isError: true, context: context, message: json['message']);
+
+        //     )));
+        //showSnackBar(isError: true, context: context, message: json['message']);
+
         debugPrint(json['message']);
 
         debugPrint(response.statusCode.toString());
@@ -69,8 +81,7 @@ class AuthService with ChangeNotifier {
   Future login({
     required String email,
     required String password,
-    BuildContext? context,
-
+    required BuildContext context,
   }) async {
     isLoggingIn = true;
     SharedPreferences sf = await SharedPreferences.getInstance();
@@ -85,10 +96,12 @@ class AuthService with ChangeNotifier {
     } else if (accountType == null) {
       isLoggingIn = false;
       notifyListeners();
+
       showSnackBar(context: context, message: "message");
     }
 
-    String url = 'https://imisi-backend-service.onrender.com/api/$accountTypes/login';
+    String url =
+        'https://imisi-backend-service.onrender.com/api/$accountTypes/login';
     Map<String, dynamic> body = {
       "email": email,
       "password": password,
@@ -101,10 +114,15 @@ class AuthService with ChangeNotifier {
           'Content-Type': 'application/json',
         },
       );
+
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
         SharedPref().saveUserToken(data['token']);
-        showSnackBar(context: context, message: "Logged in Successfully", isError: false);
+
+        showSnackBar(
+            context: context,
+            message: "Logged in Successfully",
+            isError: false);
         nextPage(const BasePage(), context!);
         isLoggingIn = false;
         notifyListeners();
@@ -113,6 +131,12 @@ class AuthService with ChangeNotifier {
         isLoggingIn = false;
         notifyListeners();
         showSnackBar(context: context, message: data['message'], isError: true);
+
+        showSnackBar(context: context, message: "Logged in Successfully");
+        nextPage(const BasePage(), context);
+        return data;
+      } else {
+        showSnackBar(context: context, message: data['message']);
       }
     } catch (e) {
       log('Error $e');

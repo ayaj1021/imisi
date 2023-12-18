@@ -34,4 +34,8 @@ class AppStyles {
     fontSize: 16,
     fontWeight: FontWeight.normal,
   );
+  static final TextStyle title4Bold = GoogleFonts.inter(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  );
 }

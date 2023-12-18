@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:imisi/Screens/favorites_screen.dart';
 import 'package:imisi/Screens/playlist_screen.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
@@ -15,7 +16,7 @@ class DrawerWidget extends StatelessWidget {
       width: 225.rw,
       shadowColor: Colors.black87,
       elevation: 10,
-      backgroundColor: AppColors.overlayColor,
+      backgroundColor: AppColors.secondaryColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 23),
         child: ListView(
@@ -63,6 +64,7 @@ class DrawerWidget extends StatelessWidget {
               ),
             ),
             ListTile(
+              onTap: () => nextPage(const FavoriteScreen(), context),
               contentPadding: const EdgeInsets.symmetric(horizontal: 28),
               leading: const Icon(
                 Icons.favorite_outline,
@@ -74,18 +76,18 @@ class DrawerWidget extends StatelessWidget {
                     .copyWith(color: AppColors.onPrimaryColor),
               ),
             ),
-            ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 28),
-              leading: const Icon(
-                Icons.person_outline,
-                color: AppColors.onPrimaryColor,
-              ),
-              title: Text(
-                'Profile',
-                style: AppStyles.agTitle3Bold
-                    .copyWith(color: AppColors.onPrimaryColor),
-              ),
-            ),
+            // ListTile(
+            //   contentPadding: const EdgeInsets.symmetric(horizontal: 28),
+            //   leading: const Icon(
+            //     Icons.person_outline,
+            //     color: AppColors.onPrimaryColor,
+            //   ),
+            //   title: Text(
+            //     'Profile',
+            //     style: AppStyles.agTitle3Bold
+            //         .copyWith(color: AppColors.onPrimaryColor),
+            //   ),
+            // ),
             ListTile(
               contentPadding: const EdgeInsets.symmetric(horizontal: 28),
               leading: const Icon(

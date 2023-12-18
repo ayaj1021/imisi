@@ -1,11 +1,16 @@
+// ignore_for_file: avoid_print
+
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:imisi/Provider/artiste_provider.dart';
+import 'package:imisi/Services/upload_file_service.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/show_alert_dialog.dart';
 import 'package:imisi/Widget/button_widget.dart';
-
 import 'package:imisi/Base/Basepages/upload_pages.dart';
 import 'package:imisi/Base/base_page.dart';
 import 'package:provider/provider.dart';
@@ -14,11 +19,8 @@ import 'package:scaled_size/scaled_size.dart';
 import '../Styles/app_colors.dart';
 
 class UploadStepperWidget extends StatefulWidget {
-  final String? file;
-  const UploadStepperWidget(
-      {super.key, this.file});
-
-
+  final File? file;
+  const UploadStepperWidget({super.key, this.file});
 
   @override
   State<UploadStepperWidget> createState() => _UploadStepperWidgetState();
@@ -32,12 +34,22 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
   TextEditingController albumController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController genreController = TextEditingController();
-  List type = [
-    {"type": "Public"},
-    {"type": "Private"}
-  ];
 
-  PageController controller = PageController(initialPage: 0);
+  File? image;
+
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      final imageTemporary = File(image.path);
+      setState(() {
+        this.image = imageTemporary;
+      });
+    } on PlatformException catch (e) {
+      print('Failed to pick image $e');
+    }
+  }
+
   int? selectedIndex;
   bool isSecondTab = false;
 
@@ -81,116 +93,169 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
         return Stack(
           children: [
             SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "Your song is uploaded",
-                    style: AppStyles.agTitle3Bold.copyWith(color: Colors.white),
-                  ),
-                  Text(
-                    "Follow these steps to complete upload ",
-                    style: AppStyles.bodyRegularText.copyWith(color: Colors.white),
-                  ),
-                  gapHeight(15),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 15),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                    color: AppColors.overlayColor,
-                    child: Row(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Your song is uploaded",
+                      style:
+                          AppStyles.agTitle3Bold.copyWith(color: Colors.white),
+                    ),
+                    Text(
+                      "Follow these steps to complete upload ",
+                      style: AppStyles.bodyRegularText
+                          .copyWith(color: Colors.white),
+                    ),
+                    gapHeight(15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         GestureDetector(
                           onTap: () {
-                            setState(() {
-                              isSecondTab = false;
-                            });
-                            controller.animateToPage(
-                              0,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.ease,
-                            );
+                            pickImage();
                           },
                           child: Container(
-                            height: 20,
-                            width: 20,
+                            height: 120.rh,
+                            width: 150.rw,
                             decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color:
-                                  isSecondTab ? AppColors.secondaryColor : AppColors.primaryColor,
                               border: Border.all(
-                                color: isSecondTab
-                                    ? AppColors.upLoadContainerColor
-                                    : AppColors.primaryColor,
+                                color: AppColors.upLoadContainerColor,
                               ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: ClipRRect(
+                              child: image != null
+                                  ? Image.file(
+                                      image!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : const Center(
+                                      child: Text(
+                                        'Click to add cover image',
+                                        style: TextStyle(
+                                          color: AppColors.hintTextColor,
+                                        ),
+                                      ),
+                                    ),
                             ),
                           ),
                         ),
-                        const Flexible(
-                          child: Divider(),
+                        gapWidth(5),
+                        const Text(
+                          '*',
+                          style: TextStyle(color: Colors.red),
+                        )
+                      ],
+                    ),
+                    gapHeight(15),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
+                          style: AppStyles.bodyRegularText
+                              .copyWith(color: AppColors.onPrimaryColor),
+                          controller: songTitleController,
+                          decoration:
+                              getDecoration("Song name", "*", Colors.red),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isSecondTab = true;
-                            });
-                            controller.animateToPage(
-                              1,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.ease,
+                        TextField(
+                          style: AppStyles.bodyRegularText
+                              .copyWith(color: AppColors.onPrimaryColor),
+                          controller: artistNameController,
+                          decoration:
+                              getDecoration("Artiste name", "*", Colors.red),
+                        ),
+                        TextField(
+                          style: AppStyles.bodyRegularText
+                              .copyWith(color: AppColors.onPrimaryColor),
+                          controller: featuringController,
+                          decoration: getDecoration(
+                              "Featuring",
+                              "(Separate names using comas)",
+                              AppColors.hintTextColor),
+                        ),
+                        TextField(
+                          style: AppStyles.bodyRegularText
+                              .copyWith(color: AppColors.onPrimaryColor),
+                          controller: producersController,
+                          decoration: getDecoration(
+                              "Producer(s)",
+                              "(Separate names using comas)",
+                              AppColors.hintTextColor),
+                        ),
+                        TextField(
+                          style: AppStyles.bodyRegularText
+                              .copyWith(color: AppColors.onPrimaryColor),
+                          controller: albumController,
+                          decoration: getDecoration("Album", "", Colors.red),
+                        ),
+                        TextField(
+                          style: AppStyles.bodyRegularText
+                              .copyWith(color: AppColors.onPrimaryColor),
+                          controller: descriptionController,
+                          decoration:
+                              getDecoration("Description", "", Colors.red),
+                        ),
+                        TextField(
+                          style: AppStyles.bodyRegularText
+                              .copyWith(color: AppColors.onPrimaryColor),
+                          controller: genreController,
+                          decoration: getDecoration("Genre", "", Colors.red),
+                        ),
+                        const SizedBox(height: 30),
+                        Container(
+                          width: 135.rw,
+                          padding: const EdgeInsets.only(bottom: 50),
+                          child: Consumer<UploadFileService>(
+                              builder: (context, artistProvider, child) {
+                            return ButtonWidget(
+                              text: "Finish",
+                              color: AppColors.primaryColor,
+                              onTap: () {
+                                artistProvider.uploadFile(
+                                    //   imageFile: widget.file!,
+                                    artist: artistNameController.text,
+                                    name: songTitleController.text,
+                                    description: descriptionController.text,
+                                    genre: genreController.text,
+                                    // file: widget.file!,
+                                    context,
+                                    audio: widget.file!,
+                                    image: image!);
+                              },
                             );
-                          },
-                          child: Container(
-                            height: 20,
-                            width: 20,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: isSecondTab == true
-                                  ? AppColors.primaryColor
-                                  : AppColors.secondaryColor,
-                              border: Border.all(
-                                color: selectedIndex == 0
-                                    ? AppColors.upLoadContainerColor
-                                    : AppColors.secondaryColor,
-                              ),
-                            ),
-                          ),
+                          }),
                         ),
                       ],
                     ),
-                  ),
-                  gapHeight(20),
-                  SizedBox(
-                    height: 500.rh,
-                    child: PageView(
-                      controller: controller,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: pages(),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             artist.isUploading
                 ? Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              color: Colors.black.withOpacity(0.6),
-                  child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const CircularProgressIndicator(),
-                      gapHeight(15),
-                      const Text(
-                        "Uploading Sing",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
-                      )
-                    ],
-                  ),
-                )
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.black.withOpacity(0.6),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const CircularProgressIndicator(),
+                        gapHeight(15),
+                        const Text(
+                          "Uploading Song",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          ),
+                        )
+                      ],
+                    ),
+                  )
                 : const SizedBox(),
           ],
         );
@@ -198,146 +263,10 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
     );
   }
 
-  List<Widget> pages() => [
-        Container(
-          padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  style: AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
-                  controller: artistNameController,
-                  decoration: getDecoration("Artist name", "*", Colors.red),
-                ),
-                TextField(
-                  style: AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
-                  controller: songTitleController,
-                  decoration: getDecoration("Song title", "*", Colors.red),
-                ),
-                TextField(
-                  style: AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
-                  controller: featuringController,
-                  decoration: getDecoration(
-                      "Featuring", "(Separate names using comas)", AppColors.hintTextColor),
-                ),
-                TextField(
-                  style: AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
-                  controller: producersController,
-                  decoration: getDecoration(
-                      "Producer(s)", "(Separate names using comas)", AppColors.hintTextColor),
-                ),
-                TextField(
-                  style: AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
-                  controller: albumController,
-                  decoration: getDecoration("Album", "", Colors.red),
-                ),
-                TextField(
-                  style: AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
-                  controller: descriptionController,
-                  decoration: getDecoration("Description", "", Colors.red),
-                ),
-                TextField(
-                  style: AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
-                  controller: genreController,
-                  decoration: getDecoration("Genre", "", Colors.red),
-                ),
-                const SizedBox(height: 30),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 50),
-                  width: 135.rw,
-                  child: ButtonWidget(
-                    text: "Next",
-                    onTap: () {
-                      setState(() {
-                        isSecondTab = true;
-                      });
-                      controller.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeIn,
-                      );
-                    },
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Column(
-          children: [
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: type.length,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = index;
-                    });
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 15),
-                    padding: const EdgeInsets.all(8),
-                    width: MediaQuery.of(context).size.height,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppColors.upLoadContainerColor),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.circle,
-                          size: 18,
-                          color: selectedIndex == index
-                              ? AppColors.primaryColor
-                              : AppColors.overlayColor,
-                        ),
-                        gapWidth(10),
-                        Text(
-                          type[index]["type"],
-                          style: AppStyles.title2.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 50),
-            Container(
-              width: 135.rw,
-              padding: const EdgeInsets.only(bottom: 50),
-              child: Consumer<ArtistProvider>(builder: (context, artistProvider, child) {
-                return ButtonWidget(
-                  text: "Finish",
-                  color: selectedIndex == null
-                      ? AppColors.disabledButtonColor
-                      : AppColors.primaryColor,
-                  onTap: () {
-                    artistProvider.postFile(
-                      artist: artistNameController.text,
-                      name: songTitleController.text,
-                      description: descriptionController.text,
-                      genre: genreController.text,
-                      file: widget.file,
-                      context: context,
-                    );
-                  },
-                );
-              }),
-            ),
-          ],
-        )
-      ];
-
   InputDecoration getDecoration(String label, String type, Color typeColor) {
     return InputDecoration(
-      labelStyle: AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
+      labelStyle:
+          AppStyles.bodyRegularText.copyWith(color: AppColors.onPrimaryColor),
       label: Row(
         children: [
           Text(label),
