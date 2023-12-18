@@ -241,9 +241,7 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                       if (isPlaying) {
                         await audioPlayer.pause();
                       } else {
-                        audioPlayer.play(
-                          (UrlSource(url)),
-                        );
+                        audioPlayer.resume();
                       }
                     },
                     icon: Icon(
