@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:imisi/Base/Basepages/library.dart';
 import 'package:imisi/Database/database.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Base/Basepages/home_page.dart';
 import 'package:imisi/Base/Basepages/upload_pages.dart';
-
 
 class BasePage extends StatefulWidget {
   const BasePage({super.key});
@@ -24,16 +24,11 @@ class _BasePageState extends State<BasePage> {
 
   List<Widget> artistPages = [
     const HomePage(),
-    Container(color: Colors.black),
     const UpLoadPage(),
-    Container(color: Colors.amber),
+    const LibraryPage(),
   ];
 
-  List<Widget> listenerPages = [
-    const HomePage(),
-    Container(color: Colors.black),
-    Container(color: Colors.amber),
-  ];
+  List<Widget> listenerPages = [const HomePage(), const LibraryPage(),];
 
   SharedPref pref = SharedPref();
 
@@ -76,36 +71,40 @@ class _BasePageState extends State<BasePage> {
         unselectedItemColor: Colors.grey,
         items: isArtist == false
             ? [
-                BottomNavigationBarItem(
-                  icon: Image.asset("assets/images/home.png"),
-                  activeIcon: Image.asset("assets/images/home_active.png"),
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.home_outlined),
+                  //Image.asset("assets/images/home.png"),
+                  activeIcon: Icon(Icons.home_filled),
+                  //Image.asset("assets/images/home_active.png"),
                   label: "Home",
                 ),
-                BottomNavigationBarItem(
-                  icon: Image.asset("assets/images/search.png"),
-                  label: "Search",
-                ),
+                // BottomNavigationBarItem(
+                //   icon: Image.asset("assets/images/search.png"),
+                //   label: "Search",
+                // ),
                 BottomNavigationBarItem(
                   icon: Image.asset("assets/images/library.png"),
                   label: "Library",
                 ),
               ]
             : [
-                BottomNavigationBarItem(
-                  icon: Image.asset("assets/images/home.png"),
-                  activeIcon: Image.asset("assets/images/home_active.png"),
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.home_outlined),
+                  //Image.asset("assets/images/home.png"),
+                  activeIcon: Icon(Icons.home_filled),
+                  //Image.asset("assets/images/home_active.png"),
                   label: "Home",
                 ),
-                BottomNavigationBarItem(
-                  icon: Image.asset("assets/images/search.png"),
-                  label: "Search",
-                ),
-                BottomNavigationBarItem(
-                  icon: Image.asset("assets/images/upload.png"),
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.upload_outlined),
+                  activeIcon: Icon(Icons.upload),
+                  //  Image.asset("assets/images/upload.png"),
                   label: "Upload",
                 ),
-                BottomNavigationBarItem(
-                  icon: Image.asset("assets/images/library.png"),
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.local_library_outlined),
+                  //    Image.asset("assets/images/library.png"),
+                  activeIcon: Icon(Icons.local_library),
                   label: "Library",
                 ),
               ],

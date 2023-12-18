@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:imisi/Provider/artiste_provider.dart';
+import 'package:imisi/Services/upload_file_service.dart';
 
 import 'package:imisi/onboard/Onboard%20Screens/splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -16,9 +17,8 @@ class MyApp extends StatelessWidget {
         builder: () {
           return MultiProvider(
             providers: [
-              ChangeNotifierProvider(
-                create: (context) => ArtistProvider(),
-              ),
+              ChangeNotifierProvider(create: (context) => ArtistProvider()),
+              ChangeNotifierProvider(create: (context) => UploadFileService()),
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,

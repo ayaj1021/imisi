@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronous, use_build_context_synchronously
 
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:imisi/Base/base_page.dart';
@@ -17,27 +17,27 @@ class ArtistProvider with ChangeNotifier {
   File? imageFile;
   bool sendingImageFailed = false;
 
-  Future<File?> getImageGallery(
-    BuildContext context,
-  ) async {
-    try {
-      final FilePickerResult? result = await FilePicker.platform
-          .pickFiles(allowCompression: true, type: FileType.audio);
-      if (result != null) {
-        imageFile = File(result.files.first.path!);
+  // Future<File?> getImageGallery(
+  //   BuildContext context,
+  // ) async {
+  //   try {
+  //     final FilePickerResult? result = await FilePicker.platform
+  //         .pickFiles(allowCompression: true, type: FileType.audio);
+  //     if (result != null) {
+  //       imageFile = File(result.files.first.path!);
 
-        notifyListeners();
-      } else {
-        status = "Image problem";
-        notifyListeners();
-        showSnackBar(context: context, message: status);
-      }
-    } catch (e) {
-      isUploading = false;
-      notifyListeners();
-    }
-    return null;
-  }
+  //       notifyListeners();
+  //     } else {
+  //       status = "Image problem";
+  //       notifyListeners();
+  //       showSnackBar(context: context, message: status);
+  //     }
+  //   } catch (e) {
+  //     isUploading = false;
+  //     notifyListeners();
+  //   }
+  //   return null;
+  // }
 
   postFile({
     // required String file,

@@ -1,17 +1,16 @@
 // ignore_for_file: avoid_print
 
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:imisi/Provider/artiste_provider.dart';
+import 'package:imisi/Services/upload_file_service.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/show_alert_dialog.dart';
 import 'package:imisi/Widget/button_widget.dart';
-
 import 'package:imisi/Base/Basepages/upload_pages.dart';
 import 'package:imisi/Base/base_page.dart';
 import 'package:provider/provider.dart';
@@ -211,20 +210,20 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
                         Container(
                           width: 135.rw,
                           padding: const EdgeInsets.only(bottom: 50),
-                          child: Consumer<ArtistProvider>(
+                          child: Consumer<UploadFileService>(
                               builder: (context, artistProvider, child) {
                             return ButtonWidget(
                               text: "Finish",
                               color: AppColors.primaryColor,
                               onTap: () {
-                                artistProvider.postFile(
-                               //   imageFile: widget.file!,
+                                artistProvider.uploadFile(
+                                    //   imageFile: widget.file!,
                                     artist: artistNameController.text,
                                     name: songTitleController.text,
                                     description: descriptionController.text,
                                     genre: genreController.text,
                                     // file: widget.file!,
-                                    context: context,
+                                    context,
                                     audio: widget.file!,
                                     image: image!);
                               },

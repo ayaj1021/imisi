@@ -43,6 +43,9 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
 
   @override
   void initState() {
+
+
+
     audioPlayer.onPlayerStateChanged.listen((event) {
       setState(() {
         isPlaying = event == PlayerState.playing;

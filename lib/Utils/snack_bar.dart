@@ -45,7 +45,7 @@ showSnackBar({
               fontWeight: FontWeight.w400,
               fontSize: 13,
             ),
-            overflow: TextOverflow.fade,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

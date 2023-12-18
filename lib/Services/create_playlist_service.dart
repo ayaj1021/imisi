@@ -14,7 +14,7 @@ class CreatePlayListService {
       {required String name, required BuildContext context}) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? token = pref.getString("token");
-    print(token);
+
     String url =
         'https://imisi-backend-service.onrender.com/api/playlists/create';
 
@@ -29,14 +29,12 @@ class CreatePlayListService {
       });
       final data = jsonDecode(response.body);
       if (response.statusCode == 201) {
-        print(data);
-        showSnackBar(
+        await showSnackBar(
             context: context, message: "Playlist Created", isError: false);
         nextPageAndremoveUntil(const PlayListScreen(), context);
 
         return data;
       } else {
-        print(data);
         showSnackBar(
             context: context,
             message: "Unable to create playlist",

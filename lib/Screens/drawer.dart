@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:imisi/Screens/favorites_screen.dart';
 import 'package:imisi/Screens/playlist_screen.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
@@ -63,6 +64,7 @@ class DrawerWidget extends StatelessWidget {
               ),
             ),
             ListTile(
+              onTap: () => nextPage(const FavoriteScreen(), context),
               contentPadding: const EdgeInsets.symmetric(horizontal: 28),
               leading: const Icon(
                 Icons.favorite_outline,

@@ -18,13 +18,11 @@ dependencies:
   shared_preferences: ^2.2.2
   provider: ^6.1.1
   google_fonts: ^6.1.0
-  another_flushbar: ^1.12.30
   video_player: ^2.8.1
   smooth_page_indicator: ^1.1.0
   http: ^1.1.0
   audioplayers: ^5.2.1
   file_picker: ^6.1.1
-  dotted_border: ^2.1.0
   image_picker: ^1.0.5
   dio: ^5.4.0
   

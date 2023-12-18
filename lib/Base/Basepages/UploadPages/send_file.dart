@@ -1,6 +1,11 @@
+// ignore_for_file: unnecessary_string_interpolations
+
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:imisi/Provider/artiste_provider.dart';
 import 'package:imisi/Screens/upload_steper.dart';
+import 'package:imisi/Services/upload_file_service.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
@@ -25,6 +30,7 @@ class UpLoadFilePage extends StatefulWidget {
 }
 
 class _UpLoadFilePageState extends State<UpLoadFilePage> {
+  File? file;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +66,7 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
         ],
       ),
       backgroundColor: AppColors.secondaryColor,
-      body: Consumer<ArtistProvider>(builder: (context, artist, child) {
+      body: Consumer<UploadFileService>(builder: (context, artist, child) {
         return Stack(
           children: [
             Center(
@@ -89,8 +95,14 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
                     ),
                     child: Center(
                       child: InkWell(
-                        onTap: () {
-                          artist.getImageGallery(context);
+                        onTap: () async {
+                          final FilePickerResult? result = await FilePicker
+                              .platform
+                              .pickFiles(type: FileType.audio);
+                          if (result == null) return;
+                          file = File(result.files.first.path!);
+
+                          // artist.getImageGallery(context);
                         },
                         child: Column(
                           children: [
@@ -113,9 +125,11 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      artist.imageFile == null
+                      //  artist.imageFile == null
+                      file == null
                           ? "You have not chosen any file"
-                          : artist.imageFile!.path,
+                          : '${file!}',
+                      // artist.imageFile!.path,
                       style: AppStyles.bodyBold.copyWith(color: Colors.white),
                     ),
                   ),
@@ -125,7 +139,7 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
                       onTap: () {
                         nextPage(
                             UploadStepperWidget(
-                              file: artist.imageFile,
+                              file: file,
                             ),
                             context);
                       },
@@ -148,5 +162,9 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
         );
       }),
     );
+  }
+
+  void openFile(PlatformFile file) {
+    //  OpenFile
   }
 }
