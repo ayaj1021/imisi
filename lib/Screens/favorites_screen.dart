@@ -48,7 +48,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   ),
                 );
               } else {
-                if (!snapshot.hasData) {
+                if (snapshot.data.isEmpty) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

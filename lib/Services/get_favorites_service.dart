@@ -7,7 +7,8 @@ class GetFavoriteService {
   Future getFavorite() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? token = pref.getString("token");
-    String url = 'https://imisi-backend-service.onrender.com/api/favorites';
+    String url =
+        'https://imisi-backend-service.onrender.com/api/favorites/music';
     var response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'Authorization': "Bearer $token",
@@ -15,6 +16,7 @@ class GetFavoriteService {
     var data = jsonDecode(response.body);
     print(data);
     if (response.statusCode == 200) {
+      print(data);
       return data;
     } else {
       print(data);
