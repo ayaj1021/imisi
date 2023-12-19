@@ -19,12 +19,8 @@ class MyApp extends StatelessWidget {
       builder: () {
         return MultiProvider(
           providers: [
-            ChangeNotifierProvider(
-              create: (context) => ArtistProvider(),
-            ),
-            ChangeNotifierProvider(
-              create: (context) => AuthService(),
-            ),
+            ChangeNotifierProvider(create: (context) => ArtistProvider()),
+            ChangeNotifierProvider(create: (context) => AuthService()),
             ChangeNotifierProvider(create: (context) => ArtistProvider()),
             ChangeNotifierProvider(create: (context) => UploadFileService()),
           ],

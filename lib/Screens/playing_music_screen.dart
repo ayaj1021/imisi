@@ -1,8 +1,11 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:imisi/Services/add_music_favorites.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
+import 'package:imisi/Utils/audio_id.dart';
 import 'package:imisi/Utils/gap.dart';
+import 'package:imisi/Utils/show_modal_bottom_sheet_widget.dart';
 import 'package:scaled_size/scaled_size.dart';
 
 class PlayingMusicScreen extends StatefulWidget {
@@ -14,6 +17,7 @@ class PlayingMusicScreen extends StatefulWidget {
     required this.artist,
     required this.image,
     required this.url,
+    required this.id,
   });
   final String name;
   final int index;
@@ -21,6 +25,7 @@ class PlayingMusicScreen extends StatefulWidget {
   final String image;
   final List songs;
   final String url;
+  final String id;
 
   @override
   State<PlayingMusicScreen> createState() => _PlayingMusicScreenState();
@@ -107,8 +112,9 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
     String currentTitle = widget.name;
     String currentSinger = widget.artist;
     String currentImage = widget.image;
+    String currentId = widget.id;
     // String currentSong = "";
-    String url = widget.url;
+    // String url = widget.url;
     return Scaffold(
       backgroundColor: AppColors.secondaryColor,
       appBar: AppBar(
@@ -159,7 +165,13 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                         ],
                       ),
                       IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            AudioId.audioId = currentId.toString();
+                            AddMusicToFavorite().addMusicToFavorite(
+                              id: currentId,
+                              context,
+                            );
+                          },
                           icon: const Icon(
                             Icons.favorite_outline,
                             color: AppColors.onPrimaryColor,
@@ -272,7 +284,48 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showModalBottomSheetWidget(context, [
+                      GestureDetector(
+                        onTap: () {},
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.edit_note_outlined,
+                              color: AppColors.primaryColor,
+                              size: 35,
+                            ),
+                            gapWidth(10),
+                            Text(
+                              'Add to playlist',
+                              style: AppStyles.title2.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.onPrimaryColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      gapHeight(10),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.info_outline_rounded,
+                            color: AppColors.primaryColor,
+                            size: 30,
+                          ),
+                          gapWidth(10),
+                          Text(
+                            'Song details',
+                            style: AppStyles.title2.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.onPrimaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ]);
+                  },
                   icon: const Icon(
                     Icons.more_horiz,
                     color: AppColors.onPrimaryColor,

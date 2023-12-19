@@ -10,6 +10,7 @@ import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/show_alert_dialog.dart';
+import 'package:imisi/Utils/snack_bar.dart';
 import 'package:imisi/Widget/button_widget.dart';
 import 'package:imisi/Base/Basepages/upload_pages.dart';
 import 'package:imisi/Base/base_page.dart';
@@ -49,9 +50,6 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
       print('Failed to pick image $e');
     }
   }
-
-  int? selectedIndex;
-  bool isSecondTab = false;
 
   @override
   Widget build(BuildContext context) {
@@ -216,16 +214,23 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
                               text: "Finish",
                               color: AppColors.primaryColor,
                               onTap: () {
-                                artistProvider.uploadFile(
-                                    //   imageFile: widget.file!,
-                                    artist: artistNameController.text,
-                                    name: songTitleController.text,
-                                    description: descriptionController.text,
-                                    genre: genreController.text,
-                                    // file: widget.file!,
-                                    context,
-                                    audio: widget.file!,
-                                    image: image!);
+                                if (songTitleController.text.isEmpty ||
+                                    artistNameController.text.isEmpty ||
+                                    image!.path.isEmpty) {
+                                  showSnackBar(
+                                      context: context,
+                                      message: "Pls fill in all details",
+                                      isError: true);
+                                } else {
+                                  artistProvider.uploadFile(
+                                      artist: artistNameController.text,
+                                      name: songTitleController.text,
+                                      description: descriptionController.text,
+                                      genre: genreController.text,
+                                      context,
+                                      audio: widget.file!,
+                                      image: image!);
+                                }
                               },
                             );
                           }),

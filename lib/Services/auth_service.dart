@@ -3,14 +3,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:imisi/Base/base_page.dart';
 import 'package:imisi/Constants/url_constants.dart';
 import 'package:imisi/Database/database.dart';
 import 'package:imisi/Utils/navigator.dart';
-
 import 'package:imisi/Utils/snack_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -123,7 +120,7 @@ class AuthService with ChangeNotifier {
             context: context,
             message: "Logged in Successfully",
             isError: false);
-        nextPage(const BasePage(), context!);
+        nextPage(const BasePage(), context);
         isLoggingIn = false;
         notifyListeners();
         return data;

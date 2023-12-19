@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:imisi/Provider/artiste_provider.dart';
 import 'package:imisi/Screens/upload_steper.dart';
 import 'package:imisi/Services/upload_file_service.dart';
 import 'package:imisi/Styles/app_colors.dart';
@@ -31,6 +32,8 @@ class UpLoadFilePage extends StatefulWidget {
 
 class _UpLoadFilePageState extends State<UpLoadFilePage> {
   File? file;
+  String message = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +69,7 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
         ],
       ),
       backgroundColor: AppColors.secondaryColor,
-      body: Consumer<UploadFileService>(builder: (context, artist, child) {
+      body: Consumer<ArtistProvider>(builder: (context, artist, child) {
         return Stack(
           children: [
             Center(
@@ -103,6 +106,9 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
                           file = File(result.files.first.path!);
 
                           // artist.getImageGallery(context);
+                          setState(() {
+                            message = '${file!.path}';
+                          });
                         },
                         child: Column(
                           children: [
@@ -125,10 +131,7 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      //  artist.imageFile == null
-                      file == null
-                          ? "You have not chosen any file"
-                          : '${file!}',
+                      file == null ? "You have not chosen any file" : message,
                       // artist.imageFile!.path,
                       style: AppStyles.bodyBold.copyWith(color: Colors.white),
                     ),

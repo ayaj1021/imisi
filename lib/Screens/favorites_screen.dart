@@ -48,7 +48,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   ),
                 );
               } else {
-                if (snapshot.data.isEmpty) {
+                if (!snapshot.hasData) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -65,9 +65,23 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   return ListView.builder(
                       itemCount: snapshot.data.length,
                       itemBuilder: (_, index) {
+                        final data = snapshot.data[index];
                         return Column(
                           children: [
-                            gapHeight(20),
+                            SizedBox(
+                              height: 48,
+                              width: 48,
+                              child: ClipRRect(
+                                child: Image.network(data["image"]["filePath"]),
+                              ),
+                            ),
+                            gapWidth(10),
+                            Text(
+                              data["artist"],
+                              style: AppStyles.bodyBold.copyWith(
+                                color: AppColors.onPrimaryColor,
+                              ),
+                            ),
                           ],
                         );
                       });
