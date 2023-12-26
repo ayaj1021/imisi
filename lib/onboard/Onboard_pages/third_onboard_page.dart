@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:imisi/Authentication_pages/login.dart';
 import 'package:imisi/Styles/app_colors.dart';
-
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Widget/button_widget.dart';
@@ -48,9 +47,15 @@ class _ThirdOnboardPageState extends State<ThirdOnboardPage> {
             height: double.infinity,
             width: double.infinity,
             child: videoPlayerController.value.isInitialized == true
-                ? AspectRatio(
-                    aspectRatio: videoPlayerController.value.aspectRatio,
-                    child: VideoPlayer(videoPlayerController),
+                ? SizedBox.expand(
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: SizedBox(
+                        width: videoPlayerController.value.size.width,
+                        height: videoPlayerController.value.size.height,
+                        child: VideoPlayer(videoPlayerController),
+                      ),
+                    ),
                   )
                 : Container(),
           ),
