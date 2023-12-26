@@ -2,20 +2,20 @@
 
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-
-import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
-import 'package:imisi/Base/base_page.dart';
-import 'package:imisi/Utils/navigator.dart';
-import 'package:imisi/Utils/snack_bar.dart';
+import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../Base/base_page.dart';
+import '../Utils/navigator.dart';
+import '../Utils/snack_bar.dart';
 
 class UploadFileService with ChangeNotifier {
   String status = "";
   bool isUploading = false;
+
   Future uploadFile(
     BuildContext context, {
     required String name,
@@ -29,65 +29,70 @@ class UploadFileService with ChangeNotifier {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? token = pref.getString("token");
     String url = 'https://imisi-backend-service.onrender.com/api/musics';
-    var headers = {
-      'Content-Type': 'application/json',
-      'Authorization': "Bearer $token",
-    };
-    try {
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(url),
-      );
-      final imageStream = http.ByteStream(image.openRead());
-      final imageLength = await image.length();
-      Uint8List bytes = await image.readAsBytes();
-      String encodedByte = base64Encode(bytes);
-      Uint8List dytes = await audio.readAsBytes();
-      String encodedDyte = base64Encode(dytes);
-      request.files.add(
-        http.MultipartFile(
-          'image',
-          imageStream,
-          imageLength,
-          filename: image.path,
-        ),
-      );
-      print('request image ${image}');
-      print('request ${request}');
-      final audioStream = http.ByteStream(audio.openRead());
-      final audioLength = await audio.length();
-      request.files.add(
-        http.MultipartFile(
-          'audio',
-          audioStream,
-          audioLength,
-          filename: audio.path,
-        ),
-      );
-      print('request audio ${audio}');
-      print('request ${request}');
 
-      request.headers.addAll(headers);
-      final fields = {
+    try {
+      /* var headers = {'Authorization': 'Bearer $token'};
+      var data = FormData.fromMap({
+        'files': [
+          await MultipartFile.fromFile(image.path,
+              filename: image.path.split("/").last),
+          await MultipartFile.fromFile(audio.path,
+              filename: audio.path.split("/").last)
+        ],
         'name': name,
         'genre': genre,
         'description': description,
-        'artist': artist,
-        'image': encodedByte,
-        // const Base64Encoder().convert(File(image.path).readAsBytesSync()),
-        'audio': encodedDyte,
-        //  const Base64Encoder().convert(File(audio.path).readAsBytesSync()),
-      };
-      for (final key in fields.entries) {
-        request.fields[key.key] = key.value;
+        'artist': artist
+      });
+
+      var dio = Dio();
+      var response = await dio.post(
+        url,
+        options: Options(
+          method: 'POST',
+          headers: headers,
+        ),
+        data: data,
+      );
+
+      if (response.statusCode == 200) {
+        Logger().i(json.encode(response.data));
+      } else {
+        Logger().e(response.statusCode);
+        Logger().e(response.statusMessage);
       }
-      print('request fields:  ${request.fields} ');
+      */
+      var request = http.MultipartRequest('POST',
+          Uri.parse(url));
+
+      /*Logger().i(token);
+      Logger().i(name);
+      Logger().i(genre);
+      Logger().i(description);
+      Logger().i(artist);
+      Logger().i(image.path.split("/").last);
+      Logger().i(audio.path.split("/").last);*/
+
+      request.headers['Authorization'] = 'Bearer $token';
+      request.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+
+      request.fields['name'] = name;
+      request.fields['genre'] = genre;
+      request.fields['description'] = description;
+      request.fields['customer'] = artist;
+
+      request.files.add(await http.MultipartFile.fromPath("image", image.path));
+      request.files.add(await http.MultipartFile.fromPath("audio", audio.path));
+
+     // Logger().w(request.files.map((e) => e.filename));
+      //Logger().w(request.toString());*/
 
       http.StreamedResponse response = await request.send();
       final dataRetrieved = await http.Response.fromStream(response);
-      print('response ${dataRetrieved.body}');
 
-      if (response.statusCode == 201) {
+      if (dataRetrieved.statusCode >= 200 && dataRetrieved.statusCode < 300) {
+        Logger().i(json.decode(dataRetrieved.body));
+
         isUploading = true;
         status = "Upload Successful";
 
@@ -99,10 +104,11 @@ class UploadFileService with ChangeNotifier {
         return response;
       } else {
         isUploading = false;
-        print(response.statusCode);
-        print(response.reasonPhrase);
+        Logger().e(dataRetrieved.statusCode);
+        Logger().e(dataRetrieved.reasonPhrase);
+        final responseJson = jsonDecode(dataRetrieved.body);
+        Logger().w(responseJson);
         status = "Upload Unsuccessful ";
-        //showSnackBar(context: context, message: status, isError: true);
         showSnackBar(context: context, message: status, isError: true);
         notifyListeners();
       }
@@ -112,8 +118,8 @@ class UploadFileService with ChangeNotifier {
     }
   }
 }
- // body: body,
-        // headers: {
-        //   // 'Content-Type': 'application/json',
-        //   'Authorization': "Bearer $token",
-        // },
+// body: body,
+// headers: {
+//   // 'Content-Type': 'application/json',
+//   'Authorization': "Bearer $token",
+// },

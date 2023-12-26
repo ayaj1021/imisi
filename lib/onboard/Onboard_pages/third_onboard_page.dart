@@ -14,22 +14,18 @@ class ThirdOnboardPage extends StatefulWidget {
   State<ThirdOnboardPage> createState() => _ThirdOnboardPageState();
 }
 
-class _ThirdOnboardPageState extends State<ThirdOnboardPage> {
+class _ThirdOnboardPageState extends State<ThirdOnboardPage> with RouteAware {
   late VideoPlayerController videoPlayerController;
 
   @override
   void initState() {
     super.initState();
     videoPlayerController =
-        VideoPlayerController.asset('assets/images/onboard_video.mp4');
-    videoPlayerController.setLooping(false);
-    videoPlayerController.initialize().then((value) => setState(() {}));
-    videoPlayerController.play();
+        VideoPlayerController.asset('assets/images/onboard_video.mp4')
+          ..addListener(() => setState(() {}))
+          ..setLooping(true)
+          ..initialize().then((value) => videoPlayerController.play());
   }
-
-  //  videoPlayerController.play();
-  //           videoPlayerController.setLooping(false);
-  //           setState(() {});
 
   @override
   void dispose() {
@@ -53,7 +49,12 @@ class _ThirdOnboardPageState extends State<ThirdOnboardPage> {
                       child: SizedBox(
                         width: videoPlayerController.value.size.width,
                         height: videoPlayerController.value.size.height,
-                        child: VideoPlayer(videoPlayerController),
+                        child: InkWell(
+                            onTap: () => videoPlayerController.value.isPlaying
+                                ? videoPlayerController.pause()
+                                : videoPlayerController.play(),
+                            splashColor: Colors.transparent,
+                            child: VideoPlayer(videoPlayerController)),
                       ),
                     ),
                   )
@@ -68,44 +69,26 @@ class _ThirdOnboardPageState extends State<ThirdOnboardPage> {
               child: Column(
                 children: [
                   ButtonWidget(
-                    onTap: () => nextPage(const SignupOptionScreens(), context),
+                    onTap: () {
+                      videoPlayerController.value.isPlaying
+                          ? videoPlayerController.pause()
+                          : null;
+                      nextPage(const SignupOptionScreens(), context);
+                    },
                     text: 'Sign up',
                     color: AppColors.primaryColor,
                   ),
-                  // GestureDetector(
-                  //   onTap: () {}
-                  //   // context.go('/signupOptions'),
-                  //   child: LongButtonContainer(
-                  //     callback: () => context.go('/signupOptions'),
-                  //     buttonColor: AppColors.primaryColor,
-                  //     buttonWidget: Text(
-                  //       'Sign up',
-                  //       style: AppStyles.buttonText.copyWith(
-                  //         color: AppColors.secondaryColor,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                   gapHeight(15),
                   ButtonWidget(
-                    onTap: () => nextPage(const LoginPage(), context),
+                    onTap: () {
+                      videoPlayerController.value.isPlaying
+                          ? videoPlayerController.pause()
+                          : null;
+                      nextPage(const LoginPage(), context);
+                    },
                     text: 'Login',
                     textColor: AppColors.primaryColor,
                   )
-
-                  // GestureDetector(
-                  //   onTap: () {},
-                  //   child: LongButtonContainer(
-                  //     callback: () {},
-                  //     buttonWidget: Text(
-                  //       'Login',
-                  //       style: AppStyles.buttonText.copyWith(
-                  //         color: AppColors.primaryColor,
-                  //       ),
-                  //     ),
-
-                  //   ),
-                  // ),
                 ],
               ),
             ),
