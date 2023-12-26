@@ -8,24 +8,14 @@ import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/show_modal_bottom_sheet_widget.dart';
 import 'package:scaled_size/scaled_size.dart';
 
+import '../Models/get_all_music_model.dart';
+
 class PlayingMusicScreen extends StatefulWidget {
-  const PlayingMusicScreen({
-    required this.index,
-    required this.songs,
-    super.key,
-    required this.name,
-    required this.artist,
-    required this.image,
-    required this.url,
-    required this.id,
-  });
-  final String name;
+  final List<GetAllMusicModel> songs;
   final int index;
-  final String artist;
-  final String image;
-  final List songs;
-  final String url;
-  final String id;
+
+  const PlayingMusicScreen(
+      {super.key, required this.songs, required this.index});
 
   @override
   State<PlayingMusicScreen> createState() => _PlayingMusicScreenState();
@@ -37,21 +27,19 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
   String currentSong = "";
-
-  formatTime(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final hours = twoDigits(duration.inHours);
-    final minutes = twoDigits(duration.inMinutes.remainder(60));
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
-    return [
-      if (duration.inHours > 0) hours,
-      minutes,
-      seconds,
-    ].join(':');
-  }
+  int index = 0;
+  List<GetAllMusicModel> allSongs = [];
 
   @override
   void initState() {
+    super.initState();
+    setState(() {
+      allSongs = widget.songs;
+      index = widget.index;
+    });
+
+    setAudio(widget.songs[widget.index].audio!.filePath!);
+
     audioPlayer.onPlayerStateChanged.listen((event) {
       setState(() {
         isPlaying = event == PlayerState.playing;
@@ -66,55 +54,26 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
     audioPlayer.onPositionChanged.listen((newPosition) {
       setState(() {
         position = newPosition;
+        if (formatTime(duration - position) == "00:00") {
+          index++;
+          audioPlayer.play(
+            (UrlSource(
+              allSongs[index].audio!.filePath ?? "",
+            )),
+          );
+        }
       });
     });
-    if (isPlaying) {
-      audioPlayer.stop();
-      audioPlayer.play(
-        UrlSource(widget.url.toString()),
-      );
-    } else {
-      audioPlayer.play(
-        UrlSource(widget.url.toString()),
-      );
-    }
-    audioPlayer.play(
-      UrlSource(widget.url.toString()),
-    );
-    super.initState();
-    //  audioPlayer.play(
-    //   (UrlSource(url)),
-    // );
-    // audioPlayer.onPlayerStateChanged.listen((state) {
-    //   isPlaying = state == PlayerState.playing;
-    // });
-
-    // audioPlayer.onDurationChanged.listen((newDuration) {
-    //   setState(() {
-    //     duration = newDuration;
-    //   });
-    // });
-    // audioPlayer.onPositionChanged.listen((newPosition) {
-    //   setState(() {
-    //     position = newPosition;
-    //   });
-    // });
   }
 
-  // @override
-  // void dispose() {
-  //   audioPlayer.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    String currentTitle = widget.name;
-    String currentSinger = widget.artist;
-    String currentImage = widget.image;
-    String currentId = widget.id;
-    // String currentSong = "";
-    // String url = widget.url;
     return Scaffold(
       backgroundColor: AppColors.secondaryColor,
       appBar: AppBar(
@@ -140,7 +99,7 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: Image.network(currentImage),
+                  child: Image.network(allSongs[index].image!.filePath!),
                 ),
                 Positioned(
                   bottom: 5,
@@ -152,13 +111,13 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            currentTitle,
+                            allSongs[index].name ?? "",
                             style: AppStyles.title4Bold
                                 .copyWith(color: AppColors.onPrimaryColor),
                           ),
                           gapWidth(250),
                           Text(
-                            currentSinger,
+                            allSongs[index].artist ?? "",
                             style: AppStyles.captionTextBold
                                 .copyWith(color: AppColors.onPrimaryColor),
                           ),
@@ -166,9 +125,10 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                       ),
                       IconButton(
                           onPressed: () {
-                            AudioId.audioId = currentId.toString();
+                            AudioId.audioId =
+                                (allSongs[index].id ?? "").toString();
                             AddMusicToFavorite().addMusicToFavorite(
-                              id: currentId,
+                              id: allSongs[index].id ?? "",
                               context,
                             );
                           },
@@ -224,24 +184,25 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                       size: 25,
                     )),
                 IconButton(
-                  onPressed: () async {
-                    if (isPlaying) {
-                      setState(() async {
-                        await audioPlayer.stop();
-                      });
-                    } else {
-                      setState(() async {
-                        await audioPlayer.play(
-                          (UrlSource(
-                            widget.songs[widget.index - 1]["audio"]["filePath"],
-                          )),
-                        );
-                      });
-                    }
-                  },
-                  icon: const Icon(
+                  onPressed: index == 0
+                      ? null
+                      : () async {
+                          setState(() {
+                            index--;
+                            duration = Duration.zero;
+                            position = Duration.zero;
+                            audioPlayer.play(
+                              (UrlSource(
+                                allSongs[index].audio!.filePath ?? "",
+                              )),
+                            );
+                          });
+                        },
+                  icon: Icon(
                     Icons.skip_previous,
-                    color: AppColors.onPrimaryColor,
+                    color: index == 0
+                        ? AppColors.upLoadContainerColor
+                        : AppColors.onPrimaryColor,
                     size: 25,
                   ),
                 ),
@@ -264,22 +225,25 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () async {
-                    if (isPlaying) {
-                      await audioPlayer.stop();
-                    } else {
-                      setState(() {
-                        audioPlayer.play(
-                          (UrlSource(
-                            widget.songs[widget.index + 1]["audio"]["filePath"],
-                          )),
-                        );
-                      });
-                    }
-                  },
-                  icon: const Icon(
+                  onPressed: index == allSongs.length
+                      ? null
+                      : () async {
+                          setState(() {
+                            index++;
+                            duration = Duration.zero;
+                            position = Duration.zero;
+                            audioPlayer.play(
+                              (UrlSource(
+                                allSongs[index].audio!.filePath ?? "",
+                              )),
+                            );
+                          });
+                        },
+                  icon: Icon(
                     Icons.skip_next,
-                    color: AppColors.onPrimaryColor,
+                    color: index == allSongs.length
+                        ? AppColors.upLoadContainerColor
+                        : AppColors.onPrimaryColor,
                     size: 25,
                   ),
                 ),
@@ -338,5 +302,22 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
         ),
       )),
     );
+  }
+
+  void setAudio(String urlToPlay) {
+    audioPlayer.setReleaseMode(ReleaseMode.stop);
+    audioPlayer.play(UrlSource(urlToPlay));
+  }
+
+  String formatTime(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final hours = twoDigits(duration.inHours);
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+    return [
+      if (duration.inHours > 0) hours,
+      minutes,
+      seconds,
+    ].join(':');
   }
 }

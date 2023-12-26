@@ -1,10 +1,14 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Models/get_all_music_model.dart';
+
 class GetAllMusicService {
-  Future getAllMusic() async {
+  Future<List<GetAllMusicModel>> getAllMusic() async {
+    List<GetAllMusicModel> allMusicList = [];
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? token = pref.getString("token");
     String url = 'https://imisi-backend-service.onrender.com/api/musics';
@@ -16,16 +20,19 @@ class GetAllMusicService {
       });
 
       if (response.statusCode == 200) {
-        var body = jsonDecode(response.body);
-        // print(response.body);
-        // print(response.statusCode);
-        return body;
+        List<dynamic> body = jsonDecode(response.body);
+        // Logger().i(response.body);
+        // Logger().i(response.statusCode);
+        allMusicList =
+            body.map((music) => GetAllMusicModel.fromJson(music)).toList();
       } else {
-        print(response.body);
+        Logger().e(response.body);
       }
     } catch (e) {
+      Logger().e(e);
       throw Exception('Error $e');
     }
+    return allMusicList;
   }
 }
 
