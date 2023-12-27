@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,14 +22,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../Styles/app_colors.dart';
 
 class UploadStepperWidget extends StatefulWidget {
-  final File? file;
-  const UploadStepperWidget({super.key, this.file});
+  final String? audioPath;
+  const UploadStepperWidget({super.key, this.audioPath});
 
   @override
   State<UploadStepperWidget> createState() => _UploadStepperWidgetState();
 }
 
 class _UploadStepperWidgetState extends State<UploadStepperWidget> {
+  String? selectedImagePath;
   TextEditingController artistNameController = TextEditingController();
   TextEditingController songTitleController = TextEditingController();
   TextEditingController featuringController = TextEditingController();
@@ -37,19 +39,29 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController genreController = TextEditingController();
 
-  File? image;
-
-  Future pickImage() async {
+  Future<String?> pickImage() async {
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) return;
-      final imageTemporary = File(image.path);
-      setState(() {
-        this.image = imageTemporary;
-      });
-    } on PlatformException catch (e) {
-      print('Failed to pick image $e');
+      // Pick image file
+      FilePickerResult? imageResult = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+      );
+
+      if (imageResult != null) {
+        // Return the path of the selected image file
+        return imageResult.files.first.path;
+      }
+    } catch (error) {
+      print('Error picking image: $error');
+      // Handle the error
     }
+
+    return null;
+  }
+
+  Future<void> pickImageFile() async {
+    selectedImagePath = await pickImage();
+    setState(() {});
   }
 
   @override
@@ -114,8 +126,8 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         GestureDetector(
-                          onTap: () {
-                            pickImage();
+                          onTap: () async {
+                            await pickImageFile();
                           },
                           child: Container(
                             height: 120.rh,
@@ -127,9 +139,9 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: ClipRRect(
-                              child: image != null
+                              child: selectedImagePath != null
                                   ? Image.file(
-                                      image!,
+                                      File(selectedImagePath!),
                                       fit: BoxFit.cover,
                                     )
                                   : const Center(
@@ -205,21 +217,21 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
                                   onTap: () {
                                     if (songTitleController.text.isEmpty ||
                                         artistNameController.text.isEmpty ||
-                                        image!.path.isEmpty) {
+                                        selectedImagePath!.isEmpty) {
                                       showSnackBar(
                                           context: context,
                                           message: "Pls fill in all details",
                                           isError: true);
                                     } else {
-                                      uploadService.uploadFile(
-                                          artist: artistNameController.text,
-                                          name: songTitleController.text,
-                                          description:
-                                              descriptionController.text,
-                                          genre: genreController.text,
-                                          context,
-                                          audio: widget.file!,
-                                          image: image!);
+                                      uploadService.sendFiles(
+                                        artist: artistNameController.text,
+                                        name: songTitleController.text,
+                                        description: descriptionController.text,
+                                        genre: genreController.text,
+                                        context,
+                                        audioPath: widget.audioPath ?? '',
+                                        imagePath: selectedImagePath ?? '',
+                                      );
                                     }
                                   },
                                 );
@@ -275,46 +287,5 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
         ],
       ),
     );
-  }
-
-  uploadFile() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? token = pref.getString("token");
-    Dio dio = Dio();
-    String imageFileName = image!.path.split('/').last;
-    String audioFileName = image!.path.split('/').last;
-    var formData = FormData.fromMap(
-      {
-        'name': songTitleController.text,
-        'genre': genreController.text,
-        'description': descriptionController.text,
-        'image':
-            await MultipartFile.fromFile(image!.path, filename: imageFileName),
-        'audio': await MultipartFile.fromFile(widget.file!.path,
-            filename: audioFileName),
-        'artist': artistNameController.text,
-      },
-    );
-    print(formData);
-    var response = await dio
-        .post(
-      'https://imisi-backend-service.onrender.com/api/musics',
-      data: formData,
-      options: Options(
-        headers: {
-          'Authorization': "Bearer $token",
-          // 'cookie':
-          //     'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1N2IxOTU2MDI3NDY2MDk0M2MwZDAxOCIsImlhdCI6MTcwMjU2NjIzMSwiZXhwIjoxNzAyNjUyNjMxfQ.UW7VU6fyU5decUFIaJTR07mfu-mdbmbFLIbT66nDVZ4'
-        },
-      ),
-    )
-        .whenComplete(() {
-      debugPrint("complete:");
-    }).catchError((onError) {
-      throw Exception("error:${onError.toString()}");
-    });
-
-    print(response.data);
-    print(response.statusCode);
   }
 }

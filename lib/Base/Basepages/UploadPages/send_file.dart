@@ -33,8 +33,33 @@ class UpLoadFilePage extends StatefulWidget {
 }
 
 class _UpLoadFilePageState extends State<UpLoadFilePage> {
-  File? file;
-  String message = '';
+  // File? file;
+  // String message = '';
+  String? selectedAudioPath;
+  Future<String?> pickAudio() async {
+    try {
+      // Pick audio file
+      FilePickerResult? audioResult = await FilePicker.platform.pickFiles(
+        type: FileType.audio,
+        allowMultiple: false,
+      );
+
+      if (audioResult != null) {
+        // Return the path of the selected audio file
+        return audioResult.files.first.path;
+      }
+    } catch (error) {
+      print('Error picking audio: $error');
+      // Handle the error
+    }
+
+    return null;
+  }
+
+  Future<void> pickAudioFile() async {
+    selectedAudioPath = await pickAudio();
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,16 +126,7 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
                     child: Center(
                       child: InkWell(
                         onTap: () async {
-                          final FilePickerResult? result = await FilePicker
-                              .platform
-                              .pickFiles(type: FileType.audio);
-                          if (result == null) return;
-                          file = File(result.files.first.path!.split('/').last);
-
-                          // artist.getImageGallery(context);
-                          setState(() {
-                            message = '${file!.path.split('/').last}';
-                          });
+                          await pickAudioFile();
                         },
                         child: Column(
                           children: [
@@ -133,7 +149,9 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      file == null ? "You have not chosen any file" : message,
+                      selectedAudioPath == null
+                          ? "You have not chosen any file"
+                          : selectedAudioPath ?? '',
                       // artist.imageFile!.path,
                       style: AppStyles.bodyBold.copyWith(color: Colors.white),
                     ),
@@ -144,7 +162,7 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
                       onTap: () {
                         nextPage(
                             UploadStepperWidget(
-                              file: file,
+                              audioPath: selectedAudioPath,
                             ),
                             context);
                       },

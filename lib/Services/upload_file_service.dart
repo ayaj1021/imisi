@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:imisi/Base/base_page.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/snack_bar.dart';
@@ -52,8 +53,8 @@ class UploadFileService with ChangeNotifier {
           filename: image.path,
         ),
       );
-      print('request image ${image}');
-      print('request ${request}');
+      print('request image $image');
+      print('request $request');
       final audioStream = http.ByteStream(audio.openRead());
       final audioLength = await audio.length();
       Uint8List dytes = await audio.readAsBytes();
@@ -66,8 +67,8 @@ class UploadFileService with ChangeNotifier {
           filename: audio.path,
         ),
       );
-      print('request audio ${audio}');
-      print('request ${request}');
+      print('request audio $audio');
+      print('request $request');
 
       request.fields.addAll({
         'name': name,
@@ -108,7 +109,7 @@ class UploadFileService with ChangeNotifier {
         return response.body;
       } else {
         isUploading = false;
-      
+
         status = "Upload Unsuccessful ";
 
         showSnackBar(context: context, message: response.body, isError: true);
@@ -126,8 +127,8 @@ class UploadFileService with ChangeNotifier {
     required String name,
     required String genre,
     required String description,
-    required File image,
-    required File audio,
+    required String imagePath,
+    required String audioPath,
     required String artist,
   }) async {
     isUploading = true;
@@ -141,30 +142,25 @@ class UploadFileService with ChangeNotifier {
         //     'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1N2IxOTU2MDI3NDY2MDk0M2MwZDAxOCIsImlhdCI6MTcwMjU2NjIzMSwiZXhwIjoxNzAyNjUyNjMxfQ.UW7VU6fyU5decUFIaJTR07mfu-mdbmbFLIbT66nDVZ4'
       };
       notifyListeners();
-      final imageData = await rootBundle.load(image.path.split('/').last);
-      final buffer = imageData.buffer.asUint8List();
-
-      final audioData = await rootBundle.load(audio.path.split('/').last);
-      final duffer = audioData.buffer.asUint8List();
       var response = await dio.post(
         options: Options(
-          contentType: Headers.formUrlEncodedContentType,
           headers: headers,
+          contentType: Headers.jsonContentType,
         ),
         url,
         data: FormData.fromMap({
           'name': name,
           'genre': genre,
           'description': description,
-          'image': MultipartFile.fromBytes(
-            // image.path,
-            buffer,
-            filename: 'photo.jpg',
+          'image': await MultipartFile.fromFile(
+            imagePath,
+            filename: '',
+            contentType: MediaType("image", "jpeg"),
           ),
-          'audio': MultipartFile.fromBytes(
-            //  audio.path,
-            duffer,
-            filename: 'audio',
+          'audio': await MultipartFile.fromFile(
+            audioPath,
+            filename: '',
+            contentType: MediaType("audio", "mp3"),
           ),
           'artist': artist,
         }),
