@@ -91,9 +91,9 @@ class _UpLoadPageState extends State<UpLoadPage> {
                         ? () {}
                         : nextPage(
                             const UpLoadFilePage(
-                              artistName: '',
-                              songTitle: '',
-                            ),
+                                // artistName: '',
+                                // songTitle: '',
+                                ),
                             context);
 
                     //  Navigator.push(

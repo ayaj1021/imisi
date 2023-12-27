@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:imisi/Models/get_all_music_model.dart';
 import 'package:imisi/Screens/drawer.dart';
 import 'package:imisi/Screens/playing_music_screen.dart';
 import 'package:imisi/Services/get_all_music_service.dart';
@@ -12,11 +12,25 @@ import 'package:scaled_size/scaled_size.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  Future getAllMusic = GetAllMusicService().getAllMusic();
+  @override
+  void initState() {
+    // isLoading = true;
+    // Future.delayed(const Duration(seconds: 4), () {
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // });
+    super.initState();
+    getAllMusic;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,144 +47,150 @@ class _HomePageState extends State<HomePage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            "Top Songs",
-                            style: AppStyles.agTitle3Bold.copyWith(
-                              color: Colors.white,
-                            ),
-                          ),
-                          const Spacer(),
-                          //  Image.asset("assets/images/point.png"),
-                          gapWidth(5),
-                          Text(
-                            "8 Points",
-                            style: AppStyles.bodyBold
-                                .copyWith(color: Colors.white),
-                          ),
-                          gapWidth(15)
-                        ],
-                      ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15.0),
+                  child: Text(
+                    "Songs",
+                    style: AppStyles.agTitle3Bold.copyWith(
+                      color: Colors.white,
                     ),
-                    gapHeight(20),
-                    FutureBuilder(
-                        future: GetAllMusicService().getAllMusic(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          } else if (!snapshot.hasData) {
-                            return Text(
-                              'No data',
-                              style: AppStyles.bodyBold
-                                  .copyWith(color: AppColors.primaryColor),
-                            );
-                          }
-                          return SizedBox(
-                            height: 200,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: snapshot.data.length,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return InkWell(
-                                  onTap: () {
-                                    nextPage(
-                                        PlayingMusicScreen(
-                                          id: snapshot.data![index]
-                                                ["_id"],
-                                            index: index,
-                                            songs: snapshot.data,
-                                            url: snapshot.data![index]["audio"]
-                                                ["filePath"],
-                                            name: snapshot.data![index]["name"],
-                                            artist: snapshot.data![index]
-                                                ["artist"],
-                                            image: snapshot.data![index]
-                                                ["image"]["filePath"]),
-                                        context);
-                                  },
-                                  child: Container(
-                                    margin: const EdgeInsets.only(left: 15),
-                                    height: 150,
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          height: 130.rw,
-                                          width: 110.rh,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                          ),
-                                          child: Image.network(snapshot
-                                              .data![index]["image"]["filePath"]
-                                              .toString()),
-                                        ),
-                                        gapHeight(5),
-                                        Text(
-                                          snapshot.data![index]["artist"],
-                                          style: AppStyles.bodyBold.copyWith(
-                                            color: AppColors.onPrimaryColor,
-                                          ),
-                                        ),
-                                        gapHeight(2),
-                                        Text(
-                                          snapshot.data![index]["name"],
-                                          style: AppStyles.bodyRegularText
-                                              .copyWith(
-                                            color: AppColors.onPrimaryColor,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        }),
-                    gapHeight(20),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Text(
-                        "Top Artistes",
-                        style: AppStyles.agTitle3Bold.copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    gapHeight(20),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 15),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            TopArtisteWidget(),
-                            TopArtisteWidget(),
-                            TopArtisteWidget(),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
+                  ),
                 ),
+                gapHeight(20),
+                FutureBuilder(
+                    future: getAllMusic,
+                    //GetAllMusicService().getAllMusic(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (!snapshot.hasData) {
+                        return Text(
+                          'No data',
+                          style: AppStyles.bodyBold
+                              .copyWith(color: AppColors.primaryColor),
+                        );
+                      } else if (snapshot.hasData) {
+                        final List<GetAllMusicModel> musicList = snapshot.data!;
+                        return SizedBox(
+                          height: 250,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: musicList.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  nextPage(
+                                      PlayingMusicScreen(
+                                          songs: musicList, index: index),
+                                      context);
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(
+                                      left: 15, right: 10),
+                                  height: 150.rh,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        height: 150.rh,
+                                        width: 130.rw,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          image: DecorationImage(
+                                            image: NetworkImage(musicList[index]
+                                                    .image!
+                                                    .filePath ??
+                                                ""),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        // child: Image.network(
+                                        //     musicList[index]
+                                        //             .image!
+                                        //             .filePath ??
+                                        //         ""),
+                                      ),
+                                      gapHeight(5),
+                                      Text(
+                                        musicList[index].artist ?? "",
+                                        style: AppStyles.bodyBold.copyWith(
+                                          color: AppColors.onPrimaryColor,
+                                        ),
+                                      ),
+                                      gapHeight(2),
+                                      Text(
+                                        musicList[index].name ?? "",
+                                        style:
+                                            AppStyles.bodyRegularText.copyWith(
+                                          color: AppColors.onPrimaryColor,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }
+                      return Container();
+                    }),
+                gapHeight(20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Text(
+                    "Videos",
+                    style: AppStyles.agTitle3Bold.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                gapHeight(20),
+                const Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        TopArtisteWidget(),
+                        TopArtisteWidget(),
+                        TopArtisteWidget(),
+                      ],
+                    ),
+                  ),
+                )
               ],
             ),
           ],
         ),
       )),
+    );
+  }
+}
+
+class SkeletonLoadingWidget extends StatelessWidget {
+  const SkeletonLoadingWidget({
+    super.key,
+    this.height,
+    this.width,
+  });
+  final double? height, width;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height,
+      width: width,
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.04),
+          borderRadius: BorderRadius.circular(16)),
     );
   }
 }

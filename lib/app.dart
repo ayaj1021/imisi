@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:imisi/Provider/artiste_provider.dart';
+import 'package:imisi/Services/add_music_favorites.dart';
+import 'package:imisi/Services/add_music_to_playlist_service.dart';
 
 import 'package:imisi/Services/auth_service.dart';
 
@@ -23,6 +25,8 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (context) => AuthService()),
             ChangeNotifierProvider(create: (context) => ArtistProvider()),
             ChangeNotifierProvider(create: (context) => UploadFileService()),
+            ChangeNotifierProvider(create: (context) => AddMusicToFavorite()),
+            ChangeNotifierProvider(create: (context) => AddMusicToPlaylistService()),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,

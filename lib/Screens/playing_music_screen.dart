@@ -1,42 +1,41 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:imisi/Base/base_page.dart';
+import 'package:imisi/Models/get_all_music_model.dart';
+import 'package:imisi/Screens/playlist_screen.dart';
+import 'package:imisi/Screens/song_details_screen.dart';
 import 'package:imisi/Services/add_music_favorites.dart';
+import 'package:imisi/Services/get_all_music_service.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
-import 'package:imisi/Utils/audio_id.dart';
 import 'package:imisi/Utils/gap.dart';
+import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/show_modal_bottom_sheet_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:scaled_size/scaled_size.dart';
 
 class PlayingMusicScreen extends StatefulWidget {
   const PlayingMusicScreen({
-    required this.index,
-    required this.songs,
     super.key,
-    required this.name,
-    required this.artist,
-    required this.image,
-    required this.url,
-    required this.id,
+    required this.songs,
+    required this.index,
   });
-  final String name;
+  final List<GetAllMusicModel> songs;
   final int index;
-  final String artist;
-  final String image;
-  final List songs;
-  final String url;
-  final String id;
-
   @override
   State<PlayingMusicScreen> createState() => _PlayingMusicScreenState();
 }
 
 class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
+  Future getAllMusic = GetAllMusicService().getAllMusic();
   final audioPlayer = AudioPlayer();
   bool isPlaying = false;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
-  String currentSong = "";
+  void setAudio(String urlToPlay) {
+    audioPlayer.setReleaseMode(ReleaseMode.stop);
+    audioPlayer.play(UrlSource(urlToPlay));
+  }
 
   formatTime(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
@@ -50,14 +49,24 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
     ].join(':');
   }
 
+  int index = 0;
+  List<GetAllMusicModel> allSongs = [];
+
   @override
   void initState() {
+    super.initState();
+
+    setState(() {
+      allSongs = widget.songs;
+      index = widget.index;
+    });
+
+    setAudio(widget.songs[widget.index].audio!.filePath!);
     audioPlayer.onPlayerStateChanged.listen((event) {
       setState(() {
         isPlaying = event == PlayerState.playing;
       });
     });
-
     audioPlayer.onDurationChanged.listen((newDuration) {
       setState(() {
         duration = newDuration;
@@ -66,60 +75,31 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
     audioPlayer.onPositionChanged.listen((newPosition) {
       setState(() {
         position = newPosition;
+        if (formatTime(duration - position) == "00:00") {
+          index++;
+          audioPlayer.play(
+            (UrlSource(
+              allSongs[index].audio!.filePath ?? "",
+            )),
+          );
+        }
       });
     });
-    if (isPlaying) {
-      audioPlayer.stop();
-      audioPlayer.play(
-        UrlSource(widget.url.toString()),
-      );
-    } else {
-      audioPlayer.play(
-        UrlSource(widget.url.toString()),
-      );
-    }
-    audioPlayer.play(
-      UrlSource(widget.url.toString()),
-    );
-    super.initState();
-    //  audioPlayer.play(
-    //   (UrlSource(url)),
-    // );
-    // audioPlayer.onPlayerStateChanged.listen((state) {
-    //   isPlaying = state == PlayerState.playing;
-    // });
-
-    // audioPlayer.onDurationChanged.listen((newDuration) {
-    //   setState(() {
-    //     duration = newDuration;
-    //   });
-    // });
-    // audioPlayer.onPositionChanged.listen((newPosition) {
-    //   setState(() {
-    //     position = newPosition;
-    //   });
-    // });
   }
 
-  // @override
-  // void dispose() {
-  //   audioPlayer.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    String currentTitle = widget.name;
-    String currentSinger = widget.artist;
-    String currentImage = widget.image;
-    String currentId = widget.id;
-    // String currentSong = "";
-    // String url = widget.url;
     return Scaffold(
       backgroundColor: AppColors.secondaryColor,
       appBar: AppBar(
         title: IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => nextPage(const BasePage(), context),
             icon: const Icon(
               Icons.arrow_back_ios,
               color: AppColors.onPrimaryColor,
@@ -138,46 +118,55 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                   height: 340.rh,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Image.network(currentImage),
+                      borderRadius: BorderRadius.circular(5),
+                      image: DecorationImage(
+                        image: NetworkImage(allSongs[index].image!.filePath!),
+                        fit: BoxFit.cover,
+                      )),
+                  //child:   Image.network(allSongs[index].image!.filePath!),
                 ),
                 Positioned(
                   bottom: 5,
                   right: 10,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            currentTitle,
-                            style: AppStyles.title4Bold
-                                .copyWith(color: AppColors.onPrimaryColor),
-                          ),
-                          gapWidth(250),
-                          Text(
-                            currentSinger,
-                            style: AppStyles.captionTextBold
-                                .copyWith(color: AppColors.onPrimaryColor),
-                          ),
-                        ],
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            AudioId.audioId = currentId.toString();
-                            AddMusicToFavorite().addMusicToFavorite(
-                              id: currentId,
-                              context,
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.favorite_outline,
-                            color: AppColors.onPrimaryColor,
-                          ))
-                    ],
-                  ),
+                  child: Consumer<AddMusicToFavorite>(
+                      builder: (context, addMusicFavorite, child) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              allSongs[index].name ?? "",
+                              style: AppStyles.title4Bold
+                                  .copyWith(color: AppColors.onPrimaryColor),
+                            ),
+                            gapWidth(250),
+                            Text(
+                              allSongs[index].artist ?? "",
+                              style: AppStyles.captionTextBold
+                                  .copyWith(color: AppColors.onPrimaryColor),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              addMusicFavorite.addMusicToFavorite(
+                                id: allSongs[index].id ?? "",
+                                context,
+                              );
+                            },
+                            icon: Icon(
+                              addMusicFavorite.isAdded == true
+                                  ? Icons.favorite
+                                  : Icons.favorite_outline,
+                              color: addMusicFavorite.isAdded == true
+                                  ? AppColors.primaryColor
+                                  : AppColors.onPrimaryColor,
+                            ))
+                      ],
+                    );
+                  }),
                 )
               ],
             ),
@@ -185,7 +174,9 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
             Slider.adaptive(
               activeColor: AppColors.primaryColor,
               min: 0,
-              max: duration.inSeconds.toDouble(),
+              max: duration.inSeconds.toDouble() < 2
+                  ? 2.0
+                  : duration.inSeconds.toDouble(),
               value: position.inSeconds.toDouble(),
               onChanged: (value) async {
                 final position = Duration(seconds: value.toInt());
@@ -224,21 +215,20 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                       size: 25,
                     )),
                 IconButton(
-                  onPressed: () async {
-                    if (isPlaying) {
-                      setState(() async {
-                        await audioPlayer.stop();
-                      });
-                    } else {
-                      setState(() async {
-                        await audioPlayer.play(
-                          (UrlSource(
-                            widget.songs[widget.index - 1]["audio"]["filePath"],
-                          )),
-                        );
-                      });
-                    }
-                  },
+                  onPressed: index == 0
+                      ? null
+                      : () async {
+                          setState(() {
+                            index--;
+                            duration = Duration.zero;
+                            position = Duration.zero;
+                            audioPlayer.play(
+                              (UrlSource(
+                                allSongs[index].audio!.filePath ?? "",
+                              )),
+                            );
+                          });
+                        },
                   icon: const Icon(
                     Icons.skip_previous,
                     color: AppColors.onPrimaryColor,
@@ -264,22 +254,25 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () async {
-                    if (isPlaying) {
-                      await audioPlayer.stop();
-                    } else {
-                      setState(() {
-                        audioPlayer.play(
-                          (UrlSource(
-                            widget.songs[widget.index + 1]["audio"]["filePath"],
-                          )),
-                        );
-                      });
-                    }
-                  },
-                  icon: const Icon(
+                  onPressed: index == allSongs.length
+                      ? null
+                      : () async {
+                          setState(() {
+                            index++;
+                            duration = Duration.zero;
+                            position = Duration.zero;
+                            audioPlayer.play(
+                              (UrlSource(
+                                allSongs[index].audio!.filePath ?? "",
+                              )),
+                            );
+                          });
+                        },
+                  icon: Icon(
                     Icons.skip_next,
-                    color: AppColors.onPrimaryColor,
+                    color: index == allSongs.length
+                        ? AppColors.upLoadContainerColor
+                        : AppColors.onPrimaryColor,
                     size: 25,
                   ),
                 ),
@@ -287,7 +280,14 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                   onPressed: () {
                     showModalBottomSheetWidget(context, [
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pop(context);
+                          nextPage(
+                              PlayListScreen(
+                                musicId: allSongs[index].id ?? "",
+                              ),
+                              context);
+                        },
                         child: Row(
                           children: [
                             const Icon(
@@ -295,7 +295,7 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                               color: AppColors.primaryColor,
                               size: 35,
                             ),
-                            gapWidth(10),
+                            gapWidth(5),
                             Text(
                               'Add to playlist',
                               style: AppStyles.title2.copyWith(
@@ -307,22 +307,35 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                         ),
                       ),
                       gapHeight(10),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.info_outline_rounded,
-                            color: AppColors.primaryColor,
-                            size: 30,
-                          ),
-                          gapWidth(10),
-                          Text(
-                            'Song details',
-                            style: AppStyles.title2.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.onPrimaryColor,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                          nextPage(
+                              SongDetailsScreen(
+                                artist: allSongs[index].artist ?? "",
+                                name: allSongs[index].name ?? "",
+                                genre: '',
+                                description: '',
+                              ),
+                              context);
+                        },
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.info_outline_rounded,
+                              color: AppColors.primaryColor,
+                              size: 30,
                             ),
-                          ),
-                        ],
+                            gapWidth(10),
+                            Text(
+                              'Song details',
+                              style: AppStyles.title2.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.onPrimaryColor,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ]);
                   },

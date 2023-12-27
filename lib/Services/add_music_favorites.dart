@@ -4,17 +4,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:imisi/Utils/audio_id.dart';
 import 'package:imisi/Utils/snack_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AddMusicToFavorite {
+class AddMusicToFavorite with ChangeNotifier {
+  bool isAdded = false;
   Future addMusicToFavorite(BuildContext context, {required String id}) async {
+    isAdded = true;
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? token = pref.getString("token");
-   // final notId = AudioId.audioId;
-    String url =
-        'https://imisi-backend-service.onrender.com/api/favorites/$id';
+
+    String url = 'https://imisi-backend-service.onrender.com/api/favorites/$id';
     var headers = {
       'Authorization': "Bearer $token",
     };
@@ -22,17 +22,16 @@ class AddMusicToFavorite {
     try {
       var response = await http.post(Uri.parse(url), headers: headers);
       var data = jsonDecode(response.body);
-      print(data);
-      print(response.statusCode);
+
       if (response.statusCode == 201) {
-        print(data);
-        print(response.statusCode);
+        isAdded = true;
         showSnackBar(context: context, message: data["message"]);
+        notifyListeners();
         return data;
       } else {
-        print(data);
-        print(response.statusCode);
+        isAdded = false;
         showSnackBar(context: context, message: data["message"]);
+        notifyListeners();
       }
     } catch (e) {
       throw Exception('Error $e');

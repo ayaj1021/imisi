@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,10 +13,10 @@ import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/show_alert_dialog.dart';
 import 'package:imisi/Utils/snack_bar.dart';
 import 'package:imisi/Widget/button_widget.dart';
-import 'package:imisi/Base/Basepages/upload_pages.dart';
 import 'package:imisi/Base/base_page.dart';
 import 'package:provider/provider.dart';
 import 'package:scaled_size/scaled_size.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Styles/app_colors.dart';
 
@@ -72,7 +73,7 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
               showAlertDialog(
                 context,
                 yesTextOnTap: () {
-                  nextPage(const UpLoadPage(), context);
+                  nextPage(const BasePage(), context);
                 },
                 message:
                     'Are you sure you want to leave this upload incomplete? You may lose any unsaved progress.',
@@ -170,30 +171,6 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
                         TextField(
                           style: AppStyles.bodyRegularText
                               .copyWith(color: AppColors.onPrimaryColor),
-                          controller: featuringController,
-                          decoration: getDecoration(
-                              "Featuring",
-                              "(Separate names using comas)",
-                              AppColors.hintTextColor),
-                        ),
-                        TextField(
-                          style: AppStyles.bodyRegularText
-                              .copyWith(color: AppColors.onPrimaryColor),
-                          controller: producersController,
-                          decoration: getDecoration(
-                              "Producer(s)",
-                              "(Separate names using comas)",
-                              AppColors.hintTextColor),
-                        ),
-                        TextField(
-                          style: AppStyles.bodyRegularText
-                              .copyWith(color: AppColors.onPrimaryColor),
-                          controller: albumController,
-                          decoration: getDecoration("Album", "", Colors.red),
-                        ),
-                        TextField(
-                          style: AppStyles.bodyRegularText
-                              .copyWith(color: AppColors.onPrimaryColor),
                           controller: descriptionController,
                           decoration:
                               getDecoration("Description", "", Colors.red),
@@ -208,32 +185,47 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
                         Container(
                           width: 135.rw,
                           padding: const EdgeInsets.only(bottom: 50),
-                          child: Consumer<UploadFileService>(
-                              builder: (context, artistProvider, child) {
-                            return ButtonWidget(
-                              text: "Finish",
-                              color: AppColors.primaryColor,
-                              onTap: () {
-                                if (songTitleController.text.isEmpty ||
-                                    artistNameController.text.isEmpty ||
-                                    image!.path.isEmpty) {
-                                  showSnackBar(
-                                      context: context,
-                                      message: "Pls fill in all details",
-                                      isError: true);
-                                } else {
-                                  artistProvider.uploadFile(
-                                      artist: artistNameController.text,
-                                      name: songTitleController.text,
-                                      description: descriptionController.text,
-                                      genre: genreController.text,
-                                      context,
-                                      audio: widget.file!,
-                                      image: image!);
-                                }
-                              },
-                            );
-                          }),
+                          child: Column(
+                            children: [
+                              // ButtonWidget(
+                              //   onTap: () {
+                              //     print('pressed');
+                              //     uploadFile();
+                              //   },
+                              //   text: 'Finish',
+                              //   color: AppColors.primaryColor,
+                              // )
+                              Consumer<UploadFileService>(
+                                  builder: (context, uploadService, child) {
+                                return ButtonWidget(
+                                  text: uploadService.isUploading == true
+                                      ? "Uploading file..."
+                                      : "Finish",
+                                  color: AppColors.primaryColor,
+                                  onTap: () {
+                                    if (songTitleController.text.isEmpty ||
+                                        artistNameController.text.isEmpty ||
+                                        image!.path.isEmpty) {
+                                      showSnackBar(
+                                          context: context,
+                                          message: "Pls fill in all details",
+                                          isError: true);
+                                    } else {
+                                      uploadService.uploadFile(
+                                          artist: artistNameController.text,
+                                          name: songTitleController.text,
+                                          description:
+                                              descriptionController.text,
+                                          genre: genreController.text,
+                                          context,
+                                          audio: widget.file!,
+                                          image: image!);
+                                    }
+                                  },
+                                );
+                              }),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -283,5 +275,46 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
         ],
       ),
     );
+  }
+
+  uploadFile() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? token = pref.getString("token");
+    Dio dio = Dio();
+    String imageFileName = image!.path.split('/').last;
+    String audioFileName = image!.path.split('/').last;
+    var formData = FormData.fromMap(
+      {
+        'name': songTitleController.text,
+        'genre': genreController.text,
+        'description': descriptionController.text,
+        'image':
+            await MultipartFile.fromFile(image!.path, filename: imageFileName),
+        'audio': await MultipartFile.fromFile(widget.file!.path,
+            filename: audioFileName),
+        'artist': artistNameController.text,
+      },
+    );
+    print(formData);
+    var response = await dio
+        .post(
+      'https://imisi-backend-service.onrender.com/api/musics',
+      data: formData,
+      options: Options(
+        headers: {
+          'Authorization': "Bearer $token",
+          // 'cookie':
+          //     'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1N2IxOTU2MDI3NDY2MDk0M2MwZDAxOCIsImlhdCI6MTcwMjU2NjIzMSwiZXhwIjoxNzAyNjUyNjMxfQ.UW7VU6fyU5decUFIaJTR07mfu-mdbmbFLIbT66nDVZ4'
+        },
+      ),
+    )
+        .whenComplete(() {
+      debugPrint("complete:");
+    }).catchError((onError) {
+      throw Exception("error:${onError.toString()}");
+    });
+
+    print(response.data);
+    print(response.statusCode);
   }
 }

@@ -32,8 +32,7 @@ class DeletePlaylistService {
         nextPageAndremoveUntil(const PlayListScreen(), context);
     
 
-        print(response.body);
-        print(response.statusCode);
+      
       } else {
         showSnackBar(context: context!, message: data["message"]);
        

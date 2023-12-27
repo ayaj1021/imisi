@@ -26,6 +26,10 @@ dependencies:
   image_picker: ^1.0.5
   dio: ^5.4.0
   logger: ^2.0.2+1
+  on_audio_query: ^2.9.0
+  just_audio: ^0.9.36
+  audio_video_progress_bar: ^2.0.1
+  audio_service: ^0.18.12
   
 
 dev_dependencies:

@@ -6,7 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:imisi/Provider/artiste_provider.dart';
 import 'package:imisi/Screens/upload_steper.dart';
-import 'package:imisi/Services/upload_file_service.dart';
+
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
@@ -17,14 +17,16 @@ import 'package:imisi/Widget/button_widget.dart';
 import 'package:provider/provider.dart';
 
 class UpLoadFilePage extends StatefulWidget {
-  final String artistName;
-  final String songTitle;
+  // final String artistName;
+  // final String songTitle;
   // final String artistName;
   // final String artistName;
   // final String artistName;
 
-  const UpLoadFilePage(
-      {super.key, required this.artistName, required this.songTitle});
+  const UpLoadFilePage({
+    super.key,
+    // required this.artistName, required this.songTitle
+  });
 
   @override
   State<UpLoadFilePage> createState() => _UpLoadFilePageState();
@@ -103,11 +105,11 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
                               .platform
                               .pickFiles(type: FileType.audio);
                           if (result == null) return;
-                          file = File(result.files.first.path!);
+                          file = File(result.files.first.path!.split('/').last);
 
                           // artist.getImageGallery(context);
                           setState(() {
-                            message = '${file!.path}';
+                            message = '${file!.path.split('/').last}';
                           });
                         },
                         child: Column(

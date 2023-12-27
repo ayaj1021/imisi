@@ -1,155 +1,111 @@
-// To parse this JSON data, do
-//
-//     final getAllMusicModel = getAllMusicModelFromJson(jsonString);
-
-// ignore_for_file: constant_identifier_names
-
-import 'dart:convert';
-
-List<GetAllMusicModel> getAllMusicModelFromJson(String str) => List<GetAllMusicModel>.from(json.decode(str).map((x) => GetAllMusicModel.fromJson(x)));
-
-String getAllMusicModelToJson(List<GetAllMusicModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
 class GetAllMusicModel {
-    final String? id;
-    final String? user;
-    final Name? name;
-    final Genre? genre;
-    final String? artist;
-    final Description? description;
-    final DateTime? createdAt;
-    final DateTime? updatedAt;
-    final int? v;
-    final AudioClass? image;
-    final dynamic audio;
+  String? id;
+  String? user;
+  String? name;
+  String? genre;
+  String? artist;
+  String? description;
+  Image? image;
+  Audio? audio;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
-    GetAllMusicModel({
-        this.id,
-        this.user,
-        this.name,
-        this.genre,
-        this.artist,
-        this.description,
-        this.createdAt,
-        this.updatedAt,
-        this.v,
-        this.image,
-        this.audio,
-    });
+  GetAllMusicModel(
+      {this.id,
+      this.user,
+      this.name,
+      this.genre,
+      this.artist,
+      this.description,
+      this.image,
+      this.audio,
+      this.createdAt,
+      this.updatedAt,
+      this.iV});
 
-    factory GetAllMusicModel.fromJson(Map<String, dynamic> json) => GetAllMusicModel(
-        id: json["_id"],
-        user: json["user"],
-        name: nameValues.map[json["name"]]!,
-        genre: genreValues.map[json["genre"]]!,
-        artist: json["artist"],
-        description: descriptionValues.map[json["description"]]!,
-        createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
-        updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
-        v: json["__v"],
-        image: json["image"] == null ? null : AudioClass.fromJson(json["image"]),
-        audio: json["audio"],
-    );
+   GetAllMusicModel.fromJson(Map<String, dynamic> json) {
+    id = json['_id'];
+    user = json['user'];
+    name = json['name'];
+    genre = json['genre'];
+    artist = json['artist'];
+    description = json['description'];
+    image = json['image'] != null ? Image.fromJson(json['image']) : null;
+    audio = json['audio'] != null ? Audio.fromJson(json['audio']) : null;
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    iV = json['__v'];
+  }
 
-    Map<String, dynamic> toJson() => {
-        "_id": id,
-        "user": user,
-        "name": nameValues.reverse[name],
-        "genre": genreValues.reverse[genre],
-        "artist": artist,
-        "description": descriptionValues.reverse[description],
-        "createdAt": createdAt?.toIso8601String(),
-        "updatedAt": updatedAt?.toIso8601String(),
-        "__v": v,
-        "image": image?.toJson(),
-        "audio": audio,
-    };
-}
-
-class AudioClass {
-    final String? fileName;
-    final String? filePath;
-    final FileType? fileType;
-    final String? fileSize;
-
-    AudioClass({
-        this.fileName,
-        this.filePath,
-        this.fileType,
-        this.fileSize,
-    });
-
-    factory AudioClass.fromJson(Map<String, dynamic> json) => AudioClass(
-        fileName: json["fileName"],
-        filePath: json["filePath"],
-        fileType: fileTypeValues.map[json["fileType"]]!,
-        fileSize: json["fileSize"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "fileName": fileName,
-        "filePath": filePath,
-        "fileType": fileTypeValues.reverse[fileType],
-        "fileSize": fileSize,
-    };
-}
-
-enum FileType {
-    AUDIO_MPEG,
-    IMAGE_JPEG,
-    IMAGE_PNG, media
-}
-
-final fileTypeValues = EnumValues({
-    "audio/mpeg": FileType.AUDIO_MPEG,
-    "image/jpeg": FileType.IMAGE_JPEG,
-    "image/png": FileType.IMAGE_PNG
-});
-
-enum Description {
-    SASA,
-    XOXO,
-    XXX
-}
-
-final descriptionValues = EnumValues({
-    "sasa": Description.SASA,
-    "xoxo": Description.XOXO,
-    "xxx": Description.XXX
-});
-
-enum Genre {
-    HIPHOP,
-    XOX,
-    XOXO
-}
-
-final genreValues = EnumValues({
-    "hiphop": Genre.HIPHOP,
-    "xox": Genre.XOX,
-    "xoxo": Genre.XOXO
-});
-
-enum Name {
-    BABAARA,
-    BABA_ARA,
-    XXO
-}
-
-final nameValues = EnumValues({
-    "babaara": Name.BABAARA,
-    "baba ara": Name.BABA_ARA,
-    "xxo": Name.XXO
-});
-
-class EnumValues<T> {
-    Map<String, T> map;
-    late Map<T, String> reverseMap;
-
-    EnumValues(this.map);
-
-    Map<T, String> get reverse {
-        reverseMap = map.map((k, v) => MapEntry(v, k));
-        return reverseMap;
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = id;
+    data['user'] = user;
+    data['name'] = name;
+    data['genre'] = genre;
+    data['artist'] = artist;
+    data['description'] = description;
+    if (image != null) {
+      data['image'] = image!.toJson();
     }
+    if (audio != null) {
+      data['audio'] = audio!.toJson();
+    }
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['__v'] = iV;
+    return data;
+  }
 }
+
+class Image {
+  String? fileName;
+  String? filePath;
+  String? fileType;
+  String? fileSize;
+
+  Image({this.fileName, this.filePath, this.fileType, this.fileSize});
+
+  Image.fromJson(Map<String, dynamic> json) {
+    fileName = json['fileName'];
+    filePath = json['filePath'];
+    fileType = json['fileType'];
+    fileSize = json['fileSize'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['fileName'] = fileName;
+    data['filePath'] = filePath;
+    data['fileType'] = fileType;
+    data['fileSize'] = fileSize;
+    return data;
+  }
+}
+
+class Audio {
+  String? fileName;
+  String? filePath;
+  String? fileType;
+  String? fileSize;
+
+  Audio({this.fileName, this.filePath, this.fileType, this.fileSize});
+
+  Audio.fromJson(Map<String, dynamic> json) {
+    fileName = json['fileName'];
+    filePath = json['filePath'];
+    fileType = json['fileType'];
+    fileSize = json['fileSize'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['fileName'] = fileName;
+    data['filePath'] = filePath;
+    data['fileType'] = fileType;
+    data['fileSize'] = fileSize;
+    return data;
+  }
+}
+

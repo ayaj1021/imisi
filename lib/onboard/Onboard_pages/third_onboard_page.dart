@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:imisi/Authentication_pages/login.dart';
+
 import 'package:imisi/Styles/app_colors.dart';
 
-import 'package:imisi/Utils/gap.dart';
+
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Widget/button_widget.dart';
 import 'package:imisi/onboard/Onboard%20Screens/signup_options_screen.dart';
@@ -22,7 +22,7 @@ class _ThirdOnboardPageState extends State<ThirdOnboardPage> {
   void initState() {
     super.initState();
     videoPlayerController =
-        VideoPlayerController.asset('assets/images/onboard_video.mp4');
+        VideoPlayerController.asset('assets/images/onboard_video1.mp4');
     videoPlayerController.setLooping(false);
     videoPlayerController.initialize().then((value) => setState(() {}));
     videoPlayerController.play();
@@ -67,40 +67,13 @@ class _ThirdOnboardPageState extends State<ThirdOnboardPage> {
                     text: 'Sign up',
                     color: AppColors.primaryColor,
                   ),
-                  // GestureDetector(
-                  //   onTap: () {}
-                  //   // context.go('/signupOptions'),
-                  //   child: LongButtonContainer(
-                  //     callback: () => context.go('/signupOptions'),
-                  //     buttonColor: AppColors.primaryColor,
-                  //     buttonWidget: Text(
-                  //       'Sign up',
-                  //       style: AppStyles.buttonText.copyWith(
-                  //         color: AppColors.secondaryColor,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  gapHeight(15),
-                  ButtonWidget(
-                    onTap: () => nextPage(const LoginPage(), context),
-                    text: 'Login',
-                    textColor: AppColors.primaryColor,
-                  )
 
-                  // GestureDetector(
-                  //   onTap: () {},
-                  //   child: LongButtonContainer(
-                  //     callback: () {},
-                  //     buttonWidget: Text(
-                  //       'Login',
-                  //       style: AppStyles.buttonText.copyWith(
-                  //         color: AppColors.primaryColor,
-                  //       ),
-                  //     ),
-
-                  //   ),
-                  // ),
+                  // gapHeight(15),
+                  // ButtonWidget(
+                  //   onTap: () => nextPage(const LoginPage(), context),
+                  //   text: 'Login',
+                  //   textColor: AppColors.primaryColor,
+                  // )
                 ],
               ),
             ),

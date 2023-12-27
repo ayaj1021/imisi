@@ -113,9 +113,10 @@ class AuthService with ChangeNotifier {
       );
 
       final data = jsonDecode(response.body);
+      print(response.body);
       if (response.statusCode == 200) {
         SharedPref().saveUserToken(data['token']);
-
+        print(response.body);
         showSnackBar(
             context: context,
             message: "Logged in Successfully",
@@ -124,7 +125,8 @@ class AuthService with ChangeNotifier {
         isLoggingIn = false;
         notifyListeners();
         return data;
-      } else if (response.statusCode == 400) {
+      } else {
+        print(response.body);
         isLoggingIn = false;
         notifyListeners();
         showSnackBar(context: context, message: data['message'], isError: true);
@@ -132,8 +134,6 @@ class AuthService with ChangeNotifier {
         showSnackBar(context: context, message: "Logged in Successfully");
         nextPage(const BasePage(), context);
         return data;
-      } else {
-        showSnackBar(context: context, message: data['message']);
       }
     } catch (e) {
       log('Error $e');

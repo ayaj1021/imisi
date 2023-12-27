@@ -8,7 +8,8 @@ import 'package:imisi/Utils/audio_id.dart';
 import 'package:imisi/Utils/snack_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AddMusicPlaylist {
+class AddMusicPlaylist  {
+  
   Future addMusicPlaylist(BuildContext context) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? token = pref.getString("token");
@@ -24,9 +25,8 @@ class AddMusicPlaylist {
       var data = jsonDecode(response.body);
       if (response.statusCode == 201) {
         showSnackBar(context: context, message: data["message"]);
-      }else{
+      } else {
         showSnackBar(context: context, message: data["message"]);
-
       }
     } catch (e) {
       throw Exception('Error $e');

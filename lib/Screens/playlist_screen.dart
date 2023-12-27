@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:imisi/Base/base_page.dart';
 import 'package:imisi/Screens/create_playlist_screen.dart';
+import 'package:imisi/Screens/display_songs_inplaylist_screen.dart';
+import 'package:imisi/Services/add_music_to_playlist_service.dart';
 import 'package:imisi/Services/delete_playlist_service.dart';
+import 'package:imisi/Services/get_all_music_service.dart';
 import 'package:imisi/Services/get_playlist_service.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
@@ -10,15 +12,17 @@ import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/show_alert_dialog.dart';
 import 'package:imisi/Utils/show_modal_bottom_sheet_widget.dart';
+import 'package:provider/provider.dart';
 
 class PlayListScreen extends StatefulWidget {
-  const PlayListScreen({super.key});
-
+  const PlayListScreen({super.key, this.musicId});
+  final String? musicId;
   @override
   State<PlayListScreen> createState() => _PlayListScreenState();
 }
 
 class _PlayListScreenState extends State<PlayListScreen> {
+  final getMusic = GetAllMusicService().getAllMusic();
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
@@ -27,14 +31,21 @@ class _PlayListScreenState extends State<PlayListScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.secondaryColor,
-        title: IconButton(
+        leading: IconButton(
             onPressed: () {
-              nextPage(const BasePage(), context);
+              Navigator.pop(context);
+              //nextPage(const PlayListScreen(), context);
             },
             icon: const Icon(
               Icons.arrow_back_ios,
               color: AppColors.onPrimaryColor,
             )),
+        title: Text(
+          'Playlists',
+          style: AppStyles.agTitle3Bold.copyWith(
+            color: AppColors.onPrimaryColor,
+          ),
+        ),
       ),
       body: SafeArea(
           child: Padding(
@@ -68,7 +79,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                         onPressed: () =>
                             nextPage(const CreatePlayListScreen(), context),
                         child: Text(
-                          'Create playlist ',
+                          'Create playlist',
                           style: AppStyles.bodyBold
                               .copyWith(color: AppColors.primaryColor),
                         ),
@@ -112,34 +123,62 @@ class _PlayListScreenState extends State<PlayListScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.queue_music_rounded,
-                                      color: AppColors.primaryColor,
-                                      size: 45,
-                                    ),
-                                    gapWidth(10),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          data["name"],
-                                          style: AppStyles.title2.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColors.onPrimaryColor,
+                                GestureDetector(
+                                  onTap: () => nextPage(
+                                      DisplaySongsInPlayListScreen(allSongs: [
+                                        snapshot.data[index]["musics"],
+                                      ], playListTitle: data["name"]),
+                                      context),
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.queue_music_rounded,
+                                        color: AppColors.primaryColor,
+                                        size: 45,
+                                      ),
+                                      gapWidth(10),
+                                      Consumer<AddMusicToPlaylistService>(
+                                          builder: (context, addMusicToPlaylist,
+                                              child) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            addMusicToPlaylist
+                                                .addMusicToPlaylist(
+                                              context,
+                                              playListId: data["_id"],
+
+                                              //  musicId: getMusic.
+                                            );
+                                            AudioId.audioId =
+                                                "${widget.musicId}";
+                                          },
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                data["name"],
+                                                style:
+                                                    AppStyles.title2.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color:
+                                                      AppColors.onPrimaryColor,
+                                                ),
+                                              ),
+                                              Text(
+                                                '${snapshot.data[index]["musics"].length} songs',
+                                                style: AppStyles.captionText
+                                                    .copyWith(
+                                                  color:
+                                                      AppColors.onPrimaryColor,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        Text(
-                                          '${snapshot.data[index]["musics"].length} songs',
-                                          style: AppStyles.captionText.copyWith(
-                                            color: AppColors.onPrimaryColor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                        );
+                                      }),
+                                    ],
+                                  ),
                                 ),
                                 IconButton(
                                     onPressed: () {
