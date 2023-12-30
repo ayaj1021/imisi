@@ -21,8 +21,8 @@ class UploadFileService with ChangeNotifier {
     required String name,
     required String genre,
     required String description,
-    required File image,
-    required File audio,
+    required File imagePath,
+    required File audioPath,
     required String artist,
   }) async {
     isUploading = true;
@@ -40,9 +40,9 @@ class UploadFileService with ChangeNotifier {
         'POST',
         Uri.parse(url),
       );
-      final imageStream = http.ByteStream(image.openRead());
-      final imageLength = await image.length();
-      Uint8List bytes = await image.readAsBytes();
+      final imageStream = http.ByteStream(imagePath.openRead());
+      final imageLength = await imagePath.length();
+      Uint8List bytes = await imagePath.readAsBytes();
       String encodedByte = base64Encode(bytes);
 
       request.files.add(
@@ -50,24 +50,24 @@ class UploadFileService with ChangeNotifier {
           'image',
           imageStream,
           imageLength,
-          filename: image.path,
+          filename: imagePath.path,
         ),
       );
-      print('request image $image');
+      print('request image $imagePath');
       print('request $request');
-      final audioStream = http.ByteStream(audio.openRead());
-      final audioLength = await audio.length();
-      Uint8List dytes = await audio.readAsBytes();
+      final audioStream = http.ByteStream(audioPath.openRead());
+      final audioLength = await audioPath.length();
+      Uint8List dytes = await audioPath.readAsBytes();
       String encodedDyte = base64Encode(dytes);
       request.files.add(
         http.MultipartFile(
           'audio',
           audioStream,
           audioLength,
-          filename: audio.path,
+          filename: audioPath.path,
         ),
       );
-      print('request audio $audio');
+      print('request audio $audioPath');
       print('request $request');
 
       request.fields.addAll({
@@ -134,12 +134,11 @@ class UploadFileService with ChangeNotifier {
     isUploading = true;
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? token = pref.getString("token");
-    String url = 'https://imisi-backend-service.onrender.com/api/musics';
+    String url = 'https://imisi-backend-service.onrender.com/api/musics/';
     try {
       var headers = {
         'Authorization': "Bearer $token",
-        // 'cookie':
-        //     'token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1N2IxOTU2MDI3NDY2MDk0M2MwZDAxOCIsImlhdCI6MTcwMjU2NjIzMSwiZXhwIjoxNzAyNjUyNjMxfQ.UW7VU6fyU5decUFIaJTR07mfu-mdbmbFLIbT66nDVZ4'
+        'cookie': token,
       };
       notifyListeners();
       var response = await dio.post(
@@ -154,21 +153,41 @@ class UploadFileService with ChangeNotifier {
           'description': description,
           'image': await MultipartFile.fromFile(
             imagePath,
-            filename: '',
+            filename: name,
             contentType: MediaType("image", "jpeg"),
           ),
           'audio': await MultipartFile.fromFile(
             audioPath,
-            filename: '',
+            filename: name,
             contentType: MediaType("audio", "mp3"),
           ),
           'artist': artist,
         }),
       );
+      print(audioPath);
+      print(imagePath);
+      final body = response.data;
+      print(body);
+      if (response.statusCode == 201) {
+        isUploading = false;
+        showSnackBar(
+            context: context, message: body["message"], isError: false);
+
+        nextPageAndremoveUntil(const BasePage(), context);
+
+        notifyListeners();
+        return body;
+      } else {
+        isUploading = false;
+        showSnackBar(context: context, message: body["message"], isError: true);
+        notifyListeners();
+      }
+
       print(response.data);
       print(response.statusCode);
     } catch (e) {
       isUploading = false;
+
       print(e);
       throw '$e';
     }

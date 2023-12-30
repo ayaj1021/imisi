@@ -93,19 +93,19 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   gapHeight(20),
 
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      "Forgot Password?",
-                      style: AppStyles.bodyRegularText.copyWith(
-                        color: AppColors.primaryColor,
-                      ),
-                    ),
-                  ),
+                  // Align(
+                  //   alignment: Alignment.centerRight,
+                  //   child: Text(
+                  //     "Forgot Password?",
+                  //     style: AppStyles.bodyRegularText.copyWith(
+                  //       color: AppColors.primaryColor,
+                  //     ),
+                  //   ),
+                  // ),
                   gapHeight(50),
                   Consumer<AuthService>(builder: (ctx, auth, child) {
                     return ButtonWidget(
-                      text: auth.isLoggingIn == true ? "Loading..." : "Login",
+                      text: auth.isLoggingIn == true ? "Logging in..." : "Login",
                       color: AppColors.primaryColor,
                       onTap: () {
                         if (emailController.text.isEmpty ||

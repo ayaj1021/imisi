@@ -41,7 +41,7 @@ class AuthService with ChangeNotifier {
       if (response.statusCode == 201) {
         SharedPref().saveUserToken(json['token']);
         nextPage(const BasePage(), context);
-        // showSnackBar(isError: true, context: context, message: "Successful");
+        showSnackBar(isError: false, context: context, message: "Successful");
         debugPrint(response.body);
         return json;
       } else {
@@ -71,6 +71,7 @@ class AuthService with ChangeNotifier {
         //  var json = jsonDecode(response.body);
       }
     } catch (e) {
+      showSnackBar(isError: false, context: context, message: "$e");
       log('Error $e');
     }
   }

@@ -29,8 +29,7 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 
-  bool isObscure = true;
-
+  bool obscureText = true;
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
@@ -59,6 +58,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   gapHeight(50),
                   CustomTextField(
+                    obscureText: false,
                     hint: "Enter username",
                     controller: nameController,
                     prefixIcon: Image.asset(
@@ -69,6 +69,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   gapHeight(15),
                   CustomTextField(
+                    obscureText: false,
                     hint: "Enter Email Address",
                     controller: emailController,
                     prefixIcon: const Icon(
@@ -79,16 +80,28 @@ class _SignUpPageState extends State<SignUpPage> {
                   gapHeight(15),
                   CustomTextField(
                     hint: "Enter Password",
+                    obscureText: obscureText,
                     controller: passwordController,
                     prefixIcon: Image.asset(
                       "assets/images/lock.png",
                       height: 30,
                       color: Colors.white,
                     ),
-                    suffixIcon: Image.asset(
-                      "assets/images/invisible.png",
-                      height: 30,
-                      color: Colors.white,
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          obscureText = !obscureText;
+                        });
+                      },
+                      icon: obscureText
+                          ? const Icon(
+                              Icons.visibility_off_outlined,
+                              color: Colors.white,
+                            )
+                          : const Icon(
+                              Icons.visibility_outlined,
+                              color: Colors.white,
+                            ),
                     ),
                   ),
                   gapHeight(10),
@@ -128,7 +141,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         });
                       });
                     },
-                    text: isLoading == true ? "Loading..." : "Sign Up",
+                    text: isLoading == true ? "Signing up..." : "Sign Up",
                     color: AppColors.primaryColor,
                   ),
                   gapHeight(20),

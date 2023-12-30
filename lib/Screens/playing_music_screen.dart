@@ -314,8 +314,8 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                               SongDetailsScreen(
                                 artist: allSongs[index].artist ?? "",
                                 name: allSongs[index].name ?? "",
-                                genre: '',
-                                description: '',
+                                genre: allSongs[index].genre ?? "",
+                                description: allSongs[index].description ?? "",
                               ),
                               context);
                         },

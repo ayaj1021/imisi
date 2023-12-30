@@ -73,7 +73,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'You have no songs yet',
+                          'You have no favorite songs yet',
                           style: AppStyles.bodyBold
                               .copyWith(color: AppColors.onPrimaryColor),
                         ),
@@ -92,8 +92,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                 nextPage(
                                     PlayingMusicScreen(
                                       //  id: data["id"],
-                                        index: index,
-                                        songs: snapshot.data,
+                                      index: index,
+                                      songs: snapshot.data,
                                     ),
                                     context);
                               },

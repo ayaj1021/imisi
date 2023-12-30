@@ -1,11 +1,8 @@
 // ignore_for_file: avoid_print
 
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:imisi/Provider/artiste_provider.dart';
 import 'package:imisi/Services/upload_file_service.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
@@ -17,12 +14,11 @@ import 'package:imisi/Widget/button_widget.dart';
 import 'package:imisi/Base/base_page.dart';
 import 'package:provider/provider.dart';
 import 'package:scaled_size/scaled_size.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../Styles/app_colors.dart';
 
 class UploadStepperWidget extends StatefulWidget {
   final String? audioPath;
+
   const UploadStepperWidget({super.key, this.audioPath});
 
   @override
@@ -39,6 +35,7 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController genreController = TextEditingController();
 
+//<String?>
   Future<String?> pickImage() async {
     try {
       // Pick image file
@@ -49,6 +46,7 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
 
       if (imageResult != null) {
         // Return the path of the selected image file
+
         return imageResult.files.first.path;
       }
     } catch (error) {

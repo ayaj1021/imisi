@@ -4,6 +4,8 @@ import 'package:imisi/Services/add_music_favorites.dart';
 import 'package:imisi/Services/add_music_to_playlist_service.dart';
 
 import 'package:imisi/Services/auth_service.dart';
+import 'package:imisi/Services/delete_playlist_service.dart';
+import 'package:imisi/Services/get_points_service.dart';
 
 import 'package:imisi/Services/upload_file_service.dart';
 
@@ -27,6 +29,8 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (context) => UploadFileService()),
             ChangeNotifierProvider(create: (context) => AddMusicToFavorite()),
             ChangeNotifierProvider(create: (context) => AddMusicToPlaylistService()),
+            ChangeNotifierProvider(create: (context) => DeletePlaylistService()),
+            ChangeNotifierProvider(create: (context) => GetPointsService()),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,

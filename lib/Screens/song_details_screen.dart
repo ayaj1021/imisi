@@ -75,6 +75,42 @@ class SongDetailsScreen extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            gapHeight(20),
+            Row(
+              children: [
+                Text(
+                  'Song description:',
+                  style: AppStyles.title4Bold.copyWith(
+                    color: AppColors.onPrimaryColor,
+                  ),
+                ),
+                gapWidth(10),
+                Text(
+                  description,
+                  style: AppStyles.title4Bold.copyWith(
+                    color: AppColors.onPrimaryColor,
+                  ),
+                ),
+              ],
+            ),
+            gapHeight(20),
+            Row(
+              children: [
+                Text(
+                  'Genre:',
+                  style: AppStyles.title4Bold.copyWith(
+                    color: AppColors.onPrimaryColor,
+                  ),
+                ),
+                gapWidth(10),
+                Text(
+                  genre,
+                  style: AppStyles.title4Bold.copyWith(
+                    color: AppColors.onPrimaryColor,
+                  ),
+                ),
+              ],
             )
           ],
         ),

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
 
 //showDialog()
 showAlertDialog(BuildContext context,
-    {required String message, required void Function()? yesTextOnTap}) {
+    {required String message, required VoidCallback yesTextOnTap}) {
   return showDialog(
       barrierDismissible: false,
       barrierColor: Colors.black.withOpacity(0.5),
@@ -68,46 +67,3 @@ showAlertDialog(BuildContext context,
             ],
           ));
 }
-
-
-// class AlertDialogPage extends StatelessWidget {
-//   const AlertDialogPage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return AlertDialog(
-//       backgroundColor: AppColors.alertDialogColor,
-//       content: Text(
-//         'Are you sure you want to leave this upload incomplete? You may lose any unsaved progress.',
-//         style: AppStyles.bodyBold.copyWith(
-//           color: Colors.white,
-//         ),
-//       ),
-//       contentPadding: const EdgeInsets.all(10),
-//       actions: [
-//         TextButton(
-//             onPressed: () {
-//               Navigator.of(context).pop();
-//             },
-//             child: const Text('No'))
-//       ],
-//     );
-//   }
-// }
-
-//Are you sure you want to leave this 
-// upload incomplete? You may lose any
-// unsaved progress.
-
-
-// Column(
-//         children: [
-//           Text(
-//             'Are you sure you want to leave this upload incomplete? You may lose any unsaved progress.',
-//             style: AppStyles.bodyBold.copyWith(
-//               color: Colors.white,
-//             ),
-//           )
-//         ],
-//       ),
-

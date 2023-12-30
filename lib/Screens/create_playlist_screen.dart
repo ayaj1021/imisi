@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:imisi/Screens/playlist_screen.dart';
 import 'package:imisi/Services/create_playlist_service.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
+import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Widget/button_widget.dart';
 
 class CreatePlayListScreen extends StatefulWidget {
@@ -93,7 +95,8 @@ class _CreatePlayListScreenState extends State<CreatePlayListScreen> {
                           children: [
                             Expanded(
                               child: ButtonWidget(
-                                onTap: () => Navigator.pop(context),
+                                onTap: () =>
+                                    nextPage(const PlayListScreen(), context),
                                 text: 'Cancel',
                                 textColor: AppColors.onPrimaryColor,
                                 border:
