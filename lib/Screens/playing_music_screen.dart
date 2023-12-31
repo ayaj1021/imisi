@@ -6,6 +6,7 @@ import 'package:imisi/Screens/playlist_screen.dart';
 import 'package:imisi/Screens/song_details_screen.dart';
 import 'package:imisi/Services/add_music_favorites.dart';
 import 'package:imisi/Services/get_all_music_service.dart';
+import 'package:imisi/Services/get_points_service.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
@@ -22,6 +23,7 @@ class PlayingMusicScreen extends StatefulWidget {
   });
   final List<GetAllMusicModel> songs;
   final int index;
+
   @override
   State<PlayingMusicScreen> createState() => _PlayingMusicScreenState();
 }
@@ -55,12 +57,16 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
   @override
   void initState() {
     super.initState();
-
+    if (isPlaying == true) {
+      setState(() {
+        audioPlayer.stop();
+      });
+    }
     setState(() {
       allSongs = widget.songs;
       index = widget.index;
     });
-
+    GetPointsService().getPoints(id: allSongs[index].id ?? "");
     setAudio(widget.songs[widget.index].audio!.filePath!);
     audioPlayer.onPlayerStateChanged.listen((event) {
       setState(() {
@@ -77,11 +83,13 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
         position = newPosition;
         if (formatTime(duration - position) == "00:00") {
           index++;
+
           audioPlayer.play(
             (UrlSource(
               allSongs[index].audio!.filePath ?? "",
             )),
           );
+          GetPointsService().getPoints(id: allSongs[index].id ?? "");
         }
       });
     });
@@ -174,8 +182,8 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
             Slider.adaptive(
               activeColor: AppColors.primaryColor,
               min: 0,
-              max: duration.inSeconds.toDouble() < 2
-                  ? 2.0
+              max: duration.inSeconds.toDouble() < 1.0
+                  ? 1.0
                   : duration.inSeconds.toDouble(),
               value: position.inSeconds.toDouble(),
               onChanged: (value) async {
@@ -211,7 +219,7 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                     onPressed: () {},
                     icon: const Icon(
                       Icons.shuffle,
-                      color: AppColors.onPrimaryColor,
+                      color: AppColors.secondaryColor,
                       size: 25,
                     )),
                 IconButton(
@@ -267,6 +275,8 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                               )),
                             );
                           });
+                          GetPointsService()
+                              .getPoints(id: allSongs[index].id ?? "");
                         },
                   icon: Icon(
                     Icons.skip_next,

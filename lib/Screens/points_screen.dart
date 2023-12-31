@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:imisi/Base/base_page.dart';
+import 'package:imisi/Models/get_all_music_model.dart';
+import 'package:imisi/Services/get_all_music_service.dart';
+import 'package:imisi/Services/get_points_service.dart';
 import 'package:imisi/Styles/app_colors.dart';
+import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/navigator.dart';
+import 'package:provider/provider.dart';
 
 class PointsScreen extends StatefulWidget {
   const PointsScreen({super.key});
@@ -11,7 +16,10 @@ class PointsScreen extends StatefulWidget {
 }
 
 class _PointsScreenState extends State<PointsScreen> {
-//  Future points = GetPointsService.getPoints();
+  int index = 0;
+  GetAllMusicModel? allSongs;
+  final getAllMusic = GetAllMusicService().getAllMusic();
+  //final points = GetPointsService.getPoints(id: '');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,29 +36,16 @@ class _PointsScreenState extends State<PointsScreen> {
               color: AppColors.onPrimaryColor,
             )),
       ),
-      body: SafeArea(child: 
-      Container(), 
-      // FutureBuilder<GetPointsService>(
-      //       future:points ,
-      //       builder: (context, snapshot) {
-      //         final data = snapshot.data;
-      //         if (snapshot.connectionState == ConnectionState.waiting) {
-      //           return const Center(
-      //             child: CircularProgressIndicator(
-      //               color: AppColors.primaryColor,
-      //             ),
-      //           );
-      //         } else if (snapshot.hasData) {
-      //           Center(
-      //               child: Text(
-      //             'You have ${data!["points"]}points yet ',
-      //             style: AppStyles.bodyBold.copyWith(
-      //               color: AppColors.onPrimaryColor,
-      //             ),
-      //           ));
-      //         }
-      //         return Container();
-      //       },),
+      body: SafeArea(
+        child: Center(
+          child: Text(
+            '${Provider.of<GetPointsService>(context, listen: false).points.toString()} points',
+            // 'You have ${data!["user"]["points"]}points ',
+            style: AppStyles.bodyBold.copyWith(
+              color: AppColors.onPrimaryColor,
+            ),
+          ),
+        ),
       ),
     );
   }

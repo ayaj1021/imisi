@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:imisi/Provider/artiste_provider.dart';
+
 import 'package:imisi/Services/add_music_favorites.dart';
 import 'package:imisi/Services/add_music_to_playlist_service.dart';
 
@@ -23,14 +23,14 @@ class MyApp extends StatelessWidget {
       builder: () {
         return MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (context) => ArtistProvider()),
+
             ChangeNotifierProvider(create: (context) => AuthService()),
-            ChangeNotifierProvider(create: (context) => ArtistProvider()),
+         
             ChangeNotifierProvider(create: (context) => UploadFileService()),
             ChangeNotifierProvider(create: (context) => AddMusicToFavorite()),
             ChangeNotifierProvider(create: (context) => AddMusicToPlaylistService()),
             ChangeNotifierProvider(create: (context) => DeletePlaylistService()),
-            ChangeNotifierProvider(create: (context) => GetPointsService()),
+           ChangeNotifierProvider(create: (context) => GetPointsService()),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,

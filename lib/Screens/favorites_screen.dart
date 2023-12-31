@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:imisi/Base/base_page.dart';
+import 'package:imisi/Models/get_all_favorite_model.dart';
 import 'package:imisi/Screens/playing_music_screen.dart';
 import 'package:imisi/Services/get_favorites_service.dart';
 import 'package:imisi/Services/remove_song_from_favorite.dart';
@@ -81,10 +82,15 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                     ),
                   );
                 } else if (snapshot.hasData) {
+                  final List<GetAllFavoriteMusicModel> favoriteList =
+                            snapshot.data;
                   return ListView.builder(
-                      itemCount: snapshot.data.length,
+                      scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                      itemCount: favoriteList.length,
                       itemBuilder: (_, index) {
                         final data = snapshot.data[index];
+                        
                         return Column(
                           children: [
                             GestureDetector(
@@ -94,6 +100,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                       //  id: data["id"],
                                       index: index,
                                       songs: snapshot.data,
+                                      
                                     ),
                                     context);
                               },
@@ -102,17 +109,23 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                        CrossAxisAlignment.center,
                                     children: [
-                                      SizedBox(
+                                      Container(
                                         height: 70,
                                         width: 70,
-                                        child: ClipRRect(
-                                          child: Image.network(
-                                              data["image"]["filePath"]),
-                                        ),
+                                        decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                            favoriteList[index].image!.filePath ??
+                                                ""),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                        
                                       ),
                                       gapWidth(10),
                                       Column(
@@ -122,15 +135,19 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            data["name"],
-                                            style: AppStyles.bodyBold.copyWith(
+                                            favoriteList[index].name ?? "",
+                                            style:
+                                                AppStyles.agTitle3Bold.copyWith(
                                               color: AppColors.onPrimaryColor,
+                                              fontSize: 18,
                                             ),
                                           ),
                                           Text(
-                                            data["artist"],
-                                            style: AppStyles.bodyBold.copyWith(
+                                             favoriteList[index].artist ?? "",
+                                            style:
+                                                AppStyles.title4Bold.copyWith(
                                               color: AppColors.onPrimaryColor,
+                                              fontSize: 14,
                                             ),
                                           ),
                                         ],

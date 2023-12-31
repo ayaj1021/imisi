@@ -3,7 +3,6 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:imisi/Provider/artiste_provider.dart';
 import 'package:imisi/Services/upload_file_service.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
@@ -98,8 +97,7 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
         ],
       ),
       backgroundColor: AppColors.secondaryColor,
-      body: Consumer<ArtistProvider>(builder: (context, artist, child) {
-        return Stack(
+      body:  Stack(
           children: [
             SingleChildScrollView(
               child: Padding(
@@ -243,30 +241,30 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
                 ),
               ),
             ),
-            artist.isUploading
-                ? Container(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.black.withOpacity(0.6),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const CircularProgressIndicator(),
-                        gapHeight(15),
-                        const Text(
-                          "Uploading Song",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                : const SizedBox(),
+            // artist.isUploading
+            //     ? Container(
+            //         height: MediaQuery.of(context).size.height,
+            //         width: MediaQuery.of(context).size.width,
+            //         color: Colors.black.withOpacity(0.6),
+            //         child: Column(
+            //           mainAxisAlignment: MainAxisAlignment.center,
+            //           children: [
+            //             const CircularProgressIndicator(),
+            //             gapHeight(15),
+            //             const Text(
+            //               "Uploading Song",
+            //               style: TextStyle(
+            //                 color: Colors.white,
+            //                 fontSize: 18,
+            //               ),
+            //             )
+            //           ],
+            //         ),
+            //       )
+            //     : const SizedBox(),
           ],
-        );
-      }),
+        )
+      
     );
   }
 

@@ -2,7 +2,7 @@
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:imisi/Provider/artiste_provider.dart';
+
 import 'package:imisi/Screens/upload_steper.dart';
 
 import 'package:imisi/Styles/app_colors.dart';
@@ -12,7 +12,7 @@ import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/show_alert_dialog.dart';
 import 'package:imisi/Base/base_page.dart';
 import 'package:imisi/Widget/button_widget.dart';
-import 'package:provider/provider.dart';
+
 
 class UpLoadFilePage extends StatefulWidget {
   // final String artistName;
@@ -95,8 +95,8 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
         ],
       ),
       backgroundColor: AppColors.secondaryColor,
-      body: Consumer<ArtistProvider>(builder: (context, artist, child) {
-        return Stack(
+      body: 
+         Stack(
           children: [
             Center(
               child: Column(
@@ -172,17 +172,17 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
                 ],
               ),
             ),
-            artist.isUploading
-                ? Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
-                : const SizedBox(),
+            // artist.isUploading
+            //     ? Container(
+            //         color: Colors.black.withOpacity(0.5),
+            //         child: const Center(
+            //           child: CircularProgressIndicator(),
+            //         ),
+            //       )
+            //     : const SizedBox(),
           ],
-        );
-      }),
+        )
+      
     );
   }
 
