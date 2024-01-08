@@ -11,9 +11,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UploadFileService with ChangeNotifier {
   Dio dio = Dio();
   String status = "";
+  int? selectedFile;
   bool isUploading = false;
 
-  Future sendFiles(
+  Future sendSong(
     BuildContext context, {
     required String name,
     required String genre,
@@ -49,6 +50,72 @@ class UploadFileService with ChangeNotifier {
           ),
           'audio': await MultipartFile.fromFile(
             audioPath,
+            filename: name,
+            contentType: MediaType("audio", "mp3"),
+          ),
+          'artist': artist,
+        }),
+      );
+
+      final body = response.data;
+
+      if (response.statusCode == 201) {
+        isUploading = false;
+        showSnackBar(
+            context: context, message: body["message"], isError: false);
+
+        nextPageAndremoveUntil(const BasePage(), context);
+
+        notifyListeners();
+        return body;
+      } else {
+        isUploading = false;
+        showSnackBar(context: context, message: body["message"], isError: true);
+        notifyListeners();
+      }
+    } catch (e) {
+      isUploading = false;
+
+      throw '$e';
+    }
+  }
+
+  Future sendVideo(
+    BuildContext context, {
+    required String name,
+    required String genre,
+    required String description,
+    required String imagePath,
+    required String videoPath,
+    required String artist,
+  }) async {
+    isUploading = true;
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? token = pref.getString("token");
+    String url = 'https://imisi-backend-service.onrender.com/api/videos/';
+    try {
+      var headers = {
+        'Authorization': "Bearer $token",
+        'cookie': token,
+      };
+      notifyListeners();
+      var response = await dio.post(
+        options: Options(
+          headers: headers,
+          contentType: Headers.jsonContentType,
+        ),
+        url,
+        data: FormData.fromMap({
+          'name': name,
+          'genre': genre,
+          'description': description,
+          'image': await MultipartFile.fromFile(
+            imagePath,
+            filename: name,
+            contentType: MediaType("image", "jpeg"),
+          ),
+          'video': await MultipartFile.fromFile(
+            videoPath,
             filename: name,
             contentType: MediaType("audio", "mp3"),
           ),

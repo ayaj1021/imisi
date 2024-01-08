@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:imisi/Base/Basepages/UploadPages/send_file.dart';
-
+import 'package:imisi/Base/Basepages/UploadPages/upload_file_page.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
@@ -49,7 +48,7 @@ class _UpLoadPageState extends State<UpLoadPage> {
               ),
               gapHeight(20),
               Text(
-                "Please select file to upload",
+                "Please select type of file to upload",
                 style: AppStyles.agTitle3Bold.copyWith(color: Colors.white),
               ),
               gapHeight(30),
@@ -90,10 +89,14 @@ class _UpLoadPageState extends State<UpLoadPage> {
                     selectedIndex == null
                         ? () {}
                         : nextPage(
-                            const UpLoadFilePage(
-                                // artistName: '',
-                                // songTitle: '',
-                                ),
+                            UpLoadFilePage(
+                              fileType: selectedIndex!,
+
+                              
+                              // fileType:fileType,
+                              // artistName: '',
+                              // songTitle: '',
+                            ),
                             context);
 
                     //  Navigator.push(

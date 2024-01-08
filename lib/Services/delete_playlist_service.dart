@@ -31,7 +31,7 @@ class DeletePlaylistService with ChangeNotifier {
 
       if (response.statusCode == 200) {
         isLoading = false;
-        print(data);
+        
         showSnackBar(
             context: context!, message: "Playlist deleted successfully");
         nextPageAndremoveUntil(const PlayListScreen(), context);

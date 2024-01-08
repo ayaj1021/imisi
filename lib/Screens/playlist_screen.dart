@@ -4,7 +4,7 @@ import 'package:imisi/Screens/create_playlist_screen.dart';
 import 'package:imisi/Screens/display_songs_inplaylist_screen.dart';
 import 'package:imisi/Services/add_music_to_playlist_service.dart';
 import 'package:imisi/Services/delete_playlist_service.dart';
-import 'package:imisi/Services/get_all_music_service.dart';
+
 import 'package:imisi/Services/get_playlist_service.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
@@ -22,7 +22,7 @@ class PlayListScreen extends StatefulWidget {
 }
 
 class _PlayListScreenState extends State<PlayListScreen> {
-  final getMusic = GetAllMusicService().getAllMusic();
+  //final getMusic = GetAllMusicService().getAllMusic();
 
   @override
   Widget build(BuildContext context) {

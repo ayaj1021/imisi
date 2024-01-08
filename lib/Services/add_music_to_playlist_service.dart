@@ -27,8 +27,6 @@ class AddMusicToPlaylistService with ChangeNotifier {
         'Authorization': "Bearer $token",
       });
       final data = jsonDecode(response.body);
-      print(data);
-      print(response.statusCode);
       if (response.statusCode == 200) {
         isAddMusic = false;
 

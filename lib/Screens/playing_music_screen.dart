@@ -5,13 +5,13 @@ import 'package:imisi/Models/get_all_music_model.dart';
 import 'package:imisi/Screens/playlist_screen.dart';
 import 'package:imisi/Screens/song_details_screen.dart';
 import 'package:imisi/Services/add_music_favorites.dart';
-import 'package:imisi/Services/get_all_music_service.dart';
 import 'package:imisi/Services/get_points_service.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/show_modal_bottom_sheet_widget.dart';
+import 'package:imisi/provider/audio_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:scaled_size/scaled_size.dart';
 
@@ -19,24 +19,25 @@ class PlayingMusicScreen extends StatefulWidget {
   const PlayingMusicScreen({
     super.key,
     required this.songs,
-    required this.index,
+    //  required this.index,
   });
   final List<GetAllMusicModel> songs;
-  final int index;
+  // final int index;
 
   @override
   State<PlayingMusicScreen> createState() => _PlayingMusicScreenState();
 }
 
 class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
-  Future getAllMusic = GetAllMusicService().getAllMusic();
-  final audioPlayer = AudioPlayer();
+  // Future getAllMusic = GetAllMusicService().getAllMusic(context);
+  var audioPlayer = AudioPlayer();
   bool isPlaying = false;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
   void setAudio(String urlToPlay) {
     audioPlayer.setReleaseMode(ReleaseMode.stop);
     audioPlayer.play(UrlSource(urlToPlay));
+    setState(() {});
   }
 
   formatTime(Duration duration) {
@@ -57,22 +58,25 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
   @override
   void initState() {
     super.initState();
-    if (isPlaying == true) {
-      setState(() {
-        audioPlayer.stop();
-      });
-    }
-    setState(() {
-      allSongs = widget.songs;
-      index = widget.index;
-    });
+    allSongs = widget.songs;
+    index = context.read<AudioProvider>().currentIndex;
+    // setState(() {
+    //   allSongs = widget.songs;
+    //   index = ;
+    // });
     GetPointsService().getPoints(id: allSongs[index].id ?? "");
-    setAudio(widget.songs[widget.index].audio!.filePath!);
+    setAudio(widget.songs[index].audio!.filePath!);
     audioPlayer.onPlayerStateChanged.listen((event) {
+      //   GetPointsService().getPoints(id: allSongs[index].id ?? "");
+
       setState(() {
+        // isPlaying = event == PlayerState.disposed;
         isPlaying = event == PlayerState.playing;
       });
     });
+    // GetPointsService().getPoints(id: allSongs[index].id ?? "");
+    // setAudio(widget.songs[index].audio!.filePath!);
+
     audioPlayer.onDurationChanged.listen((newDuration) {
       setState(() {
         duration = newDuration;
@@ -88,18 +92,19 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
             (UrlSource(
               allSongs[index].audio!.filePath ?? "",
             )),
+            volume: 1.0,
           );
-          GetPointsService().getPoints(id: allSongs[index].id ?? "");
+          //  GetPointsService().getPoints(id: allSongs[index].id ?? "");
         }
       });
     });
   }
 
-  @override
-  void dispose() {
-    audioPlayer.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   audioPlayer.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +112,9 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
       backgroundColor: AppColors.secondaryColor,
       appBar: AppBar(
         title: IconButton(
-            onPressed: () => nextPage(const BasePage(), context),
+            onPressed: () =>
+                //Navigator.of(context).pop(),
+                nextPage(const BasePage(), context),
             icon: const Icon(
               Icons.arrow_back_ios,
               color: AppColors.onPrimaryColor,

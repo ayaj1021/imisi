@@ -31,6 +31,11 @@ class SharedPref {
     sf.setString("token", token);
   }
 
+  removeUserToken(String token) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    sf.remove(token);
+  }
+
   // saveUserRefreshToken(String refreshToken) async {
   //   SharedPreferences sf = await SharedPreferences.getInstance();
   //   sf.setString("refresh_token", refreshToken);

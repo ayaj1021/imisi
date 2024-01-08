@@ -9,6 +9,7 @@ import 'package:imisi/Constants/url_constants.dart';
 import 'package:imisi/Database/database.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/snack_bar.dart';
+import 'package:imisi/onboard/Onboard%20Screens/onboard_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService with ChangeNotifier {
@@ -114,10 +115,10 @@ class AuthService with ChangeNotifier {
       );
 
       final data = jsonDecode(response.body);
-      print(response.body);
+
       if (response.statusCode == 200) {
         SharedPref().saveUserToken(data['token']);
-        print(response.body);
+
         showSnackBar(
             context: context,
             message: "Logged in Successfully",
@@ -127,14 +128,52 @@ class AuthService with ChangeNotifier {
         notifyListeners();
         return data;
       } else {
-        print(response.body);
         isLoggingIn = false;
         notifyListeners();
         showSnackBar(context: context, message: data['message'], isError: true);
-
         showSnackBar(context: context, message: "Logged in Successfully");
         nextPage(const BasePage(), context);
         return data;
+      }
+    } catch (e) {
+      log('Error $e');
+    }
+  }
+
+  Future logOut(BuildContext context) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    String? accountType = sf.getString("account_type");
+    if (accountType == "Artist") {
+      accountTypes = "users";
+      notifyListeners();
+    } else if (accountType == "Listener") {
+      accountTypes = "listeners";
+      notifyListeners();
+    } else if (accountType == null) {
+      isLoggingIn = false;
+      notifyListeners();
+
+      showSnackBar(context: context, message: "message");
+    }
+
+    String url =
+        'https://imisi-backend-service.onrender.com/api/$accountTypes/logout';
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? token = pref.getString("token");
+    var headers = {
+      'Authorization': "Bearer $token",
+    };
+    try {
+      var response = await http.post(Uri.parse(url), headers: headers);
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        SharedPref().removeUserToken(token!);
+        showSnackBar(
+            context: context, message: data["message"], isError: false);
+        await nextPage(const OnboardScreen(), context);
+      } else {
+        showSnackBar(context: context, message: data["message"], isError: true);
       }
     } catch (e) {
       log('Error $e');

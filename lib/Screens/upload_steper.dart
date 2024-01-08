@@ -17,8 +17,10 @@ import '../Styles/app_colors.dart';
 
 class UploadStepperWidget extends StatefulWidget {
   final String? audioPath;
+  final int? fileType;
 
-  const UploadStepperWidget({super.key, this.audioPath});
+  const UploadStepperWidget(
+      {super.key, this.audioPath, required this.fileType});
 
   @override
   State<UploadStepperWidget> createState() => _UploadStepperWidgetState();
@@ -64,40 +66,40 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: AppColors.secondaryColor,
-        leading: IconButton(
-          onPressed: () {
-            nextPage(const BasePage(), context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-            color: Colors.white,
-          ),
-        ),
-        actions: [
-          IconButton(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: AppColors.secondaryColor,
+          leading: IconButton(
             onPressed: () {
-              showAlertDialog(
-                context,
-                yesTextOnTap: () {
-                  nextPage(const BasePage(), context);
-                },
-                message:
-                    'Are you sure you want to leave this upload incomplete? You may lose any unsaved progress.',
-              );
+              nextPage(const BasePage(), context);
             },
             icon: const Icon(
-              Icons.close,
+              Icons.arrow_back_ios_new,
               color: Colors.white,
             ),
           ),
-          const SizedBox(width: 15)
-        ],
-      ),
-      backgroundColor: AppColors.secondaryColor,
-      body:  Stack(
+          actions: [
+            IconButton(
+              onPressed: () {
+                showAlertDialog(
+                  context,
+                  yesTextOnTap: () {
+                    nextPage(const BasePage(), context);
+                  },
+                  message:
+                      'Are you sure you want to leave this upload incomplete? You may lose any unsaved progress.',
+                );
+              },
+              icon: const Icon(
+                Icons.close,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(width: 15)
+          ],
+        ),
+        backgroundColor: AppColors.secondaryColor,
+        body: Stack(
           children: [
             SingleChildScrollView(
               child: Padding(
@@ -219,15 +221,29 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
                                           message: "Pls fill in all details",
                                           isError: true);
                                     } else {
-                                      uploadService.sendFiles(
-                                        artist: artistNameController.text,
-                                        name: songTitleController.text,
-                                        description: descriptionController.text,
-                                        genre: genreController.text,
-                                        context,
-                                        audioPath: widget.audioPath ?? '',
-                                        imagePath: selectedImagePath ?? '',
-                                      );
+                                      widget.fileType == 0
+                                          ? uploadService.sendSong(
+                                              artist: artistNameController.text,
+                                              name: songTitleController.text,
+                                              description:
+                                                  descriptionController.text,
+                                              genre: genreController.text,
+                                              context,
+                                              audioPath: widget.audioPath ?? '',
+                                              imagePath:
+                                                  selectedImagePath ?? '',
+                                            )
+                                          : uploadService.sendVideo(
+                                              artist: artistNameController.text,
+                                              name: songTitleController.text,
+                                              description:
+                                                  descriptionController.text,
+                                              genre: genreController.text,
+                                              context,
+                                              videoPath: widget.audioPath ?? '',
+                                              imagePath:
+                                                  selectedImagePath ?? '',
+                                            );
                                     }
                                   },
                                 );
@@ -263,9 +279,7 @@ class _UploadStepperWidgetState extends State<UploadStepperWidget> {
             //       )
             //     : const SizedBox(),
           ],
-        )
-      
-    );
+        ));
   }
 
   InputDecoration getDecoration(String label, String type, Color typeColor) {

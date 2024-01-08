@@ -11,6 +11,8 @@ import 'package:imisi/Utils/gap.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/show_alert_dialog.dart';
 import 'package:imisi/Utils/show_modal_bottom_sheet_widget.dart';
+import 'package:imisi/provider/audio_provider.dart';
+import 'package:provider/provider.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
@@ -83,24 +85,22 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   );
                 } else if (snapshot.hasData) {
                   final List<GetAllFavoriteMusicModel> favoriteList =
-                            snapshot.data;
+                      snapshot.data;
                   return ListView.builder(
                       scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
+                      shrinkWrap: true,
                       itemCount: favoriteList.length,
                       itemBuilder: (_, index) {
-                        final data = snapshot.data[index];
-                        
                         return Column(
                           children: [
                             GestureDetector(
                               onTap: () {
+                                context.read<AudioProvider>().setIndex(index);
                                 nextPage(
                                     PlayingMusicScreen(
                                       //  id: data["id"],
-                                      index: index,
+                                    //  index: index,
                                       songs: snapshot.data,
-                                      
                                     ),
                                     context);
                               },
@@ -117,15 +117,17 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                         height: 70,
                                         width: 70,
                                         decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                            favoriteList[index].image!.filePath ??
-                                                ""),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                        
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                                favoriteList[index]
+                                                        .image!
+                                                        .filePath ??
+                                                    ""),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
                                       ),
                                       gapWidth(10),
                                       Column(
@@ -143,7 +145,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                             ),
                                           ),
                                           Text(
-                                             favoriteList[index].artist ?? "",
+                                            favoriteList[index].artist ?? "",
                                             style:
                                                 AppStyles.title4Bold.copyWith(
                                               color: AppColors.onPrimaryColor,
@@ -167,7 +169,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                               yesTextOnTap: () {
                                                 Navigator.pop(context);
                                                 AudioId.audioId =
-                                                    "${data["id"]}";
+                                                    favoriteList[index].id ??
+                                                        "";
                                                 RemoveSongFavoriteService()
                                                     .removeSongFromFavorite(
                                                         context);

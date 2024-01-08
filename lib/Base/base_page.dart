@@ -4,7 +4,10 @@ import 'package:imisi/Base/Basepages/library.dart';
 import 'package:imisi/Database/database.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Base/Basepages/home_page.dart';
-import 'package:imisi/Base/Basepages/upload_pages.dart';
+import 'package:imisi/Base/Basepages/upload_page.dart'; 
+import 'package:imisi/main.dart';
+// MyAudioHandler _audioHandler = MyAudioHandler();
+
 
 class BasePage extends StatefulWidget {
   const BasePage({super.key});
@@ -23,12 +26,15 @@ class _BasePageState extends State<BasePage> {
   }
 
   List<Widget> artistPages = [
-    const HomePage(),
+     HomePage(audioHandler: audioHandler),
     const UpLoadPage(),
     const LibraryPage(),
   ];
 
-  List<Widget> listenerPages = [const HomePage(), const LibraryPage(),];
+  List<Widget> listenerPages = [
+     HomePage(audioHandler: audioHandler),
+    const LibraryPage(),
+  ];
 
   SharedPref pref = SharedPref();
 

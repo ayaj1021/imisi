@@ -13,16 +13,17 @@ import 'package:imisi/Utils/show_alert_dialog.dart';
 import 'package:imisi/Base/base_page.dart';
 import 'package:imisi/Widget/button_widget.dart';
 
-
 class UpLoadFilePage extends StatefulWidget {
   // final String artistName;
   // final String songTitle;
   // final String artistName;
   // final String artistName;
   // final String artistName;
-
+  final int fileType;
+  //  final FileType fileType;
   const UpLoadFilePage({
-    super.key,
+    super.key, required this.fileType,
+    // required this.fileType,
     // required this.artistName, required this.songTitle
   });
 
@@ -39,7 +40,7 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
     try {
       // Pick audio file
       FilePickerResult? audioResult = await FilePicker.platform.pickFiles(
-        type: FileType.audio,
+        type:widget.fileType == 0 ? FileType.audio : FileType.video,
         allowMultiple: false,
       );
 
@@ -48,7 +49,7 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
         return audioResult.files.first.path;
       }
     } catch (error) {
-      print('Error picking audio: $error');
+      throw Exception('Error picking audio: $error');
       // Handle the error
     }
 
@@ -63,40 +64,39 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.secondaryColor,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-            color: Colors.white,
-          ),
-        ),
-        actions: [
-          IconButton(
+        appBar: AppBar(
+          backgroundColor: AppColors.secondaryColor,
+          leading: IconButton(
             onPressed: () {
-              showAlertDialog(
-                context,
-                yesTextOnTap: () {
-                  nextPage(const BasePage(), context);
-                },
-                message:
-                    'Are you sure you want to leave this upload incomplete? You may lose any unsaved progress.',
-              );
+              Navigator.pop(context);
             },
             icon: const Icon(
-              Icons.close,
+              Icons.arrow_back_ios_new,
               color: Colors.white,
             ),
           ),
-          const SizedBox(width: 15)
-        ],
-      ),
-      backgroundColor: AppColors.secondaryColor,
-      body: 
-         Stack(
+          actions: [
+            IconButton(
+              onPressed: () {
+                showAlertDialog(
+                  context,
+                  yesTextOnTap: () {
+                    nextPage(const BasePage(), context);
+                  },
+                  message:
+                      'Are you sure you want to leave this upload incomplete? You may lose any unsaved progress.',
+                );
+              },
+              icon: const Icon(
+                Icons.close,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(width: 15)
+          ],
+        ),
+        backgroundColor: AppColors.secondaryColor,
+        body: Stack(
           children: [
             Center(
               child: Column(
@@ -161,6 +161,7 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
                       onTap: () {
                         nextPage(
                             UploadStepperWidget(
+                              fileType: widget.fileType,
                               audioPath: selectedAudioPath,
                             ),
                             context);
@@ -181,9 +182,7 @@ class _UpLoadFilePageState extends State<UpLoadFilePage> {
             //       )
             //     : const SizedBox(),
           ],
-        )
-      
-    );
+        ));
   }
 
   void openFile(PlatformFile file) {

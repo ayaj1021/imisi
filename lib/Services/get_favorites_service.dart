@@ -23,8 +23,7 @@ class GetFavoriteService {
             .map((music) => GetAllFavoriteMusicModel.fromJson(music))
             .toList();
       } else {
-        print(data);
-        print(response.statusCode);
+
       }
     } catch (e) {
       throw Exception('Error $e');

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:imisi/Screens/favorites_screen.dart';
 import 'package:imisi/Screens/playlist_screen.dart';
 import 'package:imisi/Screens/points_screen.dart';
+import 'package:imisi/Services/auth_service.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
@@ -91,6 +92,9 @@ class DrawerWidget extends StatelessWidget {
             //   ),
             // ),
             ListTile(
+              onTap: () {
+                AuthService().logOut(context);
+              },
               contentPadding: const EdgeInsets.symmetric(horizontal: 28),
               leading: const Icon(
                 Icons.logout_outlined,
