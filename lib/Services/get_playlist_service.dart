@@ -21,8 +21,7 @@ class GetPlayList {
     if (response.statusCode == 200) {
       return data;
     } else {
-      print(data);
-      print(response.statusCode);
+     
     }
 
     return data;

@@ -28,17 +28,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // FetchSongs.execute().then(
-    //   (value) {
-    //     setState(() {
-    //       songs = value;
-    //     });
-    //     widget.audioHandler.initSongs(songs: value);
-    //   },
-    // );
-
     super.initState();
-    getAllMusic;
+    // getAllMusic;
   }
 
   @override

@@ -76,7 +76,7 @@ class UploadFileService with ChangeNotifier {
     } catch (e) {
       isUploading = false;
 
-      throw '$e';
+      throw Exception ('$e');
     }
   }
 

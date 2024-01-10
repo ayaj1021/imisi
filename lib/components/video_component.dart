@@ -33,7 +33,7 @@ class VideoComponent extends StatelessWidget {
         } else if (snapshot.hasData) {
           final List<GetAllVideoModel> videoList = snapshot.data;
           return SizedBox(
-            height: 200.rh,
+            height: 220.rh,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: videoList.length,
@@ -48,7 +48,7 @@ class VideoComponent extends StatelessWidget {
                           children: [
                             Container(
                               margin: const EdgeInsets.only(left: 5, right: 10),
-                              height: 120.rh,
+                              height: 150.rh,
                               width: 250.rw,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
@@ -66,6 +66,7 @@ class VideoComponent extends StatelessWidget {
                                 onPressed: () {
                                   nextPage(
                                       VideoPlayingScreen(
+                                        videos: videoList,
                                         url: videoList[index].video!.filePath ??
                                             "",
                                       ),
@@ -83,7 +84,7 @@ class VideoComponent extends StatelessWidget {
                           videoList[index].name ?? '',
                           style: AppStyles.agTitle3Bold.copyWith(
                             color: AppColors.onPrimaryColor,
-                            fontSize: 18,
+                            fontSize: 16,
                           ),
                         ),
                         Text(

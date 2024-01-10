@@ -41,7 +41,7 @@ class SongsComponent extends StatelessWidget {
           } else if (snapshot.hasData) {
             final List<GetAllMusicModel> musicList = snapshot.data!;
             return SizedBox(
-              height: 170.rh,
+              height: 190.rh,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: musicList.length,
@@ -99,7 +99,7 @@ class SongsComponent extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            height: 120.rh,
+                            height: 140.rh,
                             width: 250.rw,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
