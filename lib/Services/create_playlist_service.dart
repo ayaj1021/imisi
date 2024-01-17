@@ -31,7 +31,7 @@ class CreatePlayListService {
       if (response.statusCode == 201) {
         await showSnackBar(
             context: context, message: "Playlist Created", isError: false);
-        nextPageAndremoveUntil(const PlayListScreen(), context);
+        nextPageAndremoveUntil(const PlayListScreen(isAddingSong: false,), context);
 
         return data;
       } else {

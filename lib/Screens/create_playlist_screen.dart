@@ -96,7 +96,7 @@ class _CreatePlayListScreenState extends State<CreatePlayListScreen> {
                             Expanded(
                               child: ButtonWidget(
                                 onTap: () =>
-                                    nextPage(const PlayListScreen(), context),
+                                    nextPage(const PlayListScreen(isAddingSong: false,), context),
                                 text: 'Cancel',
                                 textColor: AppColors.onPrimaryColor,
                                 border:

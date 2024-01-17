@@ -1,20 +1,19 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:imisi/Utils/audio_id.dart';
 import 'package:imisi/Utils/snack_bar.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddMusicToPlaylistService with ChangeNotifier {
   bool isAddMusic = false;
   Future addMusicToPlaylist(BuildContext context,
-      {required String playListId}) async {
+      {required String playListId, required String musicId}) async {
     isAddMusic = true;
     notifyListeners();
-     final musicId = AudioId.audioId;
+    
     String url =
         'https://imisi-backend-service.onrender.com/api/playlists/$playListId/addMusic/$musicId';
 

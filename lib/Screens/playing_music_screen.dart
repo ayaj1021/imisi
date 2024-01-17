@@ -22,6 +22,7 @@ class PlayingMusicScreen extends StatefulWidget {
     //  required this.index,
   });
   final List<GetAllMusicModel> songs;
+
   // final int index;
 
   @override
@@ -36,7 +37,7 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
   Duration position = Duration.zero;
   void setAudio(String urlToPlay) {
     audioPlayer.setReleaseMode(ReleaseMode.stop);
-    audioPlayer.play(UrlSource(urlToPlay));
+    audioPlayer.play(UrlSource(isPlaying == true ? "" : urlToPlay));
     setState(() {});
   }
 
@@ -60,22 +61,13 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
     super.initState();
     allSongs = widget.songs;
     index = context.read<AudioProvider>().currentIndex;
-    // setState(() {
-    //   allSongs = widget.songs;
-    //   index = ;
-    // });
     GetPointsService().getPoints(id: allSongs[index].id ?? "");
     setAudio(widget.songs[index].audio!.filePath!);
     audioPlayer.onPlayerStateChanged.listen((event) {
-      //   GetPointsService().getPoints(id: allSongs[index].id ?? "");
-
       setState(() {
-        // isPlaying = event == PlayerState.disposed;
         isPlaying = event == PlayerState.playing;
       });
     });
-    // GetPointsService().getPoints(id: allSongs[index].id ?? "");
-    // setAudio(widget.songs[index].audio!.filePath!);
 
     audioPlayer.onDurationChanged.listen((newDuration) {
       setState(() {
@@ -87,24 +79,21 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
         position = newPosition;
         if (formatTime(duration - position) == "00:00") {
           index++;
-
           audioPlayer.play(
             (UrlSource(
               allSongs[index].audio!.filePath ?? "",
             )),
-            volume: 1.0,
           );
-          //  GetPointsService().getPoints(id: allSongs[index].id ?? "");
         }
       });
     });
   }
 
-  // @override
-  // void dispose() {
-  //   audioPlayer.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +156,7 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                         IconButton(
                             onPressed: () {
                               addMusicFavorite.addMusicToFavorite(
-                                id: allSongs[index].id ?? "",
+                                id: allSongs[index].id.toString(),
                                 context,
                               );
                             },
@@ -301,6 +290,7 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
                           Navigator.pop(context);
                           nextPage(
                               PlayListScreen(
+                                isAddingSong: true,
                                 musicId: allSongs[index].id ?? "",
                               ),
                               context);

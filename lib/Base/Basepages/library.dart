@@ -30,7 +30,11 @@ class LibraryPage extends StatelessWidget {
           child: Column(
             children: [
               GestureDetector(
-                onTap: () => nextPage(const PlayListScreen(), context),
+                onTap: () => nextPage(
+                    const PlayListScreen(
+                      isAddingSong: false,
+                    ),
+                    context),
                 child: Row(
                   children: [
                     const Icon(

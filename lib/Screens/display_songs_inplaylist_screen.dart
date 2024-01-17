@@ -6,7 +6,7 @@ import 'package:imisi/Utils/gap.dart';
 
 class DisplaySongsInPlayListScreen extends StatelessWidget {
   const DisplaySongsInPlayListScreen(
-      {super.key, required this.playListTitle, required this.allSongs});
+      {super.key, required this.playListTitle, required this.allSongs, required playListId});
   final String playListTitle;
 
   final List allSongs;

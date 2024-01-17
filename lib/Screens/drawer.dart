@@ -54,7 +54,7 @@ class DrawerWidget extends StatelessWidget {
               ),
             ),
             ListTile(
-              onTap: () => nextPage(const PlayListScreen(), context),
+              onTap: () => nextPage(const PlayListScreen(isAddingSong: false,), context),
               contentPadding: const EdgeInsets.symmetric(horizontal: 28),
               leading: const Icon(
                 Icons.queue_music_outlined,

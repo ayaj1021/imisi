@@ -48,8 +48,7 @@ class _VideoPlayingScreenState extends State<VideoPlayingScreen> {
       currentIndex = index;
     });
 
-    _controller = VideoPlayerController.networkUrl(
-        Uri.parse(widget.videos[index].video!.filePath ?? ""))
+    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.url))
       ..addListener(() => setState(() {}))
       ..setLooping(true)
       ..initialize().then((value) => _controller.play());
@@ -99,7 +98,7 @@ class _VideoPlayingScreenState extends State<VideoPlayingScreen> {
                     ),
                     context);
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.fullscreen,
                 color: AppColors.onPrimaryColor,
               ))
