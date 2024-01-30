@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:imisi/Connection_controller/connection_controller.dart';
 
 import 'package:imisi/Services/add_music_favorites.dart';
 import 'package:imisi/Services/add_music_to_playlist_service.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
       builder: () {
         return MultiProvider(
           providers: [
+            StreamProvider(create: (context) => ConnectionController().controller.stream  , initialData: NetworkStatus.online),
             ChangeNotifierProvider(create: (context) => AuthService()),
             ChangeNotifierProvider(create: (context) => UploadFileService()),
             ChangeNotifierProvider(create: (context) => AddMusicToFavorite()),

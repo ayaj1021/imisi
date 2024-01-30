@@ -3,8 +3,6 @@ import 'package:imisi/Models/get_all_video_model.dart';
 import 'package:imisi/Styles/app_colors.dart';
 import 'package:imisi/Styles/app_text_styles.dart';
 import 'package:imisi/Utils/gap.dart';
-import 'package:imisi/Utils/navigator.dart';
-import 'package:imisi/components/video_player_landscape_component.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayingScreen extends StatefulWidget {
@@ -87,22 +85,22 @@ class _VideoPlayingScreenState extends State<VideoPlayingScreen> {
               Icons.arrow_back_ios,
               color: AppColors.onPrimaryColor,
             )),
-        actions: [
-          IconButton(
-              onPressed: () {
-                nextPage(
-                    VideoPlayerLandScapeComponent(
-                      // songName: videos[currentIndex].name ?? "",
-                      // artistName: videos[currentIndex].artist ?? "",
-                      controller: _controller,
-                    ),
-                    context);
-              },
-              icon: const Icon(
-                Icons.fullscreen,
-                color: AppColors.onPrimaryColor,
-              ))
-        ],
+        //  actions: [
+        // IconButton(
+        //     onPressed: () {
+        //       nextPage(
+        //           VideoPlayerLandScapeComponent(
+        //             // songName: videos[currentIndex].name ?? "",
+        //             // artistName: videos[currentIndex].artist ?? "",
+        //             controller: _controller,
+        //           ),
+        //           context);
+        //     },
+        //     icon: const Icon(
+        //       Icons.fullscreen,
+        //       color: AppColors.secondaryColor,
+        //     ))
+        // ],
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.secondaryColor,
       ),

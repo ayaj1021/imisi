@@ -36,142 +36,173 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: AppColors.secondaryColor,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 60,
-                    width: 40,
-                    child: Image.asset(
-                      'assets/logos/Imisi_logo1.png',
-                    ),
-                  ),
-                  gapHeight(20),
-                  Text(
-                    "Log into your Account",
-                    style: AppStyles.agTitle3Bold.copyWith(color: Colors.white),
-                  ),
-                  gapHeight(50),
-                  CustomTextField(
-                    obscureText: false,
-                    hint: "Enter Email Address",
-                    controller: emailController,
-                    prefixIcon: const Icon(
-                      Icons.email_outlined,
-                      color: Colors.white,
-                    ),
-                  ),
-                  gapHeight(20),
-                  CustomTextField(
-                    hint: "Enter Password",
-                    controller: passwordController,
-                    obscureText: obscureText,
-                    prefixIcon: Image.asset(
-                      "assets/images/lock.png",
-                      height: 30,
-                      color: Colors.white,
-                    ),
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          obscureText = !obscureText;
-                        });
-                      },
-                      icon: obscureText
-                          ? const Icon(
-                              Icons.visibility_off_outlined,
-                              color: Colors.white,
-                            )
-                          : const Icon(
-                              Icons.visibility_outlined,
-                              color: Colors.white,
-                            ),
-                    ),
-                  ),
-                  gapHeight(20),
-
-                  // Align(
-                  //   alignment: Alignment.centerRight,
-                  //   child: Text(
-                  //     "Forgot Password?",
-                  //     style: AppStyles.bodyRegularText.copyWith(
-                  //       color: AppColors.primaryColor,
-                  //     ),
-                  //   ),
-                  // ),
-                  gapHeight(50),
-                  Consumer<AuthService>(builder: (ctx, auth, child) {
-                    return ButtonWidget(
-                      text: auth.isLoggingIn == true ? "Logging in..." : "Login",
-                      color: AppColors.primaryColor,
-                      onTap: () {
-                        if (emailController.text.isEmpty ||
-                            passwordController.text.isEmpty) {
-                          showSnackBar(
-                              context: context,
-                              message: "Pls fill in your details",
-                              isError: true);
-                        } else {
-                          auth.login(
-                              email: emailController.text,
-                              password: passwordController.text,
-                              context: context);
-                        }
-                      },
-                    );
-                  }),
-                  // ButtonWidget(
-                  //   onTap: () {
-                  //     setState(() {
-                  //       isLoading = true;
-                  //     });
-                  //     AuthService()
-                  //         .login(
-                  //             context: context,
-                  //             email: emailController.text.trim(),
-                  //             password: passwordController.text.trim())
-                  //         .then((value) {
-                  //       setState(() {
-                  //         isLoading = false;
-                  //       });
-                  //     });
-                  //   },
-                  //   text: isLoading == true ? "Loading..." : "Login",
-                  //   color: AppColors.primaryColor,
-                  // ),
-                  gapHeight(20),
-                  InkWell(
-                    onTap: () {
-                      nextPage(const SignUpPage(), context);
-                    },
-                    child: RichText(
-                      text: TextSpan(
+        child: Consumer<AuthService>(
+          builder: (context, authService, child) {
+            return Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Center(
+                    child: SingleChildScrollView(
+                      child: Column(
                         children: [
-                          TextSpan(
-                            text: "Already have account? ",
-                            style: GoogleFonts.inter(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
+                          SizedBox(
+                            height: 60,
+                            width: 40,
+                            child: Image.asset(
+                              'assets/logos/Imisi_logo1.png',
                             ),
                           ),
-                          TextSpan(
-                            text: "Sign up",
-                            style: AppStyles.bodyRegularText.copyWith(
+                          gapHeight(20),
+                          Text(
+                            "Log into your Account",
+                            style: AppStyles.agTitle3Bold.copyWith(color: Colors.white),
+                          ),
+                          gapHeight(50),
+                          CustomTextField(
+                            obscureText: false,
+                            hint: "Enter Email Address",
+                            controller: emailController,
+                            prefixIcon: const Icon(
+                              Icons.email_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                          gapHeight(20),
+                          CustomTextField(
+                            hint: "Enter Password",
+                            controller: passwordController,
+                            obscureText: obscureText,
+                            prefixIcon: Image.asset(
+                              "assets/images/lock.png",
+                              height: 30,
+                              color: Colors.white,
+                            ),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  obscureText = !obscureText;
+                                });
+                              },
+                              icon: obscureText
+                                  ? const Icon(
+                                      Icons.visibility_off_outlined,
+                                      color: Colors.white,
+                                    )
+                                  : const Icon(
+                                      Icons.visibility_outlined,
+                                      color: Colors.white,
+                                    ),
+                            ),
+                          ),
+                          gapHeight(20),
+                
+                          // Align(
+                          //   alignment: Alignment.centerRight,
+                          //   child: Text(
+                          //     "Forgot Password?",
+                          //     style: AppStyles.bodyRegularText.copyWith(
+                          //       color: AppColors.primaryColor,
+                          //     ),
+                          //   ),
+                          // ),
+                          gapHeight(50),
+                          Consumer<AuthService>(builder: (ctx, auth, child) {
+                            return ButtonWidget(
+                              text:   "Login",
                               color: AppColors.primaryColor,
+                              onTap: () {
+                                if (emailController.text.isEmpty ||
+                                    passwordController.text.isEmpty) {
+                                  showSnackBar(
+                                      context: context,
+                                      message: "Pls fill in your details",
+                                      isError: true);
+                                } else {
+                                  auth.login(
+                                      email: emailController.text,
+                                      password: passwordController.text,
+                                      context: context);
+                                }
+                              },
+                            );
+                          }),
+                          // ButtonWidget(
+                          //   onTap: () {
+                          //     setState(() {
+                          //       isLoading = true;
+                          //     });
+                          //     AuthService()
+                          //         .login(
+                          //             context: context,
+                          //             email: emailController.text.trim(),
+                          //             password: passwordController.text.trim())
+                          //         .then((value) {
+                          //       setState(() {
+                          //         isLoading = false;
+                          //       });
+                          //     });
+                          //   },
+                          //   text: isLoading == true ? "Loading..." : "Login",
+                          //   color: AppColors.primaryColor,
+                          // ),
+                          gapHeight(20),
+                          InkWell(
+                            onTap: () {
+                              nextPage(const SignUpPage(), context);
+                            },
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: "Already have account? ",
+                                    style: GoogleFonts.inter(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: "Sign up",
+                                    style: AppStyles.bodyRegularText.copyWith(
+                                      color: AppColors.primaryColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
+                          gapHeight(20)
                         ],
                       ),
                     ),
                   ),
-                  gapHeight(20)
-                ],
-              ),
-            ),
-          ),
+                ),
+                authService.isLoggingIn
+                      ? Container(
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                          color: Colors.black.withOpacity(0.6),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const CircularProgressIndicator(
+                                color: AppColors.primaryColor,
+                              ),
+                              gapHeight(15),
+                              const Text(
+                                "Logging in...",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : const SizedBox(),
+              ],
+            );
+          }
         ),
       ),
     );

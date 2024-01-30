@@ -71,22 +71,19 @@ class _SignupOptionScreensState extends State<SignupOptionScreens> {
                   );
                 },
               ),
-              SizedBox(
-                width: 135,
-                child: ButtonWidget(
-                  onTap: () {
-                    SharedPref().saveUserAccountType(
-                        userType[selectedItem!.toInt()]["name"]);
-                    nextPage(const LoginPage(), context);
-                  },
-                  text: "Continue",
-                  color: selectedItem == null
-                      ? AppColors.disabledButtonColor
-                      : AppColors.primaryColor,
-                  textColor: selectedItem == null
-                      ? AppColors.hintTextColor
-                      : AppColors.disabledButtonColor,
-                ),
+              ButtonWidget(
+                onTap: () {
+                  SharedPref().saveUserAccountType(
+                      userType[selectedItem!.toInt()]["name"]);
+                  nextPage(const LoginPage(), context);
+                },
+                text: "Continue",
+                color: selectedItem == null
+                    ? AppColors.disabledButtonColor
+                    : AppColors.primaryColor,
+                textColor: selectedItem == null
+                    ? AppColors.hintTextColor
+                    : AppColors.disabledButtonColor,
               )
             ],
           ),

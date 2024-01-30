@@ -5,7 +5,6 @@ import 'package:http_parser/http_parser.dart';
 import 'package:imisi/Base/base_page.dart';
 import 'package:imisi/Utils/navigator.dart';
 import 'package:imisi/Utils/snack_bar.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UploadFileService with ChangeNotifier {
@@ -13,6 +12,13 @@ class UploadFileService with ChangeNotifier {
   String status = "";
   int? selectedFile;
   bool isUploading = false;
+  double _uploadSent = 0;
+  double _uploadTotal = 0;
+
+  double get uploadSent => _uploadSent;
+  double get uploadTotal => _uploadTotal;
+
+  // print('$sent, $total');
 
   Future sendSong(
     BuildContext context, {
@@ -55,6 +61,15 @@ class UploadFileService with ChangeNotifier {
           ),
           'artist': artist,
         }),
+        onSendProgress: (int sent, int total) {
+          _uploadSent = ((sent / total) * 100);
+          print(((sent / total) * 100));
+          // _uploadSent = sent;
+          _uploadTotal = ((total / total) * 100);
+          ;
+          notifyListeners();
+          print('$sent, $total');
+        },
       );
 
       final body = response.data;
@@ -76,7 +91,7 @@ class UploadFileService with ChangeNotifier {
     } catch (e) {
       isUploading = false;
 
-      throw Exception ('$e');
+      throw '$e';
     }
   }
 
@@ -121,6 +136,19 @@ class UploadFileService with ChangeNotifier {
           ),
           'artist': artist,
         }),
+        onSendProgress: (int sent, int total) {
+          _uploadSent = ((sent / total) * 100);
+          print(((sent / total) * 100));
+          // _uploadSent = sent;
+          _uploadTotal = ((total / total) * 100);
+          notifyListeners();
+        
+          // _uploadSent = ((sent / total) * 100);
+
+          // _uploadTotal = total;
+          // notifyListeners();
+          // print('$sent, $total');
+        },
       );
 
       final body = response.data;

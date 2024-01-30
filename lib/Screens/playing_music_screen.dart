@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:imisi/Base/base_page.dart';
@@ -15,14 +17,16 @@ import 'package:imisi/provider/audio_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:scaled_size/scaled_size.dart';
 
+List<GetAllMusicModel> allSongs = [];
+
 class PlayingMusicScreen extends StatefulWidget {
   const PlayingMusicScreen({
     super.key,
     required this.songs,
     //  required this.index,
   });
-  final List<GetAllMusicModel> songs;
-
+  // final List<GetAllMusicModel> songs;
+  final List<dynamic> songs;
   // final int index;
 
   @override
@@ -54,12 +58,26 @@ class _PlayingMusicScreenState extends State<PlayingMusicScreen> {
   }
 
   int index = 0;
-  List<GetAllMusicModel> allSongs = [];
+
+  List<AudioPlayer> audioPlayers = List.generate(
+      allSongs.length, (_) => AudioPlayer()..setReleaseMode(ReleaseMode.stop));
+
+  List<StreamSubscription> streams = [];
 
   @override
   void initState() {
     super.initState();
-    allSongs = widget.songs;
+    // allSongs = widget.songs;
+    audioPlayers.asMap().forEach((index, player) {
+      streams.add(player.onPlayerStateChanged.listen((it) {
+        // switch (it) {
+        //   case PlayerState.stopped:
+        //     toast();
+        //     break;
+        //   default:
+        // }
+      }));
+    });
     index = context.read<AudioProvider>().currentIndex;
     GetPointsService().getPoints(id: allSongs[index].id ?? "");
     setAudio(widget.songs[index].audio!.filePath!);

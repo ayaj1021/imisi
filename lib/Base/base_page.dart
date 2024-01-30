@@ -1,13 +1,14 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:imisi/Base/Basepages/home_page.dart';
 import 'package:imisi/Base/Basepages/library.dart';
+import 'package:imisi/Base/Basepages/upload_page.dart';
 import 'package:imisi/Database/database.dart';
 import 'package:imisi/Styles/app_colors.dart';
-import 'package:imisi/Base/Basepages/home_page.dart';
-import 'package:imisi/Base/Basepages/upload_page.dart'; 
-import 'package:imisi/main.dart';
-// MyAudioHandler _audioHandler = MyAudioHandler();
 
+
+final AudioPlayer player = AudioPlayer();
 
 class BasePage extends StatefulWidget {
   const BasePage({super.key});
@@ -26,13 +27,17 @@ class _BasePageState extends State<BasePage> {
   }
 
   List<Widget> artistPages = [
-     HomePage(audioHandler: audioHandler),
+    HomePage(
+      player: player,
+    ),
     const UpLoadPage(),
+    //   SearchPage(),
     const LibraryPage(),
   ];
 
   List<Widget> listenerPages = [
-     HomePage(audioHandler: audioHandler),
+    HomePage(player: player),
+    // SearchPage(),
     const LibraryPage(),
   ];
 
@@ -107,6 +112,12 @@ class _BasePageState extends State<BasePage> {
                   //  Image.asset("assets/images/upload.png"),
                   label: "Upload",
                 ),
+                // const BottomNavigationBarItem(
+                //   icon: Icon(Icons.search),
+                //   //    Image.asset("assets/images/library.png"),
+                //   activeIcon: Icon(Icons.search),
+                //   label: "Search",
+                // ),
                 const BottomNavigationBarItem(
                   icon: Icon(Icons.local_library_outlined),
                   //    Image.asset("assets/images/library.png"),
