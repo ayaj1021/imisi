@@ -1,16 +1,12 @@
 # imisi
 
-A new Flutter project.
+1. This is a music app that is created for gospel singers.
 
-## Getting Started
+2. On this app, there are two parts a listener part and artiste part
 
-This project is a starting point for a Flutter application.
+3. The listener are the general users that would just want to listen to gospel songs.
+4. The artiste are the singers that would want to showcase their songs for people to listen to.
+5. Here, they can upload either songs or their music videos.
+6. Listeners also get to earn points after listening to four (4) songs
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
